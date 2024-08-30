@@ -1,0 +1,1689 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "varsion": "0.0.1",
+    "title": "DAS SDL API server",
+    "description": "DAS SDL 서버 API swagger 문서",
+    "version": "1.0.0"
+  },
+  "host": "localhost:3200",
+  "basePath": "/das",
+  "tags": [
+    {
+      "name": "user",
+      "prj" : "prj"
+    }
+  ],
+  "paths": {
+    "/user/sendEmailAuth": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "이메일 인증 코드 이메일 전송",
+        "description": "사용자가 이메일 인증을 위해 인증 코드를 전송한다.",
+        "content": "application/json",
+        "parameters" : [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "login_id": { "type": "string", "example" : "altm56@gmail.com", "required" : true}
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "resultCode": {
+                  "type": "number",
+                  "example": 200
+                },
+                "resultMsg": {
+                  "type": "string",
+                  "example": "인증코드 발송 성공"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/authEmailCode": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "이메일 인증 ",
+        "description": "사용자가 이메일 인증을 한다",
+        "content": "application/json",
+        "parameters" : [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "login_id": { "type": "string", "example" : "altm56@gmail.com", "required" : true},
+                "auth_code": { "type": "string", "example" : "krlcg1", "required" : true}
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "resultCode": {
+                  "type": "number",
+                  "example": 200
+                },
+                "resultMsg": {
+                  "type": "string",
+                  "example": "이메일 인증 성공"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/signUp": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "사용자 회원가입",
+        "description": "사용자가 회원가입한다.",
+        "content": "application/json",
+        "parameters" : [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "login_id": { "type": "string", "example" : "altm56@gmail.com", "required" : true},
+                "login_pw": { "type": "string", "example" : "qwer123", "required" : true},
+                "user_name": { "type": "string", "example" : "홍길동", "required" : true},
+                "user_level" : { "type" : "number", "example" : 3, "required" : true}
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "resultCode": {
+                  "type": "number",
+                  "example": 200
+                },
+                "resultMsg": {
+                  "type": "string",
+                  "example": "회원가입 성공"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/signIn": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "사용자 로그인",
+        "description": "사용자가 로그인한다.",
+        "parameters" : [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "login_id": { "type": "string", "example" : "altm56@gmail.com", "required" : true},
+                "login_pw": { "type": "string", "example" : "123", "required" : true}
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "resultCode": {
+                  "type": "number",
+                  "example": 200
+                },
+                "resultMsg": {
+                  "type": "string",
+                  "example": "로그인 성공"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "userId" : {
+                      "type" : "number",
+                      "example" : 1
+                    },
+                    "loginId" : {
+                      "type" : "string",
+                      "example" : "altm56@gmail.com"
+                    },
+                    "isFirst" : {
+                      "type" : "number",
+                      "example" : 1
+                    },
+                    "userName" : {
+                      "type" : "string",
+                      "example" : "홍길동"
+                    },
+                    "userLevel" : {
+                      "type" : "number",
+                      "example" : 3
+                    },
+                    "userStatus" : {
+                      "type" : "string",
+                      "example" : "W"
+                    },
+                    "userRole" : {
+                      "type" : "string",
+                      "example" : "보안담당자"
+                    },
+                    "rgstDtm" : {
+                      "type" : "string",
+                      "example" : "2024/08/16 10:21:54"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/frgtEml": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "사용자 패스워드 찾기",
+        "description": "사용자가 패스워드를 찾기위해 이메일을 전송한다.",
+        "parameters" : [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "login_id": { "type": "string", "example" : "altm56@gmail.com", "required" : true}
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "resultCode": {
+                  "type": "number",
+                  "example": 200
+                },
+                "resultMsg": {
+                  "type": "string",
+                  "example": "비밀번호 찾기 이메일 전송 성공"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/modify": {
+      "put": {
+        "tags": [
+          "user"
+        ],
+        "summary": "사용자 비밀번호 변경",
+        "description": "사용자가 비밀번호를 변경한다.",
+        "parameters" : [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "login_id": { "type": "string", "example" : "altm56@gmail.com", "required" : true},
+                "current_password" : {"type" : "string", "example" : "NbghWIoeJ(yu#408orcQ2lcQu1o#AwXcIZQOuT@G$)h!hq6GX)ujcJGzjqMuE!%5ITTnSBt5", "required" : true},
+                "new_password" : { "type" : "string", "example" : "qwer123", "required" : true}
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "resultCode": {
+                  "type": "number",
+                  "example": 200
+                },
+                "resultMsg": {
+                  "type": "string",
+                  "example": "비밀번호 변경 성공"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/dvList": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "유저 리스트 출력",
+        "description": "가입된 유저 리스트를 출력한다.",
+        "parameters": [
+          {
+            "name" : "user_level",
+            "description" : "계정 레벨(1: 시스템관리자, 2: 보안담당자, 3: 개발담당자)",
+            "in" : "query",
+            "type" : "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "resultCode": {
+                  "type": "number",
+                  "example": 200
+                },
+                "resultMsg": {
+                  "type": "string",
+                  "example": "개발자 리스트 출력 완료"
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "userId" : {
+                        "type" : "number",
+                        "example" : 1
+                      },
+                      "loginId" : {
+                        "type" : "string",
+                        "example" : "altm56@gmail.com"
+                      },
+                      "isFirst" : {
+                        "type" : "number",
+                        "example" : 0
+                      },
+                      "userName" : {
+                        "type" : "string",
+                        "example" : "홍길동"
+                      },
+                      "userLevel" : {
+                        "type" : "number",
+                        "example" : 3
+                      },
+                      "userStatus" : {
+                        "type" : "string",
+                        "example" : "W"
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/prj/ctPrj": {
+      "post": {
+        "tags": [
+          "prj"
+        ],
+        "summary": "프로젝트 생성",
+        "description": "사용자가 프로젝트를 생성한다.",
+        "consumes": ["multipart/form-data"],
+        "parameters": [
+          {
+            "name": "prj_name",
+            "in": "formData",
+            "type": "string",
+            "required": true,
+            "example": "프로젝트1",
+            "description" : "프로젝트 이름"
+          },
+          {
+            "name": "prj_description",
+            "in": "formData",
+            "type": "string",
+            "required": true,
+            "example": "이 프로젝트는 러시아에서 시작되어 전세계적으로 펼쳐져..",
+            "description" : "프로젝트 설명"
+          },
+          {
+            "name": "prj_start_version",
+            "in": "formData",
+            "type": "string",
+            "required": true,
+            "example": "v0.0.1",
+            "description" : "프로젝트 버전"
+          },
+          {
+            "name": "rgst_user_id",
+            "in": "formData",
+            "type": "number",
+            "required": true,
+            "example": 1,
+            "description" : "프로젝트 생성 유저 아이디"
+          },
+          {
+            "name": "prj_lnk",
+            "in": "formData",
+            "type": "string", 
+            "example": "http://example.com",
+            "required" : true,
+            "description" : "프로젝트 링크"
+          },
+          {
+            "name": "prj_sec_user",
+            "in": "formData",
+            "type": "array",
+            "items" : {
+              "type" : "number"
+            },
+            "required": true,
+            "example": 2,
+            "description" : "프로젝트 보안 담당자(다중)"
+          },
+          {
+            "name": "prj_dev_user",
+            "in": "formData",
+            "type": "array",
+            "items" : {
+              "type" : "number"
+            },
+            "required": true,
+            "example": 1,
+            "description" : "프로젝트 개발 담당자(다중)"
+          },
+          {
+            "name": "files",
+            "in": "formData",
+            "type": "array",
+            "items" : {
+              "type" : "file"
+            },
+            "required": true,
+            "description" : "프로젝트 파일(다중)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "resultCode": {
+                  "type": "number",
+                  "example": 200
+                },
+                "resultMsg": {
+                  "type": "string",
+                  "example": "프로젝트 생성 완료"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/prj/addPrjVer": {
+      "post": {
+        "tags": [
+          "prj"
+        ],
+        "summary": "프로젝트 버전 생성",
+        "description": "사용자가 프로젝트 내 버전을 생성한다.",
+        "consumes": ["multipart/form-data"],
+        "parameters": [
+          {
+            "name": "prj_id",
+            "in": "formData",
+            "type": "number",
+            "required": true,
+            "example": "1",
+            "description" : "프로젝트 아이디"
+          },
+          {
+            "name": "prj_name",
+            "in": "formData",
+            "type": "string",
+            "required": true,
+            "example": "프로젝트1",
+            "description" : "프로젝트 이름"
+          },
+          {
+            "name": "prj_description",
+            "in": "formData",
+            "type": "string",
+            "required": true,
+            "example": "이 프로젝트는 러시아에서 시작되어 전세계적으로 펼쳐져..",
+            "description" : "프로젝트 설명"
+          },
+          {
+            "name": "version_number",
+            "in": "formData",
+            "type": "string",
+            "required": true,
+            "example": "v0.0.1",
+            "description" : "프로젝트 버전"
+          },
+          {
+            "name": "rgst_user_id",
+            "in": "formData",
+            "type": "number",
+            "required": true,
+            "example": 1,
+            "description" : "프로젝트 버전 생성 유저 아이디"
+          },
+          {
+            "name": "prj_lnk",
+            "in": "formData",
+            "type": "string", 
+            "example": "http://example.com",
+            "required" : true,
+            "description" : "프로젝트 링크"
+          },
+          {
+            "name": "prj_sec_user",
+            "in": "formData",
+            "type": "array",
+            "items" : {
+              "type" : "number"
+            },
+            "required": true,
+            "example": 2,
+            "description" : "프로젝트 보안 담당자(다중)"
+          },
+          {
+            "name": "prj_dev_user",
+            "in": "formData",
+            "type": "array",
+            "items" : {
+              "type" : "number"
+            },
+            "required": true,
+            "example": 1,
+            "description" : "프로젝트 개발 담당자(다중)"
+          },
+          {
+            "name": "files",
+            "in": "formData",
+            "type": "array",
+            "items" : {
+              "type" : "file"
+            },
+            "required": true,
+            "description" : "프로젝트 파일(다중)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "resultCode": {
+                  "type": "number",
+                  "example": 200
+                },
+                "resultMsg": {
+                  "type": "string",
+                  "example": "프로젝트 버전 생성 완료"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/prj/prjList": {
+      "get": {
+        "tags": [
+          "prj"
+        ],
+        "summary": "프로젝트 조회",
+        "description": "사용자가 프로젝트를 조회한다.",
+        "parameters" : [
+          {
+            "name" : "user_id",
+            "description" : "유저 아이디 값",
+            "in" : "query",
+            "type" : "number"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "resultCode": {
+                  "type": "number",
+                  "example": 200
+                },
+                "resultMsg": {
+                  "type": "string",
+                  "example": "프로젝트 조회 완료"
+                },
+                "totalPage" : {
+                  "type" : "number",
+                  "example" : 1
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "prj_id" : {
+                        "type" : "number",
+                        "example" : 15
+                      },
+                      "prj_name" : {
+                        "type" : "string",
+                        "example" : "프로젝트입니다"
+                      },
+                      "prj_description" : {
+                        "type" : "string",
+                        "example" : "v0.0.1"
+                      },
+                      "prj_lnk" : {
+                        "type" : "string",
+                        "example" : "https://example.com/"
+                      },
+                      "version_number" : {
+                        "type" : "string",
+                        "example" : "v0.0.1"
+                      },
+                      "step_number" : {
+                        "type" : "number",
+                        "example" : 1
+                      },
+                      "step_status" : {
+                        "type" : "string",
+                        "example" : "W"
+                      },
+                      "rgst_dtm" : {
+                        "type" : "string",
+                        "example" : "2024-08-26 16:01:40"
+                      },
+                      "updt_dtm" : {
+                        "type" : "string",
+                        "example" : "2024-08-26 16:01:40"
+                      }, 
+                      "dev_ids" : {
+                        "type" : "string",
+                        "example" : "13, 12"
+                      },
+                      "dev_user_name" : {
+                        "type" : "string",
+                        "example" : "테스터13, 테스터12"
+                      },
+                      "sec_ids" : {
+                        "type" : "string",
+                        "example" : "3"
+                      },
+                      "sec_user_name" : {
+                        "type" : "string",
+                        "example" : "테스터"
+                      }
+                    } 
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/prj/detail": {
+      "get": {
+        "tags": [
+          "prj"
+        ],
+        "summary": "프로젝트 특정 버전 조회",
+        "description": "사용자가 특정 버전 정보를 조회한다.",
+        "parameters" : [
+          {
+            "name" : "prj_id",
+            "description" : "프로젝트 번호",
+            "in" : "query",
+            "type" : "number",
+            "required" : true
+          },
+          {
+            "name" : "version_number",
+            "description" : "프로젝트 버전",
+            "in" : "query",
+            "type" : "string",
+            "required" : true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "resultCode": {
+                  "type": "number",
+                  "example": 200
+                },
+                "resultMsg": {
+                  "type": "string",
+                  "example": "특정 프로젝트 히스토리 조회 성공"
+                },
+                "totalPage" : {"type" : "number", "example" : 1},
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "prj_id" : {
+                      "type" : "number",
+                      "example" : 15
+                    },
+                    "prj_name" : {
+                      "type" : "string",
+                      "example" : "프로젝트입니다"
+                    },
+                    "prj_description" : {
+                      "type" : "string",
+                      "example" : "v0.0.1"
+                    },
+                    "prj_lnk" : {
+                      "type" : "string",
+                      "example" : "https://example.com/"
+                    },
+                    "version_number" : {
+                      "type" : "string",
+                      "example" : "v0.0.1"
+                    },
+                    "step_number" : {
+                      "type" : "number",
+                      "example" : 1
+                    },
+                    "step_status" : {
+                      "type" : "string",
+                      "example" : "W"
+                    },
+                    "rgst_dtm" : {
+                      "type" : "string",
+                      "example" : "2024-08-26 16:01:40"
+                    },
+                    "updt_dtm" : {
+                      "type" : "string",
+                      "example" : "2024-08-26 16:01:40"
+                    }, 
+                    "dev_ids" : {
+                      "type" : "string",
+                      "example" : "13, 12"
+                    },
+                    "dev_user_name" : {
+                      "type" : "string",
+                      "example" : "테스터13, 테스터12"
+                    },
+                    "sec_ids" : {
+                      "type" : "string",
+                      "example" : "3"
+                    },
+                    "sec_user_name" : {
+                      "type" : "string",
+                      "example" : "테스터"
+                    },
+                    "files" : {
+                      "type" : "array",
+                      "items" : {
+                        "type": "object",
+                        "properties": {
+                          "file_path" : {
+                            "type" : "string",
+                            "example" : "https://example.com/file/어쩌구저쩌구"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/prj/prjHst": {
+      "get": {
+        "tags": [
+          "prj"
+        ],
+        "summary": "특정 프로젝트 히스토리",
+        "description": "사용자가 특정 프로젝트 히스토리를 조회한다.",
+        "parameters" : [
+          {
+            "name" : "prj_id",
+            "description" : "프로젝트 아이디",
+            "in" : "query",
+            "type" : "number",
+            "required" : true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "resultCode": {
+                  "type": "number",
+                  "example": 200
+                },
+                "resultMsg": {
+                  "type": "string",
+                  "example": "특정 프로젝트 히스토리 조회 성공"
+                },
+                "totalPage" : {"type" : "number", "example" : 1},
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "prj_id" : {
+                        "type" : "number",
+                        "example" : 15
+                      },
+                      "prj_name" : {
+                        "type" : "string",
+                        "example" : "프로젝트입니다"
+                      },
+                      "prj_description" : {
+                        "type" : "string",
+                        "example" : "첫번째 프로젝트 입니다."
+                      },
+                      "version_number" : {
+                        "type" : "string",
+                        "example" : "v0.0.1"
+                      },
+                      "step_number" : {
+                        "type" : "number",
+                        "example" : 1
+                      },
+                      "step_status" : {
+                        "type" : "string",
+                        "example" : "W"
+                      },
+                      "rgst_dtm" : {
+                        "type" : "string",
+                        "example" : "2024-08-26 16:01:40"
+                      },
+                      "updt_dtm" : {
+                        "type" : "string",
+                        "example" : "2024-08-26 16:01:40"
+                      }, 
+                      "dev_ids" : {
+                        "type" : "string",
+                        "example" : "13, 12"
+                      },
+                      "dev_user_name" : {
+                        "type" : "string",
+                        "example" : "테스터13, 테스터12"
+                      },
+                      "sec_ids" : {
+                        "type" : "string",
+                        "example" : "3"
+                      },
+                      "sec_user_name" : {
+                        "type" : "string",
+                        "example" : "테스터"
+                      }
+                    } 
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/prj/updtPrj": {
+      "put": {
+        "tags": [
+          "prj"
+        ],
+        "summary": "프로젝트 특정 버전 수정",
+        "description": "사용자가 프로젝트 특정 버전을 수정한다.",
+        "consumes": ["multipart/form-data"],
+        "parameters": [
+          {
+            "name": "prj_id",
+            "in": "formData",
+            "type": "number",
+            "required": true,
+            "example": "1",
+            "description" : "변경대상 프로젝트 아이디"
+          },
+          {
+            "name": "updt_user_id",
+            "in": "formData",
+            "type": "number",
+            "required": true,
+            "example": "1",
+            "description" : "프로젝트 버전을 변경하는 유저 아이디"
+          },
+          {
+            "name": "version_number",
+            "in": "formData",
+            "type": "string",
+            "example": "v0.0.5",
+            "required": true,
+            "description" : "변경대상 프로젝트 버전"
+          },
+          {
+            "name": "del_yn",
+            "in": "formData",
+            "type": "string",
+            "example": "Y",
+            "description" : "프로젝트 버전 삭제 여부 삭제:N 아니면 Y"
+          },
+          {
+            "name": "prj_name",
+            "in": "formData",
+            "type": "string",
+            "example": "프로젝트1",
+            "description" : "변경할 프로젝트 이름"
+          },
+          {
+            "name": "prj_description",
+            "in": "formData",
+            "type": "string",
+            "example": "이 프로젝트는 러시아에서 시작되어 전세계적으로 펼쳐져..",
+            "description" : "변경할 프로젝트 설명"
+          },
+          {
+            "name": "prj_lnk",
+            "in": "formData",
+            "type": "string", 
+            "example": "http://example.com",
+            "description" : "변경할 프로젝트 링크"
+          },
+          {
+            "name": "prj_sec_user",
+            "in": "formData",
+            "type": "array",
+            "items" : {
+              "type" : "number"
+            },
+            "example": 2,
+            "description" : "변경할 프로젝트 보안 담당자(다중)"
+          },
+          {
+            "name": "prj_dev_user",
+            "in": "formData",
+            "type": "array",
+            "items" : {
+              "type" : "number"
+            },
+            "example": 1,
+            "description" : "변경할 프로젝트 개발 담당자(다중)"
+          },
+          {
+            "name": "del_sec_user",
+            "in": "formData",
+            "type": "array",
+            "items" : {
+              "type" : "number"
+            },
+            "example": 2,
+            "description" : "삭제할 프로젝트 보안 담당자(다중)"
+          },
+          {
+            "name": "del_dev_user",
+            "in": "formData",
+            "type": "array",
+            "items" : {
+              "type" : "number"
+            },
+            "example": 1,
+            "description" : "삭제할 프로젝트 개발 담당자(다중)"
+          },
+          {
+            "name": "del_file_id",
+            "in": "formData",
+            "type": "array",
+            "items" : {
+              "type" : "number"
+            },
+            "example": 1,
+            "description" : "삭제할 프로젝트 파일 아이디(다중)"
+          },
+          {
+            "name": "files",
+            "in": "formData",
+            "type": "array",
+            "items" : {
+              "type" : "file"
+            },
+            "description" : "변경할 프로젝트 파일 (다중)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "resultCode": {
+                  "type": "number",
+                  "example": 200
+                },
+                "resultMsg": {
+                  "type": "string",
+                  "example": "프로젝트 특정 버전 수정 완료"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "resultCode" : { "type" : "number", "example" : 200 },
+                    "resultMsg" : { "type" : "string", "example" : "프로젝트 생성 완료"}
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/prc/prcInfo": {
+      "get": {
+        "tags": [
+          "prc"
+        ],
+        "summary": "프로젝트 특정 버전 프로세스 단계별 조회",
+        "description": "사용자가 프로젝트 특정 버전 프로세스 단계별 리스트를 조회한다",
+        "parameters": [
+          {
+            "name": "prj_id",
+            "in": "query",
+            "type": "number",
+            "required": true,
+            "example": 1,
+            "description" : "조회 대상 프로젝트 아이디"
+          },
+          {
+            "name": "version_number",
+            "in": "query",
+            "type": "string",
+            "required": true,
+            "example": "v0.0.1",
+            "description" : "조회 대상 프로젝트 버전"
+          },
+          {
+            "name": "step_number",
+            "in": "query",
+            "type": "number",
+            "required": true,
+            "example": 1,
+            "description" : "조회 대상 프로젝트 버전 스텝 번호"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "resultCode": {
+                  "type": "number",
+                  "example": 200
+                },
+                "resultMsg": {
+                  "type": "string",
+                  "example": "프로세스 단계 조회 성공"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/prc/addLstc": {
+      "post": {
+        "tags": [
+          "prc"
+        ],
+        "summary": "프로젝트 특정 버전 프로세스 리스트 체크파일을 추가",
+        "description": "사용자가 프로젝트 특정 버전 프로세스 리스트 체크파일을 추가한다",
+        "consumes": ["multipart/form-data"],
+        "parameters": [
+          {
+            "name": "prj_id",
+            "in": "formData",
+            "type": "number",
+            "required": true,
+            "example": 1,
+            "description" : "프로젝트 아이디"
+          },
+          {
+            "name": "version_number",
+            "in": "formData",
+            "type": "string",
+            "required": true,
+            "example": "v0.0.1",
+            "description" : "프로젝트 버전"
+          },
+          {
+            "name": "file",
+            "in": "formData",
+            "type": "file",
+            "required": true,
+            "description" : "리스트 체크 파일(단일)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "resultCode": {
+                  "type": "number",
+                  "example": 200
+                },
+                "resultMsg": {
+                  "type": "string",
+                  "example": "리스트 체크 파일 등록 성공"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/prj/agrStp": {
+      "post": {
+        "tags": [
+          "prj"
+        ],
+        "summary": "프로젝트 특정 버전 단계별 승인",
+        "description": "사용자가 프로젝트 특정 버전의 특정 단계를 승인한다.",
+        "parameters" : [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "step_id": { 
+                  "type": "number",
+                  "example" : 1, 
+                  "required" : true
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "resultCode": {
+                  "type": "number",
+                  "example": 200
+                },
+                "resultMsg": {
+                  "type": "string",
+                  "example": "코멘트 삭제 완료"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/prc/addCmt": {
+      "post": {
+        "tags": [
+          "prc"
+        ],
+        "summary": "프로젝트 특정 버전 프로세스에 코멘트 등록",
+        "description": "사용자가 프로젝트 특정 버전 프로세스에 코멘트를 등록한다",
+        "consumes": ["multipart/form-data"],
+        "parameters": [
+          {
+            "name": "prj_id",
+            "in": "formData",
+            "type": "number",
+            "required": true,
+            "example": 1,
+            "description" : "프로젝트 아이디"
+          },
+          {
+            "name": "version_number",
+            "in": "formData",
+            "type": "string",
+            "required": true,
+            "example": "v0.0.1",
+            "description" : "프로젝트 버전"
+          },
+          {
+            "name": "step_number",
+            "in": "formData",
+            "type": "number",
+            "required": true,
+            "example": 1,
+            "description" : "프로세스 번호"
+          },
+          {
+            "name": "rgst_user_id",
+            "in": "formData",
+            "type": "number",
+            "required": true,
+            "example": 1,
+            "description" : "코멘트 등록자 아이디"
+          },
+          {
+            "name": "comment_description",
+            "in": "formData",
+            "type": "string",
+            "required": true,
+            "example": "어쩌구 저쩌구 ㅇㅇㅇ",
+            "description" : "코멘트 내용"
+          },
+          {
+            "name": "files",
+            "in": "formData",
+            "type": "array",
+            "items" : {
+              "type" : "file"
+            },
+            "description" : "코멘트 등록 파일(다중)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "resultCode": {
+                  "type": "number",
+                  "example": 200
+                },
+                "resultMsg": {
+                  "type": "string",
+                  "example": "코멘트 등록 성공"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/prc/updtCmt": {
+      "put": {
+        "tags": [
+          "prc"
+        ],
+        "summary": "코멘트 수정",
+        "description": "사용자가 코멘트를 수정한다.",
+        "consumes": ["multipart/form-data"],
+        "parameters": [
+          {
+            "name": "comm_id",
+            "in": "formData",
+            "type": "number",
+            "required": true,
+            "example": "1",
+            "description" : "변경대상 코멘트 아이디"
+          },
+          {
+            "name": "comment_description",
+            "in": "formData",
+            "type": "string",
+            "example": "어쩌구저쩌구",
+            "description" : "변경하려는 내용"
+          },
+          {
+            "name": "del_file_id",
+            "in": "formData",
+            "type": "array",
+            "items" : {
+              "type" : "number"
+            },
+            "example": 1,
+            "description" : "삭제할 코멘트 파일 번호(다중)"
+          },
+          {
+            "name": "files",
+            "in": "formData",
+            "type": "array",
+            "items" : {
+              "type" : "file"
+            },
+            "description" : "변경할 프로젝트 파일 (다중)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "resultCode": {
+                  "type": "number",
+                  "example": 200
+                },
+                "resultMsg": {
+                  "type": "string",
+                  "example": "코멘트 수정 완료"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/prc/delCmt": {
+      "delete": {
+        "tags": [
+          "prc"
+        ],
+        "summary": "코멘트 삭제",
+        "description": "사용자가 코멘트를 삭제한다.",
+        "parameters" : [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "comm_id": { 
+                  "type": "number",
+                  "example" : 1, 
+                  "required" : true
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "resultCode": {
+                  "type": "number",
+                  "example": 200
+                },
+                "resultMsg": {
+                  "type": "string",
+                  "example": "코멘트 삭제 완료"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/prc/lstnRgst": {
+      "post": {
+        "tags": [
+          "prc"
+        ],
+        "summary": "프로세스 최종 정보 등록",
+        "description": "사용자가 프로세스의 최종 정보를 등록한다",
+        "consumes": ["multipart/form-data"],
+        "parameters": [
+          {
+            "name": "prj_id",
+            "in": "formData",
+            "type": "number",
+            "required": true,
+            "example": 1,
+            "description" : "등록 대상 프로젝트 아이디"
+          },
+          {
+            "name": "version_number",
+            "in": "formData",
+            "type": "string",
+            "required": true,
+            "example": "v0.0.1",
+            "description" : "등록 대상 프로젝트 번호"
+          },
+          {
+            "name": "step_number",
+            "in": "formData",
+            "type": "number",
+            "required": true,
+            "example": 1,
+            "description" : "등록 대상 프로젝트 스텝 번호"
+          },
+          {
+            "name": "step_lnk",
+            "in": "formData",
+            "type": "string",
+            "example": "https://naver.com",
+            "description" : "등록하려는 링크"
+          },
+          {
+            "name": "step_description",
+            "in": "formData",
+            "type": "string",
+            "example": "어쩌구저쩌구 왈왈",
+            "description" : "등록하려는 내용"
+          },
+          {
+            "name": "files",
+            "in": "formData",
+            "type": "array",
+            "items" : {
+              "type" : "file"
+            },
+            "description" : "등록하려는 파일 (다중)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "resultCode": {
+                  "type": "number",
+                  "example": 200
+                },
+                "resultMsg": {
+                  "type": "string",
+                  "example": "프로젝트 최종 정보 등록 성공"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/comm/notiInfo": {
+      "get": {
+        "tags": [
+          "comm"
+        ],
+        "summary": "공지사항 조회",
+        "description": "사용자가 공지사항을 조회한다",
+        "parameters": [
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "resultCode": {
+                  "type": "number",
+                  "example": 200
+                },
+                "resultMsg": {
+                  "type": "string",
+                  "example": "공지사항 조회 성공"
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "noti_id" : {
+                        "type" : "number",
+                        "example" : 15
+                      },
+                      "notice_title" : {
+                        "type" : "string",
+                        "example" : "공지사항제목"
+                      },
+                      "rgst_user_id" : {
+                        "type" : "number",
+                        "example" : 6
+                      },
+                      "user_name" : {
+                        "type" : "string",
+                        "example" : "홍길동"
+                      },
+                      "rgst_dtm" : {
+                        "type" : "string",
+                        "example" : "2024-08-29 16:58:09"
+                      }
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/comm/addNoti": {
+      "post": {
+        "tags": [
+          "comm"
+        ],
+        "summary": "공지사항 등록",
+        "description": "사용자가 공지사항을 등록한다",
+        "parameters" : [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "notice_title": { 
+                  "type": "string",
+                  "example" : "공지사항_1", 
+                  "required" : true
+                },
+                "notice_description" : {
+                  "type": "string",
+                  "example" : "공지사항 내용 어쩌구저쩌구", 
+                  "required" : true
+                },
+                "rgst_user_id" : {
+                  "type" : "number",
+                  "example" : 1,
+                  "required" : true
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "resultCode": {
+                  "type": "number",
+                  "example": 200
+                },
+                "resultMsg": {
+                  "type": "string",
+                  "example": "공지사항 등록 성공"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/comm/detail": {
+      "get": {
+        "tags": [
+          "comm"
+        ],
+        "summary": "공지사항 상세 조회",
+        "description": "사용자가 공지사항의 상세화면을 호출한다",
+        "parameters": [
+          {
+            "name": "noti_id",
+            "description": "공지사항 아이디",
+            "in": "query",
+            "type": "number",
+            "example" : 1,
+            "required" : true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "resultCode": {
+                  "type": "number",
+                  "example": 200
+                },
+                "resultMsg": {
+                  "type": "string",
+                  "example": "공지사항 상세 조회 성공"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "noti_id" : {
+                      "type": "number",
+                      "example" : 1
+                    },
+                    "notice_title": { 
+                      "type": "string",
+                      "example" : "공지사항_1"
+                    },
+                    "notice_description" : {
+                      "type": "string",
+                      "example" : "공지사항 내용 어쩌구저쩌구"
+                    },
+                    "rgst_user_id" : {
+                      "type" : "number",
+                      "example" : 1
+                    },
+                    "user_name" : {
+                      "type" : "string",
+                      "example" : "홍길동"
+                    },
+                    "rgst_dtm" : {
+                      "type" : "string",
+                      "example" : "2024-08-26 16:01:40"
+                    }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

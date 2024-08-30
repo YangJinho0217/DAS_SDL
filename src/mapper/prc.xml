@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="prc">  
+
+  <select id="nextvalId">
+      SELECT nextval(#{id}) FROM DUAL;
+  </select>
+
+  <select id="selectPrcStepInfo">
+    SELECT a.prj_id
+         , a.version_number
+         , a.step_number
+         , b.step_id
+         , a.step_lnk
+         , a.step_description
+         , a.lstc_file_path
+         , a.file_name
+         , a.rgst_dtm
+    FROM process_step_info a, project_step b
+    WHERE a.version_number = b.version_number
+    AND a.prj_id = #{prj_id}
+    AND a.version_number = #{version_number}
+    AND a.step_number = #{step_number}
+    AND a.prj_id = b.prj_id
+  </select>
+
+  <select id="selectPrcStepInfoFile">
+    SELECT a.prj_id 
+         , a.version_number
+         , a.step_number
+         , a.file_path
+         , a.file_name
+    FROM process_step_info_file a
+    WHERE a.prj_id = #{prj_id}
+    AND a.version_number = #{version_number}
+    AND a.step_number = #{step_number}
+  </select>
+
+  <update id="updateListCheckFile">
+    UPDATE process_step_info
+    SET lstc_file_path = #{lstc_file_path},
+        fie_name = #{originalname}
+    WHERE prj_id = #{prj_id}
+    AND version_number = #{version_number}
+    AND step_number = #{step_number}
+  </update>
+
+  <insert id="insertPrcComment">
+    INSERT INTO process_comment
+    (
+        comm_id
+      , prj_id
+      , version_number
+      , rgst_user_id
+      , step_number
+      , comment_description
+    )
+    VALUES
+    (
+        #{comm_id}
+      , #{prj_id}
+      , #{version_number}
+      , #{rgst_user_id}
+      , #{step_number}
+      , #{comment_description}
+    )
+  </insert>
+
+  <insert id="insertPrcCommentFile">
+    INSERT INTO process_comment_file
+    (
+        comm_file_id
+      , comm_id
+      , file_path
+      , file_name
+    )
+    VALUES
+    (
+        #{comm_file_id}
+      , #{comm_id}
+      , #{file_path}
+      , #{file_name}
+    )
+  </insert>
+
+  <select id="selectPrcComment">
+    SELECT a.comm_id
+         , a.prj_id
+         , a.version_number
+         , a.rgst_user_id
+         , b.user_name
+         , CASE WHEN b.user_level = 3 THEN '개발담당자'
+                WHEN b.user_level = 2 THEN '보안담당자'
+                WHEN b.user_level = 1 THEN '시스템관리자'
+           ELSE ''
+           END AS user_role
+         , a.step_number
+         , a.comment_description
+         , a.rgst_dtm
+    FROM process_comment a, user_info b
+    WHERE a.prj_id = #{prj_id}
+    AND   a.version_number = #{version_number}
+    AND   a.step_number = #{step_number}
+    AND   a.rgst_user_id = b.user_id
+    ORDER BY a.rgst_dtm ASC;
+  </select>
+
+  <select id="selectPrcCommentFile">
+    SELECT a.comm_file_id
+         , a.comm_id
+         , a.file_path
+         , a.file_name
+    FROM process_comment_file a, process_comment b
+    WHERE a.comm_id = b.comm_id
+  </select>
+
+  <select id="selectPrcCommentList">
+    SELECT a.comm_id
+         , a.prj_id
+         , a.version_number
+         , a.rgst_user_id
+         , a.step_number
+    FROM process_comment a
+    WHERE a.comm_id = #{comm_id}
+  </select>
+
+  <update id="updatePrcComment">
+    UPDATE process_comment
+    SET comment_description = #{comment_description}
+    WHERE comm_id = #{comm_id}
+  </update>
+
+  <delete id="deletePrcComment">
+    DELETE FROM process_comment
+    WHERE comm_id = #{comm_id}
+  </delete>
+
+  <delete id="deletePrcCommentFile">
+    DELETE FROM process_comment_file
+    WHERE comm_id = #{comm_id}
+  </delete>
+
+  <delete id="deletePrcCommentFiles">
+    DELETE FROM process_comment_file
+    WHERE comm_file_id = #{del_file_id}
+  </delete>
+
+  <update id="updatePrcStepInfo">
+    UPDATE process_step_info
+    <trim prefix="SET" prefixOverrides="," suffixOverrides=",">
+        <if test="step_lnk != undefined">
+            step_lnk = #{step_lnk}
+        </if>
+        <if test="step_description != undefined">
+            , step_description = #{step_description}
+        </if>
+    </trim>
+    WHERE prj_id = #{prj_id}
+    AND version_number = #{version_number}
+    AND step_number = #{step_number}
+  </update>
+</mapper>

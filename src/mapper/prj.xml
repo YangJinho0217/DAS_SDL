@@ -1,0 +1,479 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="prj">  
+
+  <select id="nextvalId">
+      SELECT nextval(#{id}) FROM DUAL;
+  </select>
+
+  <select id="selectPrj">
+    SELECT prj_id
+    FROM project
+    WHERE prj_id = #{prj_id}
+  </select>
+
+  <select id="selectPrjVersion">
+    SELECT *
+    FROM project_version
+    WHERE prj_id = #{prj_id}
+    AND version_number = #{version_number}
+  </select>
+
+  <insert id="insertPrj">
+    INSERT INTO project
+    (
+        prj_id
+      , prj_name
+      , prj_description
+      , prj_start_version
+      , rgst_user_id
+    )
+    VALUES
+    (
+        #{prj_id}
+      , #{prj_name}
+      , #{prj_description}
+      , #{prj_start_version}
+      , #{rgst_user_id}
+    )
+  </insert>
+
+  <insert id="insertPrjVersion">
+    INSERT INTO project_version
+    (
+        version_id
+      , prj_id
+      , prj_name
+      , prj_description
+      , prj_lnk
+      , version_number
+      , rgst_user_id
+    )
+    VALUES
+    (
+        #{version_id}
+      , #{prj_id}
+      , #{prj_name}
+      , #{prj_description}
+      , #{prj_lnk}
+      , #{version_number}
+      , #{rgst_user_id}
+    )
+  </insert>
+  
+  <insert id="insertPrjStepCreate">
+    INSERT INTO project_step
+    (
+        step_id
+      , prj_id
+      , version_number
+      , step_number
+      , step_status
+    ) 
+    VALUES
+    (
+        #{step_id}
+      , #{prj_id}
+      , #{version_number}
+      , #{step_number}
+      , #{step_status}
+    )
+  </insert>
+
+  <insert id="insertPrjFile">
+    INSERT INTO project_file
+    (
+        file_id
+      , prj_id
+      , version_number
+      , file_path
+      , file_name
+    ) 
+    VALUES
+    (
+        #{file_id}
+      , #{prj_id}
+      , #{version_number}
+      , #{file_path}
+      , #{file_name}
+    )
+  </insert>
+
+  <select id="selectPrjList">
+    SELECT p.prj_id AS prjId
+         , p.prj_name AS prjName
+         , GROUP_CONCAT(DISTINCT ps.version_number) AS versionNumber
+         , GROUP_CONCAT(DISTINCT ps.step_number) AS stepNumber
+         , GROUP_CONCAT(DISTINCT ps.step_status) AS stepStatus
+         , GROUP_CONCAT(DISTINCT u.user_id) AS developersId
+         , GROUP_CONCAT(DISTINCT u.user_name) AS developers
+         , GROUP_CONCAT(DISTINCT sm.user_id) AS securityIds
+         , GROUP_CONCAT(DISTINCT sm.user_name) AS securityManagers
+         , GROUP_CONCAT(DISTINCT ps.rgst_dtm) AS rgstDtm
+         , GROUP_CONCAT(DISTINCT ps.updt_dtm) AS updtDtm
+    FROM project p, project_develop_manager pdm, user_info u,
+         project_security_manager psm, user_info sm, project_step ps, project_version pv
+    WHERE p.prj_id = pdm.prj_id
+    AND pdm.dev_id = u.user_id
+    AND p.prj_id = psm.prj_id
+    AND psm.sec_id = sm.user_id
+    AND p.prj_id = ps.prj_id
+    AND p.prj_id = pv.prj_id
+    <if test=" user_id != 1 and user_id != undefined">
+    AND p.prj_id IN (
+      SELECT pdm2.prj_id
+      FROM project_develop_manager pdm2
+      JOIN project p2 ON pdm2.prj_id = p2.prj_id
+      WHERE pdm2.dev_id = #{user_id}
+      UNION
+      SELECT psm2.prj_id
+      FROM project_security_manager psm2
+      JOIN project p3 ON psm2.prj_id = p3.prj_id
+      WHERE psm2.sec_id = #{user_id}
+    )
+    </if>
+    GROUP BY p.prj_id
+    ORDER BY p.prj_id DESC
+    LIMIT ${page_no}, 10
+  </select>
+
+  <select id="selectPrjAll">
+    SELECT a.prj_id
+         , a.prj_name
+         , a.prj_description
+         , a.prj_lnk
+         , a.version_number
+         , a.rgst_user_id
+         , c.user_name
+         , b.step_number
+         , b.step_status
+         , a.rgst_dtm
+         , a.updt_dtm
+    FROM project_version a, project_step b, user_info c
+    WHERE a.del_yn = 'Y'
+    AND a.prj_id = b.prj_id
+    AND a.version_number = b.version_number
+    AND a.rgst_user_id = c.user_id
+    <if test="user_id != undefined">
+    AND a.prj_id IN (
+      SELECT pdm2.prj_id
+      FROM project_develop_manager pdm2
+      JOIN project p2 ON pdm2.prj_id = p2.prj_id
+      WHERE pdm2.dev_id = #{user_id}
+      UNION
+      SELECT psm2.prj_id
+      FROM project_security_manager psm2
+      JOIN project p3 ON psm2.prj_id = p3.prj_id
+      WHERE psm2.sec_id = #{user_id}
+    )
+    </if>
+    ORDER BY b.rgst_dtm DESC
+  </select>
+
+  <select id="selectPrjListCount">
+    SELECT a.prj_id
+         , a.prj_name
+         , a.prj_description
+         , a.prj_lnk
+         , a.version_number
+         , b.step_number
+         , b.step_status
+         , b.rgst_dtm
+         , b.updt_dtm
+    FROM project_version a, project_step b
+    WHERE a.prj_id = b.prj_id
+    AND a.version_number = b.version_number
+    <if test="user_id != undefined">
+    AND a.prj_id IN (
+      SELECT pdm2.prj_id
+      FROM project_develop_manager pdm2
+      JOIN project p2 ON pdm2.prj_id = p2.prj_id
+      WHERE pdm2.dev_id = #{user_id}
+      UNION
+      SELECT psm2.prj_id
+      FROM project_security_manager psm2
+      JOIN project p3 ON psm2.prj_id = p3.prj_id
+      WHERE psm2.sec_id = #{user_id}
+    )
+    </if>
+    ORDER BY b.rgst_dtm DESC
+  </select>
+
+  <select id="selectPrjDevUser">
+    SELECT a.prj_id
+         , a.version_number
+         , GROUP_CONCAT(a.dev_id) AS dev_ids  
+         , GROUP_CONCAT(b.user_name) AS user_name  
+    FROM project_develop_manager a, user_info b
+    WHERE a.dev_id = b.user_id
+    GROUP BY prj_id, version_number
+  </select>
+
+  <select id="selectPrjSecUser">
+    SELECT a.prj_id
+         , a.version_number 
+         , GROUP_CONCAT(a.sec_id) AS sec_ids  
+         , GROUP_CONCAT(b.user_name) AS user_name  
+    FROM project_security_manager a, user_info b
+    WHERE a.sec_id = b.user_id
+    GROUP BY prj_id, version_number
+  </select>
+
+  <select id="selectPrjFile">
+    SELECT a.file_id
+         , a.file_path
+         , a.file_name
+    FROM project_file a
+    WHERE prj_id = #{prj_id}
+    AND version_number = #{version_number}
+  </select>
+
+  <select id="selectPrjHistory">
+    SELECT a.prj_id
+         , a.prj_name
+         , a.prj_description
+         , a.version_number
+         , a.rgst_user_id
+         , a.del_yn
+         , c.user_name
+         , b.step_number
+         , b.step_status
+         , b.rgst_dtm
+         , b.updt_dtm
+    FROM project_version a, project_step b, user_info c
+    WHERE a.prj_id = #{prj_id}
+    AND a.prj_id = b.prj_id
+    AND a.version_number = b.version_number
+    AND a.rgst_user_id = c.user_id
+    ORDER BY b.rgst_dtm DESC
+  </select>
+
+  <select id="selectPrjVersionDetail">
+    SELECT a.prj_id
+         , a.prj_name
+         , a.prj_description
+         , a.version_number
+         , a.rgst_user_id
+         , a.del_yn
+         , c.user_name
+         , a.prj_lnk
+         , b.step_number
+         , b.step_status
+         , b.rgst_dtm
+         , b.updt_dtm
+    FROM project_version a, project_step b, user_info c
+    WHERE a.del_yn = 'Y'
+    AND a.prj_id = b.prj_id
+    AND a.version_number = b.version_number
+    AND a.rgst_user_id = c.user_id
+    <if test="prj_id != undefined">
+    AND a.prj_id = #{prj_id}
+    </if>
+    <if test="version_number != undefined">
+    AND a.version_number = #{version_number}
+    </if>
+  </select>
+
+  <insert id="insertPrjSecManager">
+    INSERT INTO project_security_manager
+    (
+        prj_sec_id
+      , prj_id
+      , version_number
+      , sec_id
+    )
+    VALUES
+    (
+        #{prj_sec_id}
+      , #{prj_id}
+      , #{version_number}
+      , #{sec_id}
+    )
+  </insert>
+
+  <insert id="insertPrjDevManager">
+    INSERT INTO project_develop_manager
+    (
+        prj_dev_id
+      , prj_id
+      , version_number
+      , dev_id
+    )
+    VALUES
+    (
+        #{prj_dev_id}
+      , #{prj_id}
+      , #{version_number}
+      , #{dev_id}
+    )
+  </insert>
+
+  <insert id="insertPrjStep">
+    INSERT INTO project_step
+    (
+        step_id
+      , prj_id
+      , version_number
+      , step_number
+      , step_status
+      , step_result_comment
+      , step_result_file
+      , step_result_url
+    )
+    VALUES
+    (
+        #{step_id}
+      , #{prj_id}
+      , #{version_number}
+      , #{step_number}
+      , #{step_status}
+      , #{step_result_comment}
+      , #{step_result_file}
+      , #{step_result_url}
+    )
+    ON DUPLICATE KEY UPDATE
+        step_number         = #{step_number}
+      , step_status         = #{step_status}
+      , step_result_comment = #{step_result_comment}
+      , step_result_file    = #{step_result_file}
+      , step_result_url     = #{step_result_url}
+  </insert>
+
+  <update id="updatePrjVersion">
+    UPDATE project_version
+    SET updt_user_id = #{updt_user_id}
+    <if test="prj_name != undefined">
+        ,prj_name = #{prj_name}
+    </if>
+    <if test="prj_description != undefined">
+        ,prj_description = #{prj_description}
+    </if>
+    <if test="prj_lnk != undefined">
+        ,prj_lnk = #{prj_lnk}
+    </if>    
+    <if test="del_yn != undefined">
+        ,del_yn = #{del_yn}
+    </if>   
+    WHERE prj_id = #{prj_id}
+    AND version_number = #{version_number}
+  </update>
+
+  <select id="selectPrjSecManager">
+    SELECT *
+    FROM project_security_manager
+    WHERE prj_id = #{prj_id}
+    AND version_number = #{version_number}
+  </select>
+
+  <select id="selectPrjDevManager">
+    SELECT *
+    FROM project_develop_manager
+    WHERE prj_id = #{prj_id}
+    AND version_number = #{version_number}
+  </select>
+
+  <delete id="deletePrjSecManager">
+    DELETE from project_security_manager
+    WHERE prj_id = #{prj_id}
+    AND version_number = #{version_number}
+    AND sec_id = #{del_sec_user};
+  </delete>
+
+  <delete id="deletePrjDevManager">
+    DELETE from project_develop_manager
+    WHERE prj_id = #{prj_id}
+    AND version_number = #{version_number}
+    AND dev_id = #{del_dev_user};
+  </delete>
+
+  <delete id="deletePrjFile">
+    DELETE from project_file
+    WHERE file_id = #{del_file_id}
+  </delete>
+
+  <insert id="insertPrcStepInfoFile">
+    INSERT INTO process_step_info_file
+    (
+        prc_file_id
+      , prj_id
+      , version_number
+      , step_number
+      , file_path
+      , file_name
+    ) 
+    VALUES
+    (
+        #{prc_file_id}
+      , #{prj_id}
+      , #{version_number}
+      , #{step_number}
+      , #{file_path}
+      , #{file_name}
+    )
+  </insert>
+
+  <insert id="insertPrcStepInfo">
+    INSERT INTO process_step_info
+    (
+        prc_id
+      , prj_id
+      , version_number
+      , step_number
+      , step_lnk
+      , step_description
+    ) 
+    VALUES
+    (
+        #{prc_id}
+      , #{prj_id}
+      , #{version_number}
+      , #{step_number}
+      , #{step_lnk}
+      , #{step_description}
+    )
+  </insert>
+
+  <select id="selectPrjStep">
+    SELECT  step_id             
+          , prj_id             
+          , version_number     
+          , step_number
+    FROM  project_step
+    WHERE step_id = #{step_id}
+  </select>
+
+  <select id="selectPrjStepInfo">
+    SELECT  step_id             
+          , prj_id             
+          , version_number     
+          , step_number
+    FROM  project_step
+    WHERE prj_id = #{prj_id}
+    AND version_number = #{version_number}
+    AND step_number = #{step_number}
+  </select>
+
+  <update id="updatePrjStep">
+    UPDATE project_step
+    SET step_number = #{updt_step_number}
+    WHERE step_id = #{step_id}
+  </update>
+
+  <insert id="insertPrcStepInfoDefault">
+    INSERT INTO process_step_info
+    (
+        prc_id
+      , prj_id
+      , version_number
+      , step_number
+    )
+    VALUES
+    (
+        #{prc_id}
+      , #{prj_id}
+      , #{version_number}
+      , #{updt_step_number}
+    )
+  </insert>
+
+</mapper>

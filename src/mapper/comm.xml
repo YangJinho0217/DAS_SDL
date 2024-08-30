@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="comm">  
+
+    <select id="nextvalId">
+        SELECT nextval(#{id}) FROM DUAL;
+    </select>
+
+    <insert id="insertNoticeList">
+        INSERT INTO notice_list
+        (
+            noti_id
+          , notice_title
+          , notice_description
+          , rgst_user_id
+        )
+        VALUES
+        (
+            #{noti_id}
+          , #{notice_title}
+          , #{notice_description}
+          , #{rgst_user_id}
+        )
+    </insert>
+
+    <select id="selectNoticeListPaging">
+        SELECT a.noti_id
+             , a.notice_title
+             , a.rgst_user_id
+             , b.user_name
+             , a.rgst_dtm
+        FROM notice_list a, user_info b
+        WHERE a.rgst_user_id = b.user_id
+        ORDER BY a.rgst_dtm DESC
+    </select>
+
+    <select id="selectNoticeListCount">
+        SELECT a.noti_id
+             , a.notice_title
+             , a.rgst_user_id
+             , b.user_name
+             , a.rgst_dtm
+        FROM notice_list a, user_info b
+        WHERE a.rgst_user_id = b.user_id
+        <if test="notice_title != undefined">
+        AND a.notice_title LIKE CONCAT('%', #{notice_title}, '%')
+        </if>
+        <if test="user_name != undefined">
+        AND b.user_name LIKE CONCAT('%', #{user_name}, '%')
+        </if>
+        ORDER BY a.rgst_dtm DESC
+    </select>
+
+    <select id="selectNoticeListDetail">
+        SELECT a.noti_id
+             , a.notice_title
+             , a.notice_description
+             , a.rgst_user_id
+             , b.user_name
+             , a.rgst_dtm
+        FROM notice_list a, user_info b
+        WHERE a.noti_id = #{noti_id}
+    </select>
+</mapper>
