@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const mysql = require("../loaders/mysql");
-const crypto = require("crypto");
 const calc = require('../module/calc');
 
 
