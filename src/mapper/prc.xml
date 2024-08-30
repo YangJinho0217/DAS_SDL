@@ -10,6 +10,14 @@
     SELECT a.prj_id
          , a.version_number
          , a.step_number
+         , CASE WHEN a.step_number = 0 THEN '검토중'
+                WHEN a.step_number = 1 THEN '검토중'
+                WHEN a.step_number = 2 THEN '검토중'
+                WHEN a.step_number = 3 THEN '검토중'
+                WHEN a.step_number = 4 THEN '운영중'
+                WHEN a.step_Number = 5 THEN '미운영'
+           ELSE ''
+           END AS step_status
          , b.step_id
          , a.step_lnk
          , a.step_description
@@ -20,20 +28,32 @@
     WHERE a.version_number = b.version_number
     AND a.prj_id = #{prj_id}
     AND a.version_number = #{version_number}
-    AND a.step_number = #{step_number}
     AND a.prj_id = b.prj_id
+    <if test="step_number != undefined">
+    AND a.step_number = #{step_number}
+    </if>
   </select>
 
   <select id="selectPrcStepInfoFile">
     SELECT a.prj_id 
          , a.version_number
          , a.step_number
+         , CASE WHEN a.step_number = 0 THEN '검토중'
+                WHEN a.step_number = 1 THEN '검토중'
+                WHEN a.step_number = 2 THEN '검토중'
+                WHEN a.step_number = 3 THEN '검토중'
+                WHEN a.step_number = 4 THEN '운영중'
+                WHEN a.step_Number = 5 THEN '미운영'
+           ELSE ''
+           END AS step_status
          , a.file_path
          , a.file_name
     FROM process_step_info_file a
     WHERE a.prj_id = #{prj_id}
     AND a.version_number = #{version_number}
+    <if test="step_number != undefined">
     AND a.step_number = #{step_number}
+    </if>
   </select>
 
   <update id="updateListCheckFile">
@@ -100,7 +120,9 @@
     FROM process_comment a, user_info b
     WHERE a.prj_id = #{prj_id}
     AND   a.version_number = #{version_number}
-    AND   a.step_number = #{step_number}
+    <if test="step_number != undefined">
+    AND a.step_number = #{step_number}
+    </if>
     AND   a.rgst_user_id = b.user_id
     ORDER BY a.rgst_dtm ASC;
   </select>

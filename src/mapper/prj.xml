@@ -146,7 +146,14 @@
          , a.rgst_user_id
          , c.user_name
          , b.step_number
-         , b.step_status
+         , CASE WHEN b.step_number = 0 THEN '검토중'
+                WHEN b.step_number = 1 THEN '검토중'
+                WHEN b.step_number = 2 THEN '검토중'
+                WHEN b.step_number = 3 THEN '검토중'
+                WHEN b.step_number = 4 THEN '운영중'
+                WHEN b.step_Number = 5 THEN '미운영'
+           ELSE ''
+           END AS step_status
          , a.rgst_dtm
          , a.updt_dtm
     FROM project_version a, project_step b, user_info c
@@ -237,7 +244,14 @@
          , a.del_yn
          , c.user_name
          , b.step_number
-         , b.step_status
+         , CASE WHEN b.step_number = 0 THEN '검토중'
+                WHEN b.step_number = 1 THEN '검토중'
+                WHEN b.step_number = 2 THEN '검토중'
+                WHEN b.step_number = 3 THEN '검토중'
+                WHEN b.step_number = 4 THEN '운영중'
+                WHEN b.step_Number = 5 THEN '미운영'
+           ELSE ''
+           END AS step_status
          , b.rgst_dtm
          , b.updt_dtm
     FROM project_version a, project_step b, user_info c
@@ -258,7 +272,14 @@
          , c.user_name
          , a.prj_lnk
          , b.step_number
-         , b.step_status
+         , CASE WHEN b.step_number = 0 THEN '검토중'
+                WHEN b.step_number = 1 THEN '검토중'
+                WHEN b.step_number = 2 THEN '검토중'
+                WHEN b.step_number = 3 THEN '검토중'
+                WHEN b.step_number = 4 THEN '운영중'
+                WHEN b.step_Number = 5 THEN '미운영'
+           ELSE ''
+           END AS step_status
          , b.rgst_dtm
          , b.updt_dtm
     FROM project_version a, project_step b, user_info c

@@ -19,9 +19,10 @@ router.get('/prcInfo', async(req,res) => {
     const specificString = process.env.SERVER_URL;
     const fileList = [];
     const commentList = [];
-    
+
 
     if (Object.keys(prcInfoList).length !== 0) {
+
         if (prcInfoList.lstc_file_path != null) {
             if(db.host == process.env.DEV_DB_HOST) {
                 // '/file' 이전의 부분을 제거
@@ -32,6 +33,7 @@ router.get('/prcInfo', async(req,res) => {
             }
         }
     }
+
     
 
     if (param.step_number == 0) {
@@ -104,9 +106,8 @@ router.get('/prcInfo', async(req,res) => {
         });
 
         prcInfoList.commentList = combined;
-
-
     }
+
     return res.json({
         resultCode : 200,
         resultMsg : "프로세스 조회 성공",

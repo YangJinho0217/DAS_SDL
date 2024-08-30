@@ -207,7 +207,7 @@
                     },
                     "userStatus" : {
                       "type" : "string",
-                      "example" : "W"
+                      "example" : "검토중"
                     },
                     "userRole" : {
                       "type" : "string",
@@ -666,7 +666,7 @@
                       },
                       "step_status" : {
                         "type" : "string",
-                        "example" : "W"
+                        "example" : "검토중"
                       },
                       "rgst_dtm" : {
                         "type" : "string",
@@ -771,7 +771,7 @@
                     },
                     "step_status" : {
                       "type" : "string",
-                      "example" : "W"
+                      "example" : "검토중"
                     },
                     "rgst_dtm" : {
                       "type" : "string",
@@ -878,7 +878,7 @@
                       },
                       "step_status" : {
                         "type" : "string",
-                        "example" : "W"
+                        "example" : "검토중"
                       },
                       "rgst_dtm" : {
                         "type" : "string",
