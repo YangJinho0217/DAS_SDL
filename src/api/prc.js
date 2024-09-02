@@ -12,6 +12,9 @@ if (db.host == process.env.PROD_DB_HOST) {
     specificString = process.env.SERVER_URL
 }
 
+/* ========== ============= ========== */
+/* ========== 프로세스 스텝별 리스트 GET ========== */
+/* ========== ============= ========== */
 router.get('/prcInfo', verifyToken, async(req,res) => {
 
     var param = {
@@ -125,6 +128,9 @@ router.get('/prcInfo', verifyToken, async(req,res) => {
     })
 })
 
+/* ========== ============= ========== */
+/* ========== 프로세스 특정 버전 리스트 체크 파일 추가 POST ========== */
+/* ========== ============= ========== */
 router.post('/addLstc', verifyToken, upload.single('file'), async(req, res) => {
 
     var param = {
@@ -157,6 +163,9 @@ router.post('/addLstc', verifyToken, upload.single('file'), async(req, res) => {
     }
 })
 
+/* ========== ============= ========== */
+/* ========== 프로세스 코멘트 추가 POST ========== */
+/* ========== ============= ========== */
 router.post('/addCmt', verifyToken, upload.array('files'), async(req, res) => {
 
     var param = {
@@ -208,6 +217,9 @@ router.post('/addCmt', verifyToken, upload.array('files'), async(req, res) => {
     }
 })
 
+/* ========== ============= ========== */
+/* ========== 프로세스 코멘트 수정 PUT ========== */
+/* ========== ============= ========== */
 router.put('/updtCmt', verifyToken, upload.array('files'), async(req, res) => {
 
     var param = {
@@ -271,6 +283,9 @@ router.put('/updtCmt', verifyToken, upload.array('files'), async(req, res) => {
     
 })
 
+/* ========== ============= ========== */
+/* ========== 프로세스 코멘트 삭제 DELETE ========== */
+/* ========== ============= ========== */
 router.delete('/delCmt', verifyToken, async(req, res) => {
     
     var param = {
@@ -296,6 +311,9 @@ router.delete('/delCmt', verifyToken, async(req, res) => {
 
 })
 
+/* ========== ============= ========== */
+/* ========== 프로세스 최종정보 등록 PSOT ========== */
+/* ========== ============= ========== */
 router.post('/lstnRgst', verifyToken, upload.array('files'), async(req,res) => {
 
     var param = {

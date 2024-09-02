@@ -23,7 +23,7 @@
         )
     </insert>
 
-    <select id="selectNoticeListPaging">
+    <select id="selectNoticeList">
         SELECT a.noti_id
              , a.notice_title
              , a.rgst_user_id
@@ -31,23 +31,6 @@
              , a.rgst_dtm
         FROM notice_list a, user_info b
         WHERE a.rgst_user_id = b.user_id
-        ORDER BY a.rgst_dtm DESC
-    </select>
-
-    <select id="selectNoticeListCount">
-        SELECT a.noti_id
-             , a.notice_title
-             , a.rgst_user_id
-             , b.user_name
-             , a.rgst_dtm
-        FROM notice_list a, user_info b
-        WHERE a.rgst_user_id = b.user_id
-        <if test="notice_title != undefined">
-        AND a.notice_title LIKE CONCAT('%', #{notice_title}, '%')
-        </if>
-        <if test="user_name != undefined">
-        AND b.user_name LIKE CONCAT('%', #{user_name}, '%')
-        </if>
         ORDER BY a.rgst_dtm DESC
     </select>
 

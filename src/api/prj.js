@@ -473,24 +473,6 @@ router.put('/updtPrj', verifyToken, upload.array('files'), async(req, res) => {
         if (param.prj_sec_user != undefined) {
             const secUser = param.prj_sec_user.split(',');
         
-            // 기존 보안 담당자 조회
-            // const secUserList = await mysql.query('prj', 'selectPrjSecManager', param);
-            // const existingSecIds = secUserList.map(user => user.sec_id);
-            // // 중복되지 않는 값만 뽑아내기
-            // const uniqueSecUsers = secUser.filter(x => !existingSecIds.includes(Number(x)));
-        
-            // for (const currentSecId of uniqueSecUsers) {
-            //     // secUser가 현재 목록에 포함되어 있지 않을 때만 insert 수행
-            //     const data = {
-            //         prj_sec_id: await mysql.value('prj', 'nextvalId', { id: 'prj_sec_id' }),
-            //         prj_id: param.prj_id,
-            //         version_number: param.version_number,
-            //         sec_id: currentSecId
-            //     };
-            //     // INSERT 쿼리 실행
-            //     await mysql.proc('prj', 'insertPrjSecManager', data);
-            // }
-
             // project_security_manager 테이블 insert
             for (var i = 0; i < secUser.length; i ++) {
                 const data = {
@@ -506,24 +488,6 @@ router.put('/updtPrj', verifyToken, upload.array('files'), async(req, res) => {
 
         if (param.prj_dev_user != undefined) {
             const devUser = param.prj_dev_user.split(',');
-
-            // // 기존 개발 담당자 조회
-            // const devUserList = await mysql.query('prj', 'selectPrjDevManager', param);
-            // const existingSecIds = devUserList.map(user => user.dev_id);
-            // // 중복되지 않는 값만 뽑아내기
-            // const uniqueSecUsers = devUser.filter(x => !existingSecIds.includes(Number(x)));
-            // // project_develop_manager 테이블 insert
-            // for (const currentDevId of uniqueSecUsers) {
-            //     // secUser가 현재 목록에 포함되어 있지 않을 때만 insert 수행
-            //     const data = {
-            //         prj_dev_id: await mysql.value('prj', 'nextvalId', { id: 'prj_dev_id' }),
-            //         prj_id: param.prj_id,
-            //         version_number: param.version_number,
-            //         dev_id: currentDevId
-            //     };
-            //     // INSERT 쿼리 실행
-            //     await mysql.proc('prj', 'insertPrjDevManager', data);
-            // }
 
             // project_develop_manager 테이블 insert
             for (var i = 0; i < devUser.length; i++) {

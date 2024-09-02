@@ -33,16 +33,14 @@ router.post('/addNoti', verifyToken, async (req, res) => {
 
 })
 
+/* ========== ============= ========== */
+/* ========== 공지사항 리스트 GET ========== */
+/* ========== ============= ========== */
 router.get('/notiInfo', verifyToken, async(req, res) => {
-
-    var param = {
-        // notice_title : req.query.notice_title,
-        // user_name : req.query.user_name
-    }
 
     try {
 
-        const notiList = await mysql.query('comm', 'selectNoticeListPaging', param);
+        const notiList = await mysql.query('comm', 'selectNoticeList');
 
         return res.json({
             resultCode : 200,
@@ -58,6 +56,9 @@ router.get('/notiInfo', verifyToken, async(req, res) => {
     }
 })
 
+/* ========== ============= ========== */
+/* ========== 공지사항 상세 GET ========== */
+/* ========== ============= ========== */
 router.get('/detail', verifyToken, async(req, res) => {
 
     var param = {
