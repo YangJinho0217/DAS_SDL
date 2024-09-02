@@ -7,6 +7,7 @@ require('dotenv').config()
 //   database: process.env.PROD_DB_DATABASE,
 //   user: process.env.PROD_DB_USER,
 //   password: process.env.PROD_DB_PASSWORD,
+//   dateStrings: "date",
 // };
 
 // 로컬 local 개발기

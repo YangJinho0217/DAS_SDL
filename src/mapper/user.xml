@@ -37,7 +37,8 @@
   </select>
 
   <select id="selectUserInfo">
-    SELECT login_id                                     AS loginId
+    SELECT  user_id                                      AS userId
+          , login_id                                     AS loginId
           , isfirst                                      AS isFirst
           , user_name                                    AS userName
           , user_level                                   AS userLevel

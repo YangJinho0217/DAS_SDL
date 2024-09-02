@@ -8,6 +8,7 @@
 
   <select id="selectPrcStepInfo">
     SELECT a.prj_id
+         , c.prj_name
          , a.version_number
          , a.step_number
          , CASE WHEN a.step_number = 0 THEN '검토중'
@@ -21,17 +22,15 @@
          , b.step_id
          , a.step_lnk
          , a.step_description
-         , a.lstc_file_path
-         , a.file_name
          , a.rgst_dtm
-    FROM process_step_info a, project_step b
+    FROM process_step_info a, project_step b, project_version c
     WHERE a.version_number = b.version_number
     AND a.prj_id = #{prj_id}
     AND a.version_number = #{version_number}
     AND a.prj_id = b.prj_id
-    <if test="step_number != undefined">
+    AND a.prj_id = c.prj_id
+    AND a.version_number = c.version_number
     AND a.step_number = #{step_number}
-    </if>
   </select>
 
   <select id="selectPrcStepInfoFile">

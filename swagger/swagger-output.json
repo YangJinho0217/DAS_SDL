@@ -14,6 +14,14 @@
       "prj" : "prj"
     }
   ],
+  "securityDefinitions": {
+    "apiKeyAuth": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "token",
+      "description": "유저token"
+    }
+  },
   "paths": {
     "/user/sendEmailAuth": {
       "post": {
@@ -311,7 +319,16 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": [
+              {
+                "token": ""
+              }
+            ]
+          }
+        ]
       }
     },
     "/user/dvList": {
@@ -381,7 +398,16 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": [
+              {
+                "token": ""
+              }
+            ]
+          }
+        ]
       }
     },
     "/prj/ctPrj": {
@@ -486,7 +512,16 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": [
+              {
+                "token": ""
+              }
+            ]
+          }
+        ]
       }
     },
     "/prj/addPrjVer": {
@@ -599,7 +634,16 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": [
+              {
+                "token": ""
+              }
+            ]
+          }
+        ]
       }
     },
     "/prj/prjList": {
@@ -701,7 +745,16 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": [
+              {
+                "token": ""
+              }
+            ]
+          }
+        ]
       }
     },
     "/prj/detail": {
@@ -817,7 +870,16 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": [
+              {
+                "token": ""
+              }
+            ]
+          }
+        ]
       }
     },
     "/prj/prjHst": {
@@ -913,7 +975,16 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": [
+              {
+                "token": ""
+              }
+            ]
+          }
+        ]
       }
     },
     "/prj/updtPrj": {
@@ -1064,7 +1135,16 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": [
+              {
+                "token": ""
+              }
+            ]
+          }
+        ]
       }
     },
     "/prc/prcInfo": {
@@ -1120,7 +1200,16 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": [
+              {
+                "token": ""
+              }
+            ]
+          }
+        ]
       }
     },
     "/prc/addLstc": {
@@ -1176,7 +1265,16 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": [
+              {
+                "token": ""
+              }
+            ]
+          }
+        ]
       }
     },
     "/prj/agrStp": {
@@ -1222,7 +1320,16 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": [
+              {
+                "token": ""
+              }
+            ]
+          }
+        ]
       }
     },
     "/prc/addCmt": {
@@ -1304,7 +1411,16 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": [
+              {
+                "token": ""
+              }
+            ]
+          }
+        ]
       }
     },
     "/prc/updtCmt": {
@@ -1371,7 +1487,16 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": [
+              {
+                "token": ""
+              }
+            ]
+          }
+        ]
       }
     },
     "/prc/delCmt": {
@@ -1417,7 +1542,16 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": [
+              {
+                "token": ""
+              }
+            ]
+          }
+        ]
       }
     },
     "/prc/lstnRgst": {
@@ -1497,7 +1631,16 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": [
+              {
+                "token": ""
+              }
+            ]
+          }
+        ]
       }
     },
     "/comm/notiInfo": {
@@ -1557,7 +1700,16 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": [
+              {
+                "token": ""
+              }
+            ]
+          }
+        ]
       }
     },
     "/comm/addNoti": {
@@ -1613,7 +1765,16 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": [
+              {
+                "token": ""
+              }
+            ]
+          }
+        ]
       }
     },
     "/comm/detail": {
@@ -1682,7 +1843,16 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "apiKeyAuth": [
+              {
+                "token": ""
+              }
+            ]
+          }
+        ]
       }
     }
   }

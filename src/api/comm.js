@@ -1,14 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const mysql = require("../loaders/mysql");
-const crypto = require("crypto");
-const calc = require('../module/calc');
-
+const verifyToken = require('../loaders/token').verify
 
 /* ========== ============= ========== */
 /* ========== 공지사항 등록 POST ========== */
 /* ========== ============= ========== */
-router.post('/addNoti', async (req, res) => {
+router.post('/addNoti', verifyToken, async (req, res) => {
 
     var param = {
         notice_title : req.body.notice_title,
@@ -35,7 +33,7 @@ router.post('/addNoti', async (req, res) => {
 
 })
 
-router.get('/notiInfo', async(req, res) => {
+router.get('/notiInfo', verifyToken, async(req, res) => {
 
     var param = {
         // notice_title : req.query.notice_title,
@@ -60,7 +58,7 @@ router.get('/notiInfo', async(req, res) => {
     }
 })
 
-router.get('/detail', async(req, res) => {
+router.get('/detail', verifyToken, async(req, res) => {
 
     var param = {
         noti_id : req.query.noti_id

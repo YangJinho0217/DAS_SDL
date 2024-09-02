@@ -3,11 +3,19 @@ const router = express.Router();
 const mysql = require("../loaders/mysql");
 const upload = require("../loaders/multer");
 const db = require('../config/db');
+const verifyToken = require('../loaders/token').verify
+
+var specificString = '';
+if (db.host == process.env.PROD_DB_HOST) {
+    specificString = process.env.PROD_SERVER_URL
+} else if (db.host == process.env.DEV_DB_HOST) {
+    specificString = process.env.SERVER_URL
+}
 
 /* ========== ============= ========== */
 /* ========== 프로젝트 생성 POST ========== */
 /* ========== ============= ========== */
-router.post('/ctPrj', upload.array('files'), async (req, res) => {
+router.post('/ctPrj', verifyToken, upload.array('files'), async (req, res) => {
 
     var param = {
         prj_name : req.body.prj_name,
@@ -62,9 +70,9 @@ router.post('/ctPrj', upload.array('files'), async (req, res) => {
         for (var i = 0; i < param.step_file.length; i++) {
 
             const file_id = await mysql.value('prj', 'nextvalId', {id : 'file_id'});
-            const prc_file_id = await mysql.value('prj', 'nextvalId', {id : 'prc_file_id'});
+            // const prc_file_id = await mysql.value('prj', 'nextvalId', {id : 'prc_file_id'});
             const data = {
-                prc_file_id : prc_file_id,
+                // prc_file_id : prc_file_id,
                 file_id : file_id,
                 prj_id : param.prj_id,
                 step_number : param.step_number,
@@ -74,7 +82,7 @@ router.post('/ctPrj', upload.array('files'), async (req, res) => {
             };
 
             await mysql.proc('prj', 'insertPrjFile', data);
-            await mysql.proc('prj', 'insertPrcStepInfoFile', data);
+            // await mysql.proc('prj', 'insertPrcStepInfoFile', data);
         }
 
         // project 테이블에 insert
@@ -105,7 +113,7 @@ router.post('/ctPrj', upload.array('files'), async (req, res) => {
 /* ========== ============= ========== */
 /* ========== 프로젝트 버전 생성 POST ========== */
 /* ========== ============= ========== */
-router.post('/addPrjVer', upload.array('files'), async(req, res) => {
+router.post('/addPrjVer', verifyToken, upload.array('files'), async(req, res) => {
 
     var param = {
         prj_id : req.body.prj_id,
@@ -177,9 +185,9 @@ router.post('/addPrjVer', upload.array('files'), async(req, res) => {
         for (var i = 0; i < param.step_file.length; i++) {
 
             const file_id = await mysql.value('prj', 'nextvalId', {id : 'file_id'});
-            const prc_file_id = await mysql.value('prj', 'nextvalId', {id : 'prc_file_id'});
+            // const prc_file_id = await mysql.value('prj', 'nextvalId', {id : 'prc_file_id'});
             const data = {
-                prc_file_id : prc_file_id,
+                // prc_file_id : prc_file_id,
                 file_id : file_id,
                 prj_id : param.prj_id,
                 step_number : param.step_number,
@@ -189,7 +197,7 @@ router.post('/addPrjVer', upload.array('files'), async(req, res) => {
             };
 
             await mysql.proc('prj', 'insertPrjFile', data);
-            await mysql.proc('prj', 'insertPrcStepInfoFile', data);
+            // await mysql.proc('prj', 'insertPrcStepInfoFile', data);
         }
 
         // project_version 테이블에 insert
@@ -218,7 +226,8 @@ router.post('/addPrjVer', upload.array('files'), async(req, res) => {
 /* ========== ============= ========== */
 /* ========== 프로젝트 리스트 GET ========== */
 /* ========== ============= ========== */
-router.get('/prjList', async(req, res) => {
+router.get('/prjList',verifyToken, async(req, res) => {
+
 
     var param = {
         user_id : req.query.user_id
@@ -287,6 +296,7 @@ router.get('/prjList', async(req, res) => {
         }).filter(item => item !== null);
 
 
+        console.log(specificString);
         return res.json({
             resultCode : 200,
             resultMsg : '프로젝트 조회 완료',
@@ -307,7 +317,7 @@ router.get('/prjList', async(req, res) => {
 /* ========== ============= ========== */
 /* ========== 프로젝트 상세 조회 ========== */
 /* ========== ============= ========== */
-router.get('/detail', async(req, res) => {
+router.get('/detail', verifyToken, async(req, res) => {
     
     var param = {
         prj_id : req.query.prj_id,
@@ -328,12 +338,9 @@ router.get('/detail', async(req, res) => {
                 resultMsg : '버전이 없습니다.'
             })
         }
-
-        // 특정 문자열
-        const specificString = process.env.SERVER_URL;
         const modifiedPaths = myProjectListFile.map(item => {
 
-            if(db.host == process.env.DEV_DB_HOST) {
+            if(db.host == process.env.DEV_DB_HOST || db.host == process.env.PROD_DB_HOST) {
                 // '/file' 이전의 부분을 제거
                 const newPath = item.file_path.split('/develop')[1];
                 // 특정 문자열과 합치기
@@ -376,7 +383,7 @@ router.get('/detail', async(req, res) => {
 /* ========== ============= ========== */
 /* ========== 특정 프로젝트 히스토리 GET ========== */
 /* ========== ============= ========== */
-router.get('/prjHst', async(req,res) => {
+router.get('/prjHst', verifyToken, async(req,res) => {
     
     var param = {
         prj_id : req.query.prj_id
@@ -433,7 +440,7 @@ router.get('/prjHst', async(req,res) => {
 /* ========== ============= ========== */
 /* ========== 프로젝트 특정 버전 수정 PUT ========== */
 /* ========== ============= ========== */
-router.put('/updtPrj', upload.array('files'), async(req, res) => {
+router.put('/updtPrj', verifyToken, upload.array('files'), async(req, res) => {
 
     var param = {
         prj_id : req.body.prj_id,
@@ -588,116 +595,6 @@ router.put('/updtPrj', upload.array('files'), async(req, res) => {
         return res.json({
             resultCode : 500,
             resultMsg : error
-        })
-    }
-
-})
-
-router.get('/prcInfo', async(req,res) => {
-
-    var param = {
-        prj_id : req.query.prj_id,
-        version_number : req.query.version_number,
-        step_number : req.query.step_number
-    }
-
-    try {
-
-        const prcInfoList = await mysql.query('prj' ,'selectPrcStepInfo', param)
-        const prcInfoFileList = await mysql.query('prj', 'selectPrcStepInfoFile', param)
-        const fileList = [];
-        for (const i in prcInfoFileList) {
-            fileList.push(prcInfoFileList[i].file_path)
-        }
-        prcInfoList[0].file = fileList
-        
-        return res.json({
-            resultCode : 200,
-            resultMsg : "프로세스 단계 조회 성공",
-            data : prcInfoList
-        })
-    } catch(error) {
-        console.log(error)
-        return res.json({
-            resultCode : 500,
-            resultMsg : error
-        })
-    }
-})
-
-router.post('/addLstc', upload.single('file'), async(req, res) => {
-
-    var param = {
-        prj_id : req.body.prj_id,
-        version_number : req.body.version_number,
-        step_number : 0,
-        lstc_file_path : req.file.path
-    }
-
-    try {
-        const prcInfoList = await mysql.query('prj' ,'selectPrcStepInfo', param)
-        if (prcInfoList.length < 1) {
-            return res.json({
-                resultCode : 400,
-                resultMsg : '프로젝트 버전 또는 버전이 없습니다.'
-            })
-        }
-        await mysql.proc('prj','updateListCheckFile', param);
-        return res.json({
-            resultCode : 200,
-            resultMsg : '리스트 체크파일 등록 완료'
-        })
-    } catch(error) {
-        console.log(error)
-        return res.json({
-            resultCode : 500,
-            resultMsg : 'SERVER ERROR'
-        })
-    }
-   
-
-})
-
-router.post('/agrStp', async(req,res) => {
-    var param = {
-        step_id : req.body.step_id,
-    }
-
-    try {
-
-        const prjStepList = await mysql.query('prj', 'selectPrjStep', param);
-
-        if(prjStepList.length < 1) {
-            return res.json({
-                resultCode : 400,
-                resultMsg : '프로젝트의 스텝아이디가 존재하지 않습니다'
-            })
-        };
-
-        param.prj_id = prjStepList[0].prj_id;
-        param.version_number = prjStepList[0].version_number;
-        if (prjStepList[0].step_number >= 5) {
-            return res.json({
-                resultCode : 400,
-                resultMsg : '스텝 넘버가 잘못되었습니다' + ' ' + '현재 : ' + prjStepList[0].step_number
-            })
-        }
-        param.updt_step_number = prjStepList[0].step_number + 1;
-        param.prc_id = await mysql.value('prj', 'nextvalId', {id : 'prc_id'});
-
-        await mysql.proc('prj', 'updatePrjStep', param);
-        await mysql.proc('prj', 'insertPrcStepInfoDefault', param);
-
-        return res.json({
-            resultCode : 200,
-            resultMsg : '승인 완료'
-        })
-
-    } catch(error) {
-        console.log(error)
-        return res.json({
-            resultCode : 500,
-            resultMsg : 'SERVER ERROR'
         })
     }
 

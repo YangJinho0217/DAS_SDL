@@ -3,8 +3,16 @@ const router = express.Router();
 const mysql = require("../loaders/mysql");
 const upload = require("../loaders/multer");
 const db = require('../config/db');
+const verifyToken = require('../loaders/token').verify
 
-router.get('/prcInfo', async(req,res) => {
+var specificString = '';
+if (db.host == process.env.PROD_DB_HOST) {
+    specificString = process.env.PROD_SERVER_URL
+} else if (db.host == process.env.DEV_DB_HOST) {
+    specificString = process.env.SERVER_URL
+}
+
+router.get('/prcInfo', verifyToken, async(req,res) => {
 
     var param = {
         prj_id : req.query.prj_id,
@@ -16,7 +24,6 @@ router.get('/prcInfo', async(req,res) => {
     const prcInfoFileList = await mysql.query('prc', 'selectPrcStepInfoFile', param);
     const prcCommentList = await mysql.query('prc', 'selectPrcComment', param);
 
-    const specificString = process.env.SERVER_URL;
     const fileList = [];
     const commentList = [];
 
@@ -24,14 +31,18 @@ router.get('/prcInfo', async(req,res) => {
     if (Object.keys(prcInfoList).length !== 0) {
 
         if (prcInfoList.lstc_file_path != null) {
-            if(db.host == process.env.DEV_DB_HOST) {
+            if(db.host == process.env.DEV_DB_HOST || db.host == process.env.PROD_DB_HOST) {
                 // '/file' 이전의 부분을 제거
                 const newPath = prcInfoList.lstc_file_path.split('/develop')[1];
                 // 특정 문자열과 합치기
                 const data = specificString + newPath;
-                prcInfoList.lstc_file_path = data
+                // prcInfoList.lstc_file_path = data
             }
         }
+
+        /* 리스트 체크 파일 서버에 박아둠 그냥 하드코딩으로(변경될 일이 없음) */
+        prcInfoList.lstc_file_path = 'https://yagsill.com/file/default/20240829.09.36.44_das_sdl_storyboard_240813.pdf'
+        prcInfoList.lstc_file_name = '20240829.09.36.44_das_sdl_storyboard_240813.pdf'
     }
 
     
@@ -45,7 +56,7 @@ router.get('/prcInfo', async(req,res) => {
             }
 
             const modifiedPaths = fileList.map(item => {
-                if(db.host == process.env.DEV_DB_HOST) {
+                if(db.host == process.env.DEV_DB_HOST || db.host == process.env.PROD_DB_HOST) {
                     // '/file' 이전의 부분을 제거
                     const newPath = item.file_path.split('/develop')[1];
                     // 특정 문자열과 합치기
@@ -78,9 +89,8 @@ router.get('/prcInfo', async(req,res) => {
         const prcCommentFileList = await mysql.query('prc', 'selectPrcCommentFile', param)
 
         // 특정 문자열
-        const specificString = process.env.SERVER_URL;
         const modifiedPaths = prcCommentFileList.map(item => {
-            if(db.host == process.env.DEV_DB_HOST) {
+            if(db.host == process.env.DEV_DB_HOST || db.host == process.env.PROD_DB_HOST) {
                 // '/file' 이전의 부분을 제거
                 const newPath = item.file_path.split('/develop')[1];
                 // 특정 문자열과 합치기
@@ -115,7 +125,7 @@ router.get('/prcInfo', async(req,res) => {
     })
 })
 
-router.post('/addLstc', upload.single('file'), async(req, res) => {
+router.post('/addLstc', verifyToken, upload.single('file'), async(req, res) => {
 
     var param = {
         prj_id : req.body.prj_id,
@@ -147,7 +157,7 @@ router.post('/addLstc', upload.single('file'), async(req, res) => {
     }
 })
 
-router.post('/addCmt', upload.array('files'), async(req, res) => {
+router.post('/addCmt', verifyToken, upload.array('files'), async(req, res) => {
 
     var param = {
         prj_id : req.body.prj_id,
@@ -198,7 +208,7 @@ router.post('/addCmt', upload.array('files'), async(req, res) => {
     }
 })
 
-router.put('/updtCmt', upload.array('files'), async(req, res) => {
+router.put('/updtCmt', verifyToken, upload.array('files'), async(req, res) => {
 
     var param = {
         comm_id : req.body.comm_id,
@@ -261,7 +271,7 @@ router.put('/updtCmt', upload.array('files'), async(req, res) => {
     
 })
 
-router.delete('/delCmt', async(req, res) => {
+router.delete('/delCmt', verifyToken, async(req, res) => {
     
     var param = {
         comm_id : req.body.comm_id
@@ -286,7 +296,7 @@ router.delete('/delCmt', async(req, res) => {
 
 })
 
-router.post('/lstnRgst', upload.array('files'), async(req,res) => {
+router.post('/lstnRgst', verifyToken, upload.array('files'), async(req,res) => {
 
     var param = {
         prj_id : req.body.prj_id,

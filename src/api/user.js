@@ -2,6 +2,10 @@ const express = require("express");
 const router = express.Router();
 const mysql = require("../loaders/mysql");
 const calc = require('../module/calc');
+const jwt = require('jsonwebtoken');
+const verifyToken = require('../loaders/token').verify
+const token = require('../loaders/token')
+require('dotenv').config();
 
 
 /* ========== ============= ========== */
@@ -76,7 +80,8 @@ router.post('/signIn', async (req, res) => {
         return res.json({
             resultCode : 200,
             resultMsg : '로그인 성공',
-            data : user[0]
+            data : user[0],
+            token : token.create(user[0].userId)
         });
 
     } catch(error) {
@@ -319,7 +324,7 @@ router.post('/frgtEml' , async(req,res) => {
 /* ========== ============= ========== */
 /* ========== 유저 비밀번호 변경 POST ========== */
 /* ========== ============= ========== */
-router.put('/modify', async(req,res) => {
+router.put('/modify', verifyToken, async(req,res) => {
 
     var param = {
         login_id : req.body.login_id,
@@ -374,7 +379,7 @@ router.put('/modify', async(req,res) => {
 /* ========== ============= ========== */
 /* ========== 유저 리스트 GET ========== */
 /* ========== ============= ========== */
-router.get('/dvList', async(req,res) => {
+router.get('/dvList',verifyToken, async(req,res) => {
 
     var param = {
         user_level : req.query.user_level
