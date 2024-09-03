@@ -31,7 +31,7 @@
              , a.rgst_dtm
         FROM notice_list a, user_info b
         WHERE a.rgst_user_id = b.user_id
-        ORDER BY a.rgst_dtm DESC
+        ORDER BY a.noti_id DESC
     </select>
 
     <select id="selectNoticeListDetail">

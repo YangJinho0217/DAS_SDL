@@ -47,6 +47,7 @@
            END AS step_status
          , a.file_path
          , a.file_name
+         , a.prc_file_id
     FROM process_step_info_file a
     WHERE a.prj_id = #{prj_id}
     AND a.version_number = #{version_number}
@@ -123,7 +124,7 @@
     AND a.step_number = #{step_number}
     </if>
     AND   a.rgst_user_id = b.user_id
-    ORDER BY a.rgst_dtm ASC;
+    ORDER BY a.comm_id ASC;
   </select>
 
   <select id="selectPrcCommentFile">

@@ -1,19 +1,16 @@
-const express = require("express");
-const router = express.Router();
-const mysql = require("../loaders/mysql");
-const upload = require("../loaders/multer");
-const db = require('../config/db');
-const verifyToken = require('../loaders/token').verify
-const sql = require("mysql2/promise");
-const dbconfig = require("../config/db");
-const pool = sql.createPool(dbconfig);
+const express                       = require("express");
+const verifyToken                   = require('../loaders/token').verify;
+const router                        = express.Router();
+const mysql                         = require("../loaders/mysql");
+const upload                        = require("../loaders/multer");
+const db                            = require('../config/db');
+const sql                           = require("mysql2/promise");
+const dbconfig                      = require("../config/db");
+const calc                          = require('../module/calc');
+const pool                          = sql.createPool(dbconfig);
+const specificString                = calc.specificString();
 
-var specificString = '';
-if (db.host == process.env.PROD_DB_HOST) {
-    specificString = process.env.PROD_SERVER_URL
-} else if (db.host == process.env.DEV_DB_HOST) {
-    specificString = process.env.SERVER_URL
-}
+require('dotenv').config()
 
 /* ========== ============= ========== */
 /* ========== 프로젝트 생성 POST ========== */
@@ -38,6 +35,7 @@ router.post('/ctPrj', verifyToken, upload.array('files'), async (req, res) => {
     try {
 
         await con.beginTransaction();
+        await calc.logInfo('Interface', `${specificString}/das/prj/ctPrj`)
         param.prj_id = await mysql.value('prj', 'nextvalId', {id : 'prj_id'}, con);
         param.version_id = await mysql.value('prj', 'nextvalId', {id : 'version_id'}, con);
         param.step_id = await mysql.value('prj', 'nextvalId', {id : 'step_id'}, con);
@@ -75,9 +73,7 @@ router.post('/ctPrj', verifyToken, upload.array('files'), async (req, res) => {
         for (var i = 0; i < param.step_file.length; i++) {
 
             const file_id = await mysql.value('prj', 'nextvalId', {id : 'file_id'}, con);
-            // const prc_file_id = await mysql.value('prj', 'nextvalId', {id : 'prc_file_id'});
             const data = {
-                // prc_file_id : prc_file_id,
                 file_id : file_id,
                 prj_id : param.prj_id,
                 step_number : param.step_number,
@@ -87,7 +83,6 @@ router.post('/ctPrj', verifyToken, upload.array('files'), async (req, res) => {
             };
 
             await mysql.proc('prj', 'insertPrjFile', data, con);
-            // await mysql.proc('prj', 'insertPrcStepInfoFile', data);
         }
 
         // project 테이블에 insert
@@ -141,7 +136,7 @@ router.post('/addPrjVer', verifyToken, upload.array('files'), async(req, res) =>
 
     const con = await pool.getConnection();
     try {
-
+        await calc.logInfo('Interface', `${specificString}/das/prj/addPrjVer`)
         await con.beginTransaction();
         const prj = await mysql.query('prj', 'selectPrj', param, con);
         const version = await mysql.query('prj', 'selectPrjVersion', param, con);
@@ -251,6 +246,7 @@ router.get('/prjList',verifyToken, async(req, res) => {
     const con = await pool.getConnection();
     try {
         await con.beginTransaction();
+        await calc.logInfo('Interface', `${specificString}/das/prj/prjList`)
         const myProjectList = await mysql.query('prj', 'selectPrjAll', param, con);
         const myProjectListDevUser = await mysql.query('prj', 'selectPrjDevUser', param, con);
         const myProjectListSecUser = await mysql.query('prj', 'selectPrjSecUser', param, con);
@@ -344,8 +340,9 @@ router.get('/detail', verifyToken, async(req, res) => {
     
     const con = await pool.getConnection();
     try {
-
         await con.beginTransaction();
+
+        await calc.logInfo('Interface', `${specificString}/das/prj/detail`)
         const value = await mysql.select('prj', 'selectPrjVersionDetail', param, con);
         const myProjectListDevUser = await mysql.query('prj', 'selectPrjDevUser', param, con);
         const myProjectListSecUser = await mysql.query('prj', 'selectPrjSecUser', param, con);
@@ -417,6 +414,8 @@ router.get('/prjHst', verifyToken, async(req,res) => {
     try {
 
         await con.beginTransaction();
+
+        await calc.logInfo('Interface', `${specificString}/das/prj/prjHst`)
         const myProjectList = await mysql.query('prj', 'selectPrjHistory', param, con);
         const myProjectListDevUser = await mysql.query('prj', 'selectPrjDevUser', param, con);
         const myProjectListSecUser = await mysql.query('prj', 'selectPrjSecUser', param, con);
@@ -492,6 +491,7 @@ router.put('/updtPrj', verifyToken, upload.array('files'), async(req, res) => {
     try {
 
         await con.beginTransaction();
+        await calc.logInfo('Interface', `${specificString}/das/prj/updtPrj`)
         // 버전 변경 불가
         const projectList = await mysql.query('prj','selectPrjVersion', param, con);
         if (projectList.length < 1) {
@@ -608,6 +608,8 @@ router.post('/agrStp', verifyToken, async(req,res) => {
     try {
 
         await con.beginTransaction();
+
+        await calc.logInfo('Interface', `${specificString}/das/prj/agrStp`)
         const prjStepList = await mysql.query('prj', 'selectPrjStep', param, con);
 
         if(prjStepList.length < 1) {

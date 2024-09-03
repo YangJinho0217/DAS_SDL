@@ -1,20 +1,16 @@
-const express = require("express");
-const router = express.Router();
-const mysql = require("../loaders/mysql");
-const upload = require("../loaders/multer");
-const db = require('../config/db');
-const verifyToken = require('../loaders/token').verify
-const sql = require("mysql2/promise");
-const dbconfig = require("../config/db");
-const pool = sql.createPool(dbconfig);
+const express                       = require("express");
+const verifyToken                   = require('../loaders/token').verify;
+const router                        = express.Router();
+const mysql                         = require("../loaders/mysql");
+const upload                        = require("../loaders/multer");
+const calc                          = require('../module/calc');
+const db                            = require('../config/db');
+const sql                           = require("mysql2/promise");
+const dbconfig                      = require("../config/db");
+const pool                          = sql.createPool(dbconfig);
+const specificString                = calc.specificString();
 
-var specificString = '';
-if (db.host == process.env.PROD_DB_HOST) {
-    specificString = process.env.PROD_SERVER_URL
-} else if (db.host == process.env.DEV_DB_HOST) {
-    specificString = process.env.SERVER_URL
-}
-
+require('dotenv').config()
 /* ========== ============= ========== */
 /* ========== 프로세스 스텝별 리스트 GET ========== */
 /* ========== ============= ========== */
@@ -28,7 +24,11 @@ router.get('/prcInfo', verifyToken, async(req,res) => {
 
     const con = await pool.getConnection();
     try {
+
         await con.beginTransaction();
+
+        await calc.logInfo('Interface', `${specificString}/das/user/prcInfo`);
+
         const prcInfoList = await mysql.select('prc' ,'selectPrcStepInfo', param, con);
         const prcInfoFileList = await mysql.query('prc', 'selectPrcStepInfoFile', param, con);
         const prcCommentList = await mysql.query('prc', 'selectPrcComment', param, con);
@@ -69,9 +69,10 @@ router.get('/prcInfo', verifyToken, async(req,res) => {
                         // '/file' 이전의 부분을 제거
                         const newPath = item.file_path.split('/develop')[1];
                         // 특정 문자열과 합치기
-                        return {file_path: specificString + newPath, file_name : item.file_name };
+                        return {file_id : item.prc_file_id, file_path: specificString + newPath, file_name : item.file_name };
                     } else {
                         return {
+                            file_id : item.prc_file_id,
                             file_path : item.file_path,
                             file_name : item.file_name
                         }
@@ -160,7 +161,11 @@ router.post('/addLstc', verifyToken, upload.single('file'), async(req, res) => {
 
     const con = await pool.getConnection();
     try {
+
         await con.beginTransaction();
+
+        await calc.logInfo('Interface', `${specificString}/das/user/addLstc`);
+
         const prcInfoList = await mysql.query('prc' ,'selectPrcStepInfo', param, con)
         param.file_name = req.file.originalname
         if (prcInfoList.length < 1) {
@@ -203,7 +208,11 @@ router.post('/addCmt', verifyToken, upload.array('files'), async(req, res) => {
 
     const con = await pool.getConnection();
     try {
+
         await con.beginTransaction();
+
+        await calc.logInfo('Interface', `${specificString}/das/user/addCmt`);
+
         const prjlist = await mysql.query('prj', 'selectPrjVersion', param, con);
 
         if (prjlist.length < 1) {
@@ -261,8 +270,11 @@ router.put('/updtCmt', verifyToken, upload.array('files'), async(req, res) => {
 
     const con = await pool.getConnection();
     try {
+
         await con.beginTransaction();
-        // 코멘트 리스트 확인
+
+        await calc.logInfo('Interface', `${specificString}/das/user/updtCmt`);
+
         const commentList = await mysql.query('prc', 'selectPrcCommentList', param, con);
 
         if(commentList.length < 1) {
@@ -329,7 +341,11 @@ router.delete('/delCmt', verifyToken, async(req, res) => {
      
     const con = await pool.getConnection();
     try {
+
         await con.beginTransaction();
+
+        await calc.logInfo('Interface', `${specificString}/das/user/delCmt`);
+
         const commentList = await mysql.query('prc', 'selectPrcCommentList', param, con);
         
         if(commentList.length < 1) {
@@ -376,7 +392,11 @@ router.post('/lstnRgst', verifyToken, upload.array('files'), async(req,res) => {
 
     const con = await pool.getConnection();
     try {
+
         await con.beginTransaction();
+
+        await calc.logInfo('Interface', `${specificString}/das/user/lstnRgst`);
+
         const prjStepList = await mysql.query('prj', 'selectPrjStepInfo', param, con);
 
         if (prjStepList.length < 1) {

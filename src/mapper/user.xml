@@ -49,7 +49,7 @@
               WHEN user_level = 1 THEN '시스템관리자'
             ELSE ''
             END                                          AS userRole
-          , DATE_FORMAT(rgst_dtm, '%Y/%m/%d %H:%i:%s')   AS rgstDtm
+          , rgst_dtm                                     AS rgstDtm
     FROM user_info 
     WHERE login_id = #{login_id}
   </select>
@@ -136,7 +136,7 @@
                 WHEN user_level = 1 THEN '시스템관리자'
            ELSE ''
            END                                          AS userRole
-         , DATE_FORMAT(rgst_dtm, '%Y/%m/%d %H:%i:%s')   AS rgstDtm
+         , rgst_dtm                                     AS rgstDtm
     FROM user_info
     WHERE isfirst = 0
     <if test=" user_level != undefined">

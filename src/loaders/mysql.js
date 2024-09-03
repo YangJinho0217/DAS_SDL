@@ -1,5 +1,5 @@
-const mapper = require("./mapper");
-const calc = require('../module/calc');
+const mapper                        = require("./mapper");
+const calc                          = require('../module/calc');
 
 const query = {
     query: async (nameSpace, selectId, param, connection) => {

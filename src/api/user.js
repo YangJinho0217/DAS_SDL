@@ -1,13 +1,13 @@
-const express = require("express");
-const router = express.Router();
-const mysql = require("../loaders/mysql");
-const calc = require('../module/calc');
-const verifyToken = require('../loaders/token').verify
-const token = require('../loaders/token')
-require('dotenv').config();
-const sql = require("mysql2/promise");
-const dbconfig = require("../config/db");
-const pool = sql.createPool(dbconfig);
+const express                       = require("express");
+const verifyToken                   = require('../loaders/token').verify;
+const router                        = express.Router();
+const mysql                         = require("../loaders/mysql");
+const calc                          = require('../module/calc');
+const token                         = require('../loaders/token')
+const sql                           = require("mysql2/promise");
+const dbconfig                      = require("../config/db");
+const pool                          = sql.createPool(dbconfig);
+const specificString                = calc.specificString();
 
 /* ========== ============= ========== */
 /* ========== 유저 로그인 POST ========== */
@@ -23,6 +23,9 @@ router.post('/signIn', async (req, res) => {
     try {
 
         await con.beginTransaction();
+
+        await calc.logInfo('Interface', `${specificString}/das/user/signIn`);
+
         const user = await mysql.select("user", "selectUserInfo", param, con);
 
         /* 아이디 존재 체크 */
@@ -93,6 +96,9 @@ router.post('/sendEmailAuth', async (req, res) => {
     try {
 
         await con.beginTransaction();
+
+        await calc.logInfo('Interface', `${specificString}/das/user/sendEmailAuth`);
+
         const emailAuthCode = await calc.createEmailAuthCode();
         // /* 이메일 전송  */
         await calc.emailAuthSend(param.login_id, emailAuthCode).then(async (response) => {
@@ -140,6 +146,9 @@ router.post('/authEmailCode', async (req, res) => {
     try {
 
         await con.beginTransaction();
+
+        await calc.logInfo('Interface', `${specificString}/das/user/authEmailCode`);
+
         const user = await mysql.query('user', 'selectUserAuth', param, con);
 
         if(user.length < 1) {
@@ -192,8 +201,11 @@ router.post('/signUp', async (req, res) => {
 
     const con = await pool.getConnection();
     try {
-        /* 회원가입 이메일 중복확인 */
+
         await con.beginTransaction();
+
+        await calc.logInfo('Interface', `${specificString}/das/user/signUp`);
+
         var user = await mysql.select("user", "selectUserInfo", param, con);
 
         if (await calc.isEmptyObject(user)) {
@@ -251,6 +263,9 @@ router.put('/signOn' , async(req,res) => {
     try {
 
         await con.beginTransaction();
+
+        await calc.logInfo('Interface', `${specificString}/das/user/signOn`);
+
         const user = await mysql.query("user", "selectUserInfo", param, con);
 
         /* 아이디 존재 체크 */
@@ -295,6 +310,9 @@ router.post('/frgtEml' , async(req,res) => {
     try {
 
         await con.beginTransaction();
+
+        await calc.logInfo('Interface', `${specificString}/das/user/frgtEml`);
+
         const user = await mysql.select("user", "selectUserInfo", param, con);
         
         /* 아이디 존재 체크 */
@@ -352,6 +370,9 @@ router.put('/modify', verifyToken, async(req,res) => {
     try {
 
         await con.beginTransaction();
+
+        await calc.logInfo('Interface', `${specificString}/das/user/modify`);
+
         const user = await mysql.select("user", "selectUserInfo", param, con);
 
         /* 아이디 존재 체크 */
@@ -410,6 +431,9 @@ router.get('/dvList',verifyToken, async(req,res) => {
     try {
 
         await con.beginTransaction();
+
+        await calc.logInfo('Interface', `${specificString}/das/user/dvList`);
+
         const dvList = await mysql.query("user", "selectDvList", param, con)
 
         await con.commit();
@@ -440,7 +464,6 @@ router.post('/chPw', async(req,res) => {
         password : req.body.password
     }
 
-    const con = await pool.getConnection();
     try {
         const userPassword = await calc.decryptPassword(param.password);
         return res.json({

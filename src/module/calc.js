@@ -1,7 +1,9 @@
-const nodemailer = require('nodemailer');
-const cryptojs = require('crypto');
+const nodemailer                    = require('nodemailer');
+const db                            = require('../config/db');
+const logger                        = require('../config/logger');
+const cryptojs                      = require('crypto');
+
 require('dotenv').config();
-const logger = require('../config/logger');
 
 // 이메일 인증 Function
 exports.emailAuthSend = async function(to, option) {
@@ -168,6 +170,15 @@ exports.decryptPassword = async function(password) {
     let result = decipher.update(password, 'base64', 'utf8');
     result += decipher.final('utf8');
     return result;
+}
+
+/* DB 호스트 확인 */
+exports.specificString = function() {
+    if (db.host == process.env.PROD_DB_HOST) {
+        return process.env.PROD_SERVER_URL
+    } else if (db.host == process.env.DEV_DB_HOST) {
+        return process.env.SERVER_URL
+    }
 }
 
 exports.logInfo = async function(label, data) {

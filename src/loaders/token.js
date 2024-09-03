@@ -1,11 +1,10 @@
-const jwt = require('jsonwebtoken')
-const secretKey = require('../config/jwt').key
-const calc = require('../module/calc');
+const jwt                           = require('jsonwebtoken')
+const calc                          = require('../module/calc');
+const secretKey                     = require('../config/jwt').key;
 
 const token = {
     create : (user) => {
         var token = null
-
         try {
             token = jwt.sign({user}, secretKey, {
                 // expiresIn : '1m'
