@@ -1,6 +1,7 @@
 const nodemailer = require('nodemailer');
 const cryptojs = require('crypto');
 require('dotenv').config();
+const logger = require('../config/logger');
 
 // 이메일 인증 Function
 exports.emailAuthSend = async function(to, option) {
@@ -169,3 +170,14 @@ exports.decryptPassword = async function(password) {
     return result;
 }
 
+exports.logInfo = async function(label, data) {
+    logger.info(`===== ${label} : `, { message: JSON.stringify(data, null, 2) });
+}
+
+exports.logError = async function(label, data) {
+    logger.error(`===== ${label} : `, { message: JSON.stringify(data, null, 2) });
+}
+
+exports.isEmptyObject = async function(param) {
+    return Object.keys(param).length === 0 && param.constructor === Object;
+}

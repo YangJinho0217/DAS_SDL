@@ -1,4 +1,5 @@
 const mapper = require("./mapper");
+const calc = require('../module/calc');
 
 const query = {
     query: async (nameSpace, selectId, param, connection) => {
@@ -6,51 +7,46 @@ const query = {
         console.log('----------------------------------------');
         console.log(sql);
         console.log('----------------------------------------');
-        try {
-            const [rows, fields] = await connection.query(sql);
-            console.log(rows);
-            return rows;
-        } catch (error) {
-            throw error; // 에러를 던져서 호출한 곳에서 처리
-        }
+        const [rows, fields] = await connection.query(sql);
+        console.log(rows);
+        await calc.logInfo('selectId', selectId)
+        await calc.logInfo('Parameter', param)
+        await calc.logInfo('Data', rows);
+        return rows;
     },
     select: async (nameSpace, selectId, param, connection) => {
         const sql = mapper.getStatement(nameSpace, selectId, param, { language: 'sql', indent: '  ' });
         console.log('----------------------------------------');
         console.log(sql);
         console.log('----------------------------------------');
-        try {
-            const [rows, fields] = await connection.query(sql);
-            console.log(rows);
-            return typeof rows[0] == 'undefined' ? {} : rows[0];
-        } catch (error) {
-            throw error;
-        }
+        const [rows, fields] = await connection.query(sql);
+        console.log(rows[0]);
+        await calc.logInfo('selectId', selectId)
+        await calc.logInfo('Parameter', param)
+        await calc.logInfo('Data', rows);
+        return typeof rows[0] == 'undefined' ? {} : rows[0];
     },
     proc: async (nameSpace, selectId, param, connection) => {
         const sql = mapper.getStatement(nameSpace, selectId, param, { language: 'sql', indent: '  ' });
         console.log('----------------------------------------');
         console.log(sql);
         console.log('----------------------------------------');
-        try {
-            const result = await connection.query(sql);
-            return result[0].affectedRows;
-        } catch (error) {
-            throw error;
-        }
+        const result = await connection.query(sql);
+        await calc.logInfo('selectId', selectId)
+        await calc.logInfo('Parameter', param)
+        return result[0].affectedRows;
     },
     value: async (nameSpace, selectId, param, connection) => {
         const sql = mapper.getStatement(nameSpace, selectId, param, { language: 'sql', indent: '  ' });
         console.log('----------------------------------------');
         console.log(sql);
         console.log('----------------------------------------');
-        try {
-            const [rows, fields] = await connection.query(sql);
-            console.log(rows);
-            return rows[0] ? rows[0][fields[0].name] : null; // rows[0]가 undefined일 경우 null 반환
-        } catch (error) {
-            throw error; // 에러를 던져서 호출한 곳에서 처리
-        }
+        const [rows, fields] = await connection.query(sql);
+        console.log(rows);
+        await calc.logInfo('selectId', selectId)
+        await calc.logInfo('Parameter', param)
+        await calc.logInfo('Data', rows);
+        return rows[0] ? rows[0][fields[0].name] : null; // rows[0]가 undefined일 경우 null 반환
     }
 };
 

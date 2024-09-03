@@ -8,14 +8,12 @@ require('dotenv').config();
 const sql = require("mysql2/promise");
 const dbconfig = require("../config/db");
 const pool = sql.createPool(dbconfig);
-const logger = require('../config/logger');
 
 /* ========== ============= ========== */
 /* ========== 유저 로그인 POST ========== */
 /* ========== ============= ========== */
 router.post('/signIn', async (req, res) => {
 
-    
     var param = {
         login_id : req.body.login_id,
         login_pw : req.body.login_pw
@@ -25,23 +23,22 @@ router.post('/signIn', async (req, res) => {
     try {
 
         await con.beginTransaction();
-        const user = await mysql.query("user", "selectUserInfo", param, con);
+        const user = await mysql.select("user", "selectUserInfo", param, con);
 
         /* 아이디 존재 체크 */
-        if (user.length < 1) {
+        if (await calc.isEmptyObject(user)) {
             return res.json({
                 resultCode : 400,
                 resultMsg : '아이디가 존재하지 않습니다'
             })
         };
 
-        if (user[0].isFirst == 1) {
+        if (user.isFirst == 1) {
             await mysql.proc('user', 'updateUserInfoIsFirst', param, con);
         }
 
         /* 비밀번호 체크 */
-        const userPassword = await mysql.select("user", "selectUserPassword", param, con);
-        const userDBPassword = userPassword.loginPw;
+        const userDBPassword = user.loginPw;
         const decryptPassword = await calc.decryptPassword(userDBPassword);
 
         if (param.login_pw != decryptPassword) {
@@ -51,12 +48,23 @@ router.post('/signIn', async (req, res) => {
             })
         };
 
+        const data = {
+            userId : user.userId,
+            loginId : user.loginId,
+            isFirst : user.isFirst,
+            userName : user.userName,
+            userLevel : user.userLevel,
+            userStatus : user.userStatus,
+            userRole : user.userRole,
+            rgstDtm : user.rgstDtm
+        }
+
         await con.commit();
         return res.json({
             resultCode : 200,
             resultMsg : '로그인 성공',
-            data : user[0],
-            token : token.create(user[0].userId)
+            data : data,
+            token : token.create(user.userId)
         });
 
     } catch(error) {
@@ -186,9 +194,9 @@ router.post('/signUp', async (req, res) => {
     try {
         /* 회원가입 이메일 중복확인 */
         await con.beginTransaction();
-        var user = await mysql.query("user", "selectUserInfo", param, con);
+        var user = await mysql.select("user", "selectUserInfo", param, con);
 
-        if (user.length > 0) {
+        if (await calc.isEmptyObject(user)) {
             return res.json({
                 resultCode : 400,
                 resultMsg : '아이디가 존재합니다.'
@@ -203,7 +211,6 @@ router.post('/signUp', async (req, res) => {
         }
 
         param.user_id = await mysql.value('user', 'nextvalAppUserId', {id : 'user_id'}, con);
-
         const encryptNewPassword = await calc.encryptPassword(param.login_pw);
         param.login_pw = encryptNewPassword;
 
@@ -288,18 +295,17 @@ router.post('/frgtEml' , async(req,res) => {
     try {
 
         await con.beginTransaction();
-        const user = await mysql.query("user", "selectUserInfo", param, con);
+        const user = await mysql.select("user", "selectUserInfo", param, con);
         
         /* 아이디 존재 체크 */
-        if (user.length < 1) {
+        if (await calc.isEmptyObject(user)) {
             return res.json({
                 resultCode : 400,
                 resultMsg : '가입되어 있지 않은 이메일 입니다'
             })
         };
 
-        const userPassword = await mysql.select("user", "selectUserPassword", param, con);
-        const userDBPassword = userPassword.loginPw;
+        const userDBPassword = user.loginPw;
         const decryptPassword = await calc.decryptPassword(userDBPassword);
 
         /* 이메일 전송  */
@@ -346,10 +352,10 @@ router.put('/modify', verifyToken, async(req,res) => {
     try {
 
         await con.beginTransaction();
-        const user = await mysql.query("user", "selectUserInfo", param, con);
+        const user = await mysql.select("user", "selectUserInfo", param, con);
 
         /* 아이디 존재 체크 */
-        if (user.length < 1) {
+        if (await calc.isEmptyObject(user)) {
             return res.json({
                 resultCode : 400,
                 resultMsg : '아이디가 존재하지 않습니다'
@@ -357,8 +363,7 @@ router.put('/modify', verifyToken, async(req,res) => {
         };
 
         /* 비밀번호 체크 */
-        const userPassword = await mysql.select("user", "selectUserPassword", param, con);
-        const userDBPassword = userPassword.loginPw;
+        const userDBPassword = user.loginPw;
         const decryptPassword = await calc.decryptPassword(userDBPassword);
 
         if (param.current_password != decryptPassword) {
@@ -407,14 +412,6 @@ router.get('/dvList',verifyToken, async(req,res) => {
         await con.beginTransaction();
         const dvList = await mysql.query("user", "selectDvList", param, con)
 
-        // 성공 로그 기록
-        logger.info({
-            message:`CALL API ======== /dvList `,
-            message: `================ Parameter : ${JSON.stringify(param, null, 2)}`,
-            message: `================ hedaers : ${JSON.stringify(req.headers, null, 2)}`,
-            message: `================ data    : ${JSON.stringify(dvList, null, 2)}`
-        });
-
         await con.commit();
         return res.json({
             resultCode : 200,
@@ -422,12 +419,7 @@ router.get('/dvList',verifyToken, async(req,res) => {
             data : dvList
         })
     } catch(error) {
-        logger.error({
-            message: `API /dvList 호출 중 에러 발생: ${error.message}`,
-            label: 'API /dvList',
-            headers: JSON.stringify(req.headers), // 에러 발생 시에도 헤더 정보 기록
-            queryParams: JSON.stringify(req.query) // 쿼리 파라미터 기록
-        });
+        await calc.logError('/dvList', error.message)
         await con.rollback();
         return res.json({
             resultCode : 500,

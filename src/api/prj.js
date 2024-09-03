@@ -598,7 +598,56 @@ router.put('/updtPrj', verifyToken, upload.array('files'), async(req, res) => {
     } finally {
         await con.release();
     }
-
 })
+
+router.post('/agrStp', verifyToken, async(req,res) => {
+    var param = {
+        step_id : req.body.step_id,
+    }
+    const con = await pool.getConnection();
+    try {
+
+        await con.beginTransaction();
+        const prjStepList = await mysql.query('prj', 'selectPrjStep', param, con);
+
+        if(prjStepList.length < 1) {
+            return res.json({
+                resultCode : 400,
+                resultMsg : '프로젝트의 스텝아이디가 존재하지 않습니다'
+            })
+        };
+
+        param.prj_id = prjStepList[0].prj_id;
+        param.version_number = prjStepList[0].version_number;
+        if (prjStepList[0].step_number >= 5) {
+            return res.json({
+                resultCode : 400,
+                resultMsg : '스텝 넘버가 잘못되었습니다' + ' ' + '현재 : ' + prjStepList[0].step_number
+            })
+        }
+        param.updt_step_number = prjStepList[0].step_number + 1;
+        param.prc_id = await mysql.value('prj', 'nextvalId', {id : 'prc_id'}, con);
+
+        await mysql.proc('prj', 'updatePrjStep', param, con);
+        await mysql.proc('prj', 'insertPrcStepInfoDefault', param, con);
+
+        await con.commit();
+        return res.json({
+            resultCode : 200,
+            resultMsg : '승인 완료'
+        })
+
+    } catch(error) {
+        console.log(error)
+        await con.rollback();
+        return res.json({
+            resultCode : 500,
+            resultMsg : 'SERVER ERROR'
+        })
+    } finally {
+        await con.release();
+    }
+})
+
 
 module.exports = router;

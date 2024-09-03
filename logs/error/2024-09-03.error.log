@@ -1,0 +1,24 @@
+2024-09-03 12:00:14 [API CALL LOG] error: API /dvList 호출 중 에러 발생: JOSN is not defined
+2024-09-03 12:00:27 [API CALL LOG] error: API /dvList 호출 중 에러 발생: JOSN is not defined
+2024-09-03 12:01:20 [API CALL LOG] error: API /dvList 호출 중 에러 발생: JOSN is not defined
+2024-09-03 12:03:24 [API CALL LOG] error: API /dvList 호출 중 에러 발생: logger.logData is not a function
+2024-09-03 12:26:13 [API CALL LOG] error: ===== token verify :  {
+  "name": "JsonWebTokenError",
+  "message": "jwt must be provided"
+}
+2024-09-03 13:35:01 [API CALL LOG] error: ===== token verify :  {
+  "name": "JsonWebTokenError",
+  "message": "jwt must be provided"
+}
+2024-09-03 13:35:21 [API CALL LOG] error: ===== token verify :  {
+  "name": "JsonWebTokenError",
+  "message": "jwt must be provided"
+}
+2024-09-03 14:05:06 [API CALL LOG] error: ===== token verify :  {
+  "name": "JsonWebTokenError",
+  "message": "jwt must be provided"
+}
+2024-09-03 14:18:57 [API CALL LOG] error: ===== token verify :  {
+  "name": "JsonWebTokenError",
+  "message": "jwt must be provided"
+}

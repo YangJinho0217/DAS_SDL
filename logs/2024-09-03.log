@@ -1,16 +1,13 @@
-2024-09-03 10:40:46 [Winston 연습 어플리케이션] info: [object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object]
-2024-09-03 10:41:12 [Winston 연습 어플리케이션] info: [object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object]
-2024-09-03 10:41:14 [Winston 연습 어플리케이션] info: [object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object]
-2024-09-03 10:41:21 [Winston 연습 어플리케이션] info: [object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object]
-2024-09-03 10:41:22 [Winston 연습 어플리케이션] info: [object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object]
-2024-09-03 10:41:42 [Winston 연습 어플리케이션] info: [object Object]
-2024-09-03 10:45:11 [API /dvList] info: API /dvList 호출 성공: 사용자 레벨=undefined
-2024-09-03 10:45:32 [API /dvList] info: API /dvList 호출 성공: 사용자 레벨=1
-2024-09-03 10:46:11 [API /dvList] info: [object Object]
-2024-09-03 10:47:15 [API /dvList] info: [
+2024-09-03 14:13:05 [API CALL LOG] info: ===== selectId :  "selectUserInfo"
+2024-09-03 14:13:05 [API CALL LOG] info: ===== Parameter :  {
+  "login_id": "altm56@gmail.com",
+  "login_pw": "@tjsghk0217"
+}
+2024-09-03 14:13:05 [API CALL LOG] info: ===== Data :  [
   {
     "userId": 1,
     "loginId": "altm56@gmail.com",
+    "loginPw": "RSfzVdjW8Gj6lWk3jbCy9g==",
     "isFirst": 0,
     "userName": "양진호",
     "userLevel": 1,
@@ -19,7 +16,365 @@
     "rgstDtm": "2024/08/26 20:28:23"
   }
 ]
-2024-09-03 10:47:25 [API /dvList] info: [
+2024-09-03 14:13:05 [API CALL LOG] info: ===== token :  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoxLCJpYXQiOjE3MjUzNDAzODV9.tjEgnK7ljIe8QE1wUwHYGlr-GwetFM0Q2-sgMrjHukg"
+2024-09-03 14:13:11 [API CALL LOG] info: ===== selectId :  "selectUserInfo"
+2024-09-03 14:13:11 [API CALL LOG] info: ===== Parameter :  {
+  "login_id": "altm56@gmail.com",
+  "login_pw": "@tjsghk02127"
+}
+2024-09-03 14:13:11 [API CALL LOG] info: ===== Data :  [
+  {
+    "userId": 1,
+    "loginId": "altm56@gmail.com",
+    "loginPw": "RSfzVdjW8Gj6lWk3jbCy9g==",
+    "isFirst": 0,
+    "userName": "양진호",
+    "userLevel": 1,
+    "userStatus": "A",
+    "userRole": "시스템관리자",
+    "rgstDtm": "2024/08/26 20:28:23"
+  }
+]
+2024-09-03 14:14:34 [API CALL LOG] info: ===== selectId :  "selectUserAuth"
+2024-09-03 14:14:34 [API CALL LOG] info: ===== Parameter :  {
+  "login_id": "qwer1234qwer@gmail.com",
+  "auth_code": "ozos0s"
+}
+2024-09-03 14:14:34 [API CALL LOG] info: ===== Data :  [
+  {
+    "loginId": "qwer1234qwer@gmail.com",
+    "authCode": "ozos0s"
+  }
+]
+2024-09-03 14:15:20 [API CALL LOG] info: ===== selectId :  "selectUserInfo"
+2024-09-03 14:15:20 [API CALL LOG] info: ===== Parameter :  {
+  "login_id": "qwer1234qwer@gmail.com",
+  "login_pw": "qwerqwer",
+  "user_name": "홍길동",
+  "user_level": 3,
+  "isfirst": 1,
+  "user_status": "A"
+}
+2024-09-03 14:15:20 [API CALL LOG] info: ===== Data :  []
+2024-09-03 14:15:20 [API CALL LOG] info: ===== selectId :  "nextvalAppUserId"
+2024-09-03 14:15:20 [API CALL LOG] info: ===== Parameter :  {
+  "id": "user_id"
+}
+2024-09-03 14:15:20 [API CALL LOG] info: ===== Data :  [
+  {
+    "user_id": 60
+  }
+]
+2024-09-03 14:16:11 [API CALL LOG] info: ===== selectId :  "selectUserInfo"
+2024-09-03 14:16:11 [API CALL LOG] info: ===== Parameter :  {
+  "login_id": "qwer1234qwer@gmail.com",
+  "login_pw": "qwerqwer",
+  "user_name": "홍길동",
+  "user_level": 3,
+  "isfirst": 1,
+  "user_status": "A"
+}
+2024-09-03 14:16:11 [API CALL LOG] info: ===== Data :  []
+2024-09-03 14:16:11 [API CALL LOG] info: ===== selectId :  "nextvalAppUserId"
+2024-09-03 14:16:11 [API CALL LOG] info: ===== Parameter :  {
+  "id": "user_id"
+}
+2024-09-03 14:16:11 [API CALL LOG] info: ===== Data :  [
+  {
+    "user_id": 61
+  }
+]
+2024-09-03 14:16:11 [API CALL LOG] info: ===== selectId :  "insertUserInfo"
+2024-09-03 14:16:11 [API CALL LOG] info: ===== Parameter :  {
+  "login_id": "qwer1234qwer@gmail.com",
+  "login_pw": "CC24kC0B3H7D6mFqewvKHg==",
+  "user_name": "홍길동",
+  "user_level": 3,
+  "isfirst": 1,
+  "user_status": "A",
+  "user_id": 61
+}
+2024-09-03 14:16:39 [API CALL LOG] info: ===== selectId :  "selectUserInfo"
+2024-09-03 14:16:39 [API CALL LOG] info: ===== Parameter :  {
+  "login_id": "qwer1234qwer@gmail.com"
+}
+2024-09-03 14:16:39 [API CALL LOG] info: ===== Data :  [
+  {
+    "userId": 61,
+    "loginId": "qwer1234qwer@gmail.com",
+    "loginPw": "CC24kC0B3H7D6mFqewvKHg==",
+    "isFirst": 1,
+    "userName": "홍길동",
+    "userLevel": 3,
+    "userStatus": "A",
+    "userRole": "개발담당자",
+    "rgstDtm": "2024/09/03 14:16:11"
+  }
+]
+2024-09-03 14:16:39 [API CALL LOG] info: ===== selectId :  "selectUserPassword"
+2024-09-03 14:16:39 [API CALL LOG] info: ===== Parameter :  {
+  "login_id": "qwer1234qwer@gmail.com"
+}
+2024-09-03 14:16:39 [API CALL LOG] info: ===== Data :  [
+  {
+    "loginId": "qwer1234qwer@gmail.com",
+    "loginPw": "CC24kC0B3H7D6mFqewvKHg=="
+  }
+]
+2024-09-03 14:17:52 [API CALL LOG] info: ===== selectId :  "selectUserInfo"
+2024-09-03 14:17:52 [API CALL LOG] info: ===== Parameter :  {
+  "login_id": "qwer1234qwer@gmail.com"
+}
+2024-09-03 14:17:52 [API CALL LOG] info: ===== Data :  [
+  {
+    "userId": 61,
+    "loginId": "qwer1234qwer@gmail.com",
+    "loginPw": "CC24kC0B3H7D6mFqewvKHg==",
+    "isFirst": 1,
+    "userName": "홍길동",
+    "userLevel": 3,
+    "userStatus": "A",
+    "userRole": "개발담당자",
+    "rgstDtm": "2024/09/03 14:16:11"
+  }
+]
+2024-09-03 14:18:57 [API CALL LOG] error: ===== token verify :  {
+  "name": "JsonWebTokenError",
+  "message": "jwt must be provided"
+}
+2024-09-03 14:19:16 [API CALL LOG] info: ===== selectId :  "selectUserInfo"
+2024-09-03 14:19:16 [API CALL LOG] info: ===== Parameter :  {
+  "login_id": "qwer1234qwer@gmail.com",
+  "login_pw": "qwerqwer"
+}
+2024-09-03 14:19:16 [API CALL LOG] info: ===== Data :  [
+  {
+    "userId": 61,
+    "loginId": "qwer1234qwer@gmail.com",
+    "loginPw": "CC24kC0B3H7D6mFqewvKHg==",
+    "isFirst": 1,
+    "userName": "홍길동",
+    "userLevel": 3,
+    "userStatus": "A",
+    "userRole": "개발담당자",
+    "rgstDtm": "2024/09/03 14:16:11"
+  }
+]
+2024-09-03 14:19:16 [API CALL LOG] info: ===== selectId :  "updateUserInfoIsFirst"
+2024-09-03 14:19:16 [API CALL LOG] info: ===== Parameter :  {
+  "login_id": "qwer1234qwer@gmail.com",
+  "login_pw": "qwerqwer"
+}
+2024-09-03 14:19:16 [API CALL LOG] info: ===== token :  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjo2MSwiaWF0IjoxNzI1MzQwNzU2fQ.jA4q5WPsgU7xNyzs7mG0FuJci-v4XHMvIuAAxz7ZeZo"
+2024-09-03 14:19:25 [API CALL LOG] info: ===== selectId :  "selectUserInfo"
+2024-09-03 14:19:25 [API CALL LOG] info: ===== Parameter :  {
+  "login_id": "qwer1234q3wer@gmail.com",
+  "login_pw": "qwerqwer"
+}
+2024-09-03 14:19:25 [API CALL LOG] info: ===== Data :  []
+2024-09-03 14:19:46 [API CALL LOG] info: ===== selectId :  "selectUserInfo"
+2024-09-03 14:19:46 [API CALL LOG] info: ===== Parameter :  {
+  "login_id": "qwer1234q3wer@gmail.com",
+  "login_pw": "qwerqwer"
+}
+2024-09-03 14:19:46 [API CALL LOG] info: ===== Data :  []
+2024-09-03 14:19:58 [API CALL LOG] info: ===== selectId :  "selectUserInfo"
+2024-09-03 14:19:58 [API CALL LOG] info: ===== Parameter :  {
+  "login_id": "qwer1234q3wer@gmail.com",
+  "login_pw": "qwerqwer"
+}
+2024-09-03 14:19:58 [API CALL LOG] info: ===== Data :  []
+2024-09-03 14:20:03 [API CALL LOG] info: ===== selectId :  "selectUserInfo"
+2024-09-03 14:20:03 [API CALL LOG] info: ===== Parameter :  {
+  "login_id": "qwer1234q3wer@gmail.com",
+  "login_pw": "qwerqwer"
+}
+2024-09-03 14:20:03 [API CALL LOG] info: ===== Data :  []
+2024-09-03 14:20:10 [API CALL LOG] info: ===== selectId :  "selectUserInfo"
+2024-09-03 14:20:10 [API CALL LOG] info: ===== Parameter :  {
+  "login_id": "qwer1234q3wer@gmail.com",
+  "login_pw": "qwerqwer"
+}
+2024-09-03 14:20:10 [API CALL LOG] info: ===== Data :  []
+2024-09-03 14:20:16 [API CALL LOG] info: ===== selectId :  "selectUserInfo"
+2024-09-03 14:20:16 [API CALL LOG] info: ===== Parameter :  {
+  "login_id": "qwer1234q3wer@gmail.com",
+  "login_pw": "qwerqwer"
+}
+2024-09-03 14:20:16 [API CALL LOG] info: ===== Data :  []
+2024-09-03 14:20:27 [API CALL LOG] info: ===== selectId :  "selectUserInfo"
+2024-09-03 14:20:27 [API CALL LOG] info: ===== Parameter :  {
+  "login_id": "qwer1234q3wer@gmail.com",
+  "login_pw": "qwerqwer"
+}
+2024-09-03 14:20:27 [API CALL LOG] info: ===== Data :  []
+2024-09-03 14:21:10 [API CALL LOG] info: ===== selectId :  "selectUserInfo"
+2024-09-03 14:21:10 [API CALL LOG] info: ===== Parameter :  {
+  "login_id": "qwer1234q3wer@gmail.com",
+  "login_pw": "qwerqwer"
+}
+2024-09-03 14:21:10 [API CALL LOG] info: ===== Data :  []
+2024-09-03 14:21:18 [API CALL LOG] info: ===== selectId :  "selectUserInfo"
+2024-09-03 14:21:18 [API CALL LOG] info: ===== Parameter :  {
+  "login_id": "qwer1234q3wer@gmail.com",
+  "login_pw": "qwerqwer"
+}
+2024-09-03 14:21:18 [API CALL LOG] info: ===== Data :  []
+2024-09-03 14:21:28 [API CALL LOG] info: ===== selectId :  "selectUserInfo"
+2024-09-03 14:21:28 [API CALL LOG] info: ===== Parameter :  {
+  "login_id": "qwer1234q3wer@gmail.com",
+  "login_pw": "qwerqwer"
+}
+2024-09-03 14:21:28 [API CALL LOG] info: ===== Data :  []
+2024-09-03 14:21:37 [API CALL LOG] info: ===== selectId :  "selectUserInfo"
+2024-09-03 14:21:37 [API CALL LOG] info: ===== Parameter :  {
+  "login_id": "qwer1234q3wer@gmail.com",
+  "login_pw": "qwerqwer"
+}
+2024-09-03 14:21:37 [API CALL LOG] info: ===== Data :  []
+2024-09-03 14:21:44 [API CALL LOG] info: ===== selectId :  "selectUserInfo"
+2024-09-03 14:21:44 [API CALL LOG] info: ===== Parameter :  {
+  "login_id": "qwer1234q3wer@gmail.com",
+  "login_pw": "qwerqwer"
+}
+2024-09-03 14:21:44 [API CALL LOG] info: ===== Data :  []
+2024-09-03 14:24:23 [API CALL LOG] info: ===== selectId :  "selectUserInfo"
+2024-09-03 14:24:23 [API CALL LOG] info: ===== Parameter :  {
+  "login_id": "qwer1234q3wer@gmail.com",
+  "login_pw": "qwerqwer"
+}
+2024-09-03 14:24:23 [API CALL LOG] info: ===== Data :  []
+2024-09-03 14:24:32 [API CALL LOG] info: ===== selectId :  "selectUserInfo"
+2024-09-03 14:24:32 [API CALL LOG] info: ===== Parameter :  {
+  "login_id": "qwer1234q3wer@gmail.com",
+  "login_pw": "qwerqwer"
+}
+2024-09-03 14:24:32 [API CALL LOG] info: ===== Data :  []
+2024-09-03 14:24:37 [API CALL LOG] info: ===== selectId :  "selectUserInfo"
+2024-09-03 14:24:37 [API CALL LOG] info: ===== Parameter :  {
+  "login_id": "qwer1234q3wer@gmail.com",
+  "login_pw": "qwerqwer"
+}
+2024-09-03 14:24:37 [API CALL LOG] info: ===== Data :  []
+2024-09-03 14:24:58 [API CALL LOG] info: ===== selectId :  "selectUserInfo"
+2024-09-03 14:24:58 [API CALL LOG] info: ===== Parameter :  {
+  "login_id": "qwer1234q3wer@gmail.com",
+  "login_pw": "qwerqwer"
+}
+2024-09-03 14:24:58 [API CALL LOG] info: ===== Data :  []
+2024-09-03 14:25:07 [API CALL LOG] info: ===== selectId :  "selectUserInfo"
+2024-09-03 14:25:07 [API CALL LOG] info: ===== Parameter :  {
+  "login_id": "qwer1234q3wer@gmail.com",
+  "login_pw": "qwerqwer"
+}
+2024-09-03 14:25:07 [API CALL LOG] info: ===== Data :  []
+2024-09-03 14:26:28 [API CALL LOG] info: ===== selectId :  "selectUserInfo"
+2024-09-03 14:26:28 [API CALL LOG] info: ===== Parameter :  {
+  "login_id": "qwer1234qwer@gmail.com",
+  "isfirst": 0,
+  "current_password": "qwerqwer",
+  "new_password": "qwer123"
+}
+2024-09-03 14:26:28 [API CALL LOG] info: ===== Data :  [
+  {
+    "userId": 61,
+    "loginId": "qwer1234qwer@gmail.com",
+    "loginPw": "CC24kC0B3H7D6mFqewvKHg==",
+    "isFirst": 0,
+    "userName": "홍길동",
+    "userLevel": 3,
+    "userStatus": "A",
+    "userRole": "개발담당자",
+    "rgstDtm": "2024/09/03 14:16:11"
+  }
+]
+2024-09-03 14:26:28 [API CALL LOG] info: ===== selectId :  "updateModify"
+2024-09-03 14:26:28 [API CALL LOG] info: ===== Parameter :  {
+  "login_id": "qwer1234qwer@gmail.com",
+  "isfirst": 0,
+  "current_password": "qwerqwer",
+  "new_password": "XfLbNR6wOtd/t9J6HNYxaw=="
+}
+2024-09-03 14:26:31 [API CALL LOG] info: ===== selectId :  "selectUserInfo"
+2024-09-03 14:26:31 [API CALL LOG] info: ===== Parameter :  {
+  "login_id": "qwer1234qwer@gmail.com",
+  "isfirst": 0,
+  "current_password": "qwerqwer",
+  "new_password": "qwer123"
+}
+2024-09-03 14:26:31 [API CALL LOG] info: ===== Data :  [
+  {
+    "userId": 61,
+    "loginId": "qwer1234qwer@gmail.com",
+    "loginPw": "XfLbNR6wOtd/t9J6HNYxaw==",
+    "isFirst": 0,
+    "userName": "홍길동",
+    "userLevel": 3,
+    "userStatus": "A",
+    "userRole": "개발담당자",
+    "rgstDtm": "2024/09/03 14:16:11"
+  }
+]
+2024-09-03 14:26:38 [API CALL LOG] info: ===== selectId :  "selectUserInfo"
+2024-09-03 14:26:38 [API CALL LOG] info: ===== Parameter :  {
+  "login_id": "qwer1234qwer@gmail.com",
+  "isfirst": 0,
+  "current_password": "qwer123r",
+  "new_password": "qwerqwer"
+}
+2024-09-03 14:26:38 [API CALL LOG] info: ===== Data :  [
+  {
+    "userId": 61,
+    "loginId": "qwer1234qwer@gmail.com",
+    "loginPw": "XfLbNR6wOtd/t9J6HNYxaw==",
+    "isFirst": 0,
+    "userName": "홍길동",
+    "userLevel": 3,
+    "userStatus": "A",
+    "userRole": "개발담당자",
+    "rgstDtm": "2024/09/03 14:16:11"
+  }
+]
+2024-09-03 14:26:43 [API CALL LOG] info: ===== selectId :  "selectUserInfo"
+2024-09-03 14:26:43 [API CALL LOG] info: ===== Parameter :  {
+  "login_id": "qwer1234qwer@gmail.com",
+  "isfirst": 0,
+  "current_password": "qwer123",
+  "new_password": "qwerqwer"
+}
+2024-09-03 14:26:43 [API CALL LOG] info: ===== Data :  [
+  {
+    "userId": 61,
+    "loginId": "qwer1234qwer@gmail.com",
+    "loginPw": "XfLbNR6wOtd/t9J6HNYxaw==",
+    "isFirst": 0,
+    "userName": "홍길동",
+    "userLevel": 3,
+    "userStatus": "A",
+    "userRole": "개발담당자",
+    "rgstDtm": "2024/09/03 14:16:11"
+  }
+]
+2024-09-03 14:26:43 [API CALL LOG] info: ===== selectId :  "updateModify"
+2024-09-03 14:26:43 [API CALL LOG] info: ===== Parameter :  {
+  "login_id": "qwer1234qwer@gmail.com",
+  "isfirst": 0,
+  "current_password": "qwer123",
+  "new_password": "CC24kC0B3H7D6mFqewvKHg=="
+}
+2024-09-03 14:27:24 [API CALL LOG] info: ===== selectId :  "selectDvList"
+2024-09-03 14:27:24 [API CALL LOG] info: ===== Parameter :  {}
+2024-09-03 14:27:24 [API CALL LOG] info: ===== Data :  [
+  {
+    "userId": 61,
+    "loginId": "qwer1234qwer@gmail.com",
+    "isFirst": 0,
+    "userName": "홍길동",
+    "userLevel": 3,
+    "userStatus": "A",
+    "userRole": "개발담당자",
+    "rgstDtm": "2024/09/03 14:16:11"
+  },
   {
     "userId": 59,
     "loginId": "test04@gmail.com",
@@ -151,139 +506,1139 @@
     "rgstDtm": "2024/08/19 15:54:00"
   }
 ]
-2024-09-03 10:48:21 [API /dvList] info: API /dvList 호출 성공: 사용자 레벨=undefined
-2024-09-03 10:48:42 [API /dvList] info: API /dvList 호출 성공: 사용자 레벨=3
-2024-09-03 10:50:02 [API /dvList] info: API /dvList 호출 성공: 사용자 레벨=undefined
-2024-09-03 10:59:22 [API /dvList] info: API /dvList ===== Parameter : [object Object]
-2024-09-03 11:12:42 [undefined] info: ================ data    : [
+2024-09-03 14:27:46 [API CALL LOG] info: ===== selectId :  "selectPrjAll"
+2024-09-03 14:27:46 [API CALL LOG] info: ===== Parameter :  {}
+2024-09-03 14:27:46 [API CALL LOG] info: ===== Data :  [
   {
-    "userId": 59,
-    "loginId": "test04@gmail.com",
-    "isFirst": 0,
-    "userName": "홍길동",
-    "userLevel": 3,
-    "userStatus": "A",
-    "userRole": "개발담당자",
-    "rgstDtm": "2024/09/02 15:57:07"
+    "prj_id": 25,
+    "prj_name": "dwdwdwd",
+    "prj_description": "hduwhduahduwah",
+    "prj_lnk": "1",
+    "version_number": "v0.0.7",
+    "rgst_user_id": 1,
+    "user_name": "양진호",
+    "step_number": 0,
+    "step_status": "검토중",
+    "rgst_dtm": "2024-09-03 11:30:46",
+    "updt_dtm": null
   },
   {
-    "userId": 58,
-    "loginId": "gymhub500@gmail.com",
-    "isFirst": 0,
-    "userName": "한스리스리",
-    "userLevel": 3,
-    "userStatus": "A",
-    "userRole": "개발담당자",
-    "rgstDtm": "2024/09/01 16:37:33"
+    "prj_id": 28,
+    "prj_name": "안녕",
+    "prj_description": "난프로젝트난프로젝트난프로젝트난프로젝트난프로젝트난프로젝트난프로젝트난프로젝트난프로젝트난프로젝트난프로젝트난프로젝트",
+    "prj_lnk": "https://yagsill.com/das-sdl-swagger/#/prj/post_prj_ctPrj",
+    "version_number": "v2.0.4",
+    "rgst_user_id": 13,
+    "user_name": "스리스리",
+    "step_number": 1,
+    "step_status": "검토중",
+    "rgst_dtm": "2024-09-03 10:47:07",
+    "updt_dtm": "2024-09-03 11:27:36"
   },
   {
-    "userId": 54,
-    "loginId": "",
-    "isFirst": 0,
-    "userName": "",
-    "userLevel": 3,
-    "userStatus": "A",
-    "userRole": "개발담당자",
-    "rgstDtm": "2024/08/28 12:03:48"
+    "prj_id": 27,
+    "prj_name": "테스트임닏",
+    "prj_description": "디스크립션",
+    "prj_lnk": "www.naver.com",
+    "version_number": "v0.0.1",
+    "rgst_user_id": 52,
+    "user_name": "최지완",
+    "step_number": 0,
+    "step_status": "검토중",
+    "rgst_dtm": "2024-09-02 14:12:19",
+    "updt_dtm": null
   },
   {
-    "userId": 53,
-    "loginId": "wlsgh132@naver.com",
-    "isFirst": 0,
-    "userName": "진호",
-    "userLevel": 2,
-    "userStatus": "A",
-    "userRole": "보안담당자",
-    "rgstDtm": "2024/08/27 22:07:07"
+    "prj_id": 26,
+    "prj_name": "aaaaaa",
+    "prj_description": "ddwadwdadsdasd",
+    "prj_lnk": "ㅋㅋ",
+    "version_number": "v0.0.1",
+    "rgst_user_id": 1,
+    "user_name": "양진호",
+    "step_number": 0,
+    "step_status": "검토중",
+    "rgst_dtm": "2024-09-02 11:13:03",
+    "updt_dtm": null
   },
   {
-    "userId": 52,
-    "loginId": "jiwan.choi@dasvers.com",
-    "isFirst": 0,
-    "userName": "최지완",
-    "userLevel": 3,
-    "userStatus": "A",
-    "userRole": "개발담당자",
-    "rgstDtm": "2024/08/27 15:12:54"
+    "prj_id": 25,
+    "prj_name": "[프로젝트] DAS SDL 프로젝트 2024_09_03",
+    "prj_description": "난프로젝트난프로젝트난프로젝트난프로젝트난프로젝트난프로젝트난프로젝트난프로젝트난프로젝트난프로젝트난프로젝트난프로젝트난프로젝트난프로젝트난프로젝트난프로젝트난프로젝트난프로젝트난프로젝트난프로젝트난프로젝트난프로젝트난프로젝트난프로젝트난프로젝트난프로젝트난프로젝트난프로젝트난프로젝트난프로젝트난프로젝트난프로젝트난프로젝트난프로젝트난프로젝트난프로젝트",
+    "prj_lnk": "www.naver.com",
+    "version_number": "v0.0.6",
+    "rgst_user_id": 52,
+    "user_name": "최지완",
+    "step_number": 5,
+    "step_status": "미운영",
+    "rgst_dtm": "2024-08-30 16:01:16",
+    "updt_dtm": "2024-09-03 11:27:36"
   },
   {
-    "userId": 51,
-    "loginId": "asd@gmail.com",
-    "isFirst": 0,
-    "userName": "스리술",
-    "userLevel": 3,
-    "userStatus": "A",
-    "userRole": "개발담당자",
-    "rgstDtm": "2024/08/27 15:11:23"
+    "prj_id": 24,
+    "prj_name": "테스트입니다",
+    "prj_description": "디스크립션",
+    "prj_lnk": "www.naver.com",
+    "version_number": "v0.0.6",
+    "rgst_user_id": 52,
+    "user_name": "최지완",
+    "step_number": 0,
+    "step_status": "검토중",
+    "rgst_dtm": "2024-08-30 16:01:06",
+    "updt_dtm": null
   },
   {
-    "userId": 1,
-    "loginId": "altm56@gmail.com",
-    "isFirst": 0,
-    "userName": "양진호",
-    "userLevel": 1,
-    "userStatus": "A",
-    "userRole": "시스템관리자",
-    "rgstDtm": "2024/08/26 20:28:23"
+    "prj_id": 23,
+    "prj_name": "테스트입니다",
+    "prj_description": "디스크립션",
+    "prj_lnk": "www.naver.com",
+    "version_number": "v0.0.5",
+    "rgst_user_id": 52,
+    "user_name": "최지완",
+    "step_number": 0,
+    "step_status": "검토중",
+    "rgst_dtm": "2024-08-30 15:31:09",
+    "updt_dtm": null
   },
   {
-    "userId": 13,
-    "loginId": "seulhyi@dasvers.com",
-    "isFirst": 0,
-    "userName": "스리스리",
-    "userLevel": 3,
-    "userStatus": "W",
-    "userRole": "개발담당자",
-    "rgstDtm": "2024/08/20 11:08:11"
+    "prj_id": 22,
+    "prj_name": "test",
+    "prj_description": "qweqwe",
+    "prj_lnk": "www.naver.com",
+    "version_number": "v0.0.1",
+    "rgst_user_id": 52,
+    "user_name": "최지완",
+    "step_number": 0,
+    "step_status": "검토중",
+    "rgst_dtm": "2024-08-30 14:51:55",
+    "updt_dtm": null
   },
   {
-    "userId": 12,
-    "loginId": "yagsill@dasvers.com",
-    "isFirst": 0,
-    "userName": "양진호",
-    "userLevel": 3,
-    "userStatus": "A",
-    "userRole": "개발담당자",
-    "rgstDtm": "2024/08/20 10:25:36"
+    "prj_id": 21,
+    "prj_name": "test",
+    "prj_description": "qweqwe",
+    "prj_lnk": "www.naver.com",
+    "version_number": "v0.0.1",
+    "rgst_user_id": 52,
+    "user_name": "최지완",
+    "step_number": 0,
+    "step_status": "검토중",
+    "rgst_dtm": "2024-08-30 14:51:32",
+    "updt_dtm": null
   },
   {
-    "userId": 10,
-    "loginId": "3021062@gmail.com",
-    "isFirst": 0,
-    "userName": "한슬희",
-    "userLevel": 3,
-    "userStatus": "W",
-    "userRole": "개발담당자",
-    "rgstDtm": "2024/08/20 09:59:03"
+    "prj_id": 20,
+    "prj_name": "버전삭제테스트",
+    "prj_description": "삭제테스트",
+    "prj_lnk": "1",
+    "version_number": "v0.0.2",
+    "rgst_user_id": 1,
+    "user_name": "양진호",
+    "step_number": 0,
+    "step_status": "검토중",
+    "rgst_dtm": "2024-08-30 10:53:12",
+    "updt_dtm": null
   },
   {
-    "userId": 9,
-    "loginId": "aaaasdf@gmail.com",
-    "isFirst": 0,
-    "userName": "스리스리스리",
-    "userLevel": 3,
-    "userStatus": "W",
-    "userRole": "개발담당자",
-    "rgstDtm": "2024/08/20 09:57:07"
+    "prj_id": 19,
+    "prj_name": "찐막 변경테스트",
+    "prj_description": "!___ㅇ0ㅇ___!",
+    "prj_lnk": "https://yagsill.com",
+    "version_number": "v0.0.1",
+    "rgst_user_id": 1,
+    "user_name": "양진호",
+    "step_number": 0,
+    "step_status": "검토중",
+    "rgst_dtm": "2024-08-29 21:24:15",
+    "updt_dtm": "2024-08-29 21:28:43"
   },
   {
-    "userId": 8,
-    "loginId": "asdf@gmail.com",
-    "isFirst": 0,
-    "userName": "메로롱",
-    "userLevel": 2,
-    "userStatus": "W",
-    "userRole": "보안담당자",
-    "rgstDtm": "2024/08/20 09:56:02"
+    "prj_id": 18,
+    "prj_name": "최지완프로젝트테스트",
+    "prj_description": "최지완프로젝트테스트디스크립션",
+    "prj_lnk": "1",
+    "version_number": "v0.0.1",
+    "rgst_user_id": 1,
+    "user_name": "양진호",
+    "step_number": 0,
+    "step_status": "검토중",
+    "rgst_dtm": "2024-08-29 18:13:43",
+    "updt_dtm": null
   },
   {
-    "userId": 2,
-    "loginId": "jiwan001@gmail.com",
-    "isFirst": 0,
-    "userName": "홍길동",
-    "userLevel": 3,
-    "userStatus": "W",
-    "userRole": "개발담당자",
-    "rgstDtm": "2024/08/19 15:54:00"
+    "prj_id": 17,
+    "prj_name": "test1",
+    "prj_description": "decription_Test",
+    "prj_lnk": "www.naver.com",
+    "version_number": "v1.0.3",
+    "rgst_user_id": 52,
+    "user_name": "최지완",
+    "step_number": 0,
+    "step_status": "검토중",
+    "rgst_dtm": "2024-08-29 17:33:24",
+    "updt_dtm": "2024-09-02 11:49:34"
+  },
+  {
+    "prj_id": 17,
+    "prj_name": "test",
+    "prj_description": "decription_Test",
+    "prj_lnk": "www.naver.com",
+    "version_number": "v1.0.2",
+    "rgst_user_id": 52,
+    "user_name": "최지완",
+    "step_number": 0,
+    "step_status": "검토중",
+    "rgst_dtm": "2024-08-29 17:33:22",
+    "updt_dtm": null
+  },
+  {
+    "prj_id": 17,
+    "prj_name": "test",
+    "prj_description": "decription_Test",
+    "prj_lnk": "www.naver.com",
+    "version_number": "v1.0.1",
+    "rgst_user_id": 52,
+    "user_name": "최지완",
+    "step_number": 0,
+    "step_status": "검토중",
+    "rgst_dtm": "2024-08-29 17:33:20",
+    "updt_dtm": null
+  },
+  {
+    "prj_id": 17,
+    "prj_name": "test",
+    "prj_description": "decription_Test",
+    "prj_lnk": "www.naver.com",
+    "version_number": "v1.0.0",
+    "rgst_user_id": 52,
+    "user_name": "최지완",
+    "step_number": 0,
+    "step_status": "검토중",
+    "rgst_dtm": "2024-08-29 17:33:17",
+    "updt_dtm": null
+  },
+  {
+    "prj_id": 17,
+    "prj_name": "test",
+    "prj_description": "decription_Test",
+    "prj_lnk": "www.naver.com",
+    "version_number": "v0.0.9",
+    "rgst_user_id": 52,
+    "user_name": "최지완",
+    "step_number": 0,
+    "step_status": "검토중",
+    "rgst_dtm": "2024-08-29 17:33:12",
+    "updt_dtm": null
+  },
+  {
+    "prj_id": 17,
+    "prj_name": "test",
+    "prj_description": "decription_Test",
+    "prj_lnk": "www.naver.com",
+    "version_number": "v0.0.8",
+    "rgst_user_id": 52,
+    "user_name": "최지완",
+    "step_number": 0,
+    "step_status": "검토중",
+    "rgst_dtm": "2024-08-29 17:33:10",
+    "updt_dtm": null
+  },
+  {
+    "prj_id": 17,
+    "prj_name": "test",
+    "prj_description": "decription_Test",
+    "prj_lnk": "www.naver.com",
+    "version_number": "v0.0.7",
+    "rgst_user_id": 52,
+    "user_name": "최지완",
+    "step_number": 0,
+    "step_status": "검토중",
+    "rgst_dtm": "2024-08-29 17:33:07",
+    "updt_dtm": null
+  },
+  {
+    "prj_id": 17,
+    "prj_name": "test",
+    "prj_description": "decription_Test",
+    "prj_lnk": "www.naver.com",
+    "version_number": "v0.0.6",
+    "rgst_user_id": 52,
+    "user_name": "최지완",
+    "step_number": 0,
+    "step_status": "검토중",
+    "rgst_dtm": "2024-08-29 17:33:05",
+    "updt_dtm": null
+  },
+  {
+    "prj_id": 17,
+    "prj_name": "test",
+    "prj_description": "decription_Test",
+    "prj_lnk": "www.naver.com",
+    "version_number": "v0.0.5",
+    "rgst_user_id": 52,
+    "user_name": "최지완",
+    "step_number": 0,
+    "step_status": "검토중",
+    "rgst_dtm": "2024-08-29 17:33:03",
+    "updt_dtm": null
+  },
+  {
+    "prj_id": 17,
+    "prj_name": "test",
+    "prj_description": "decription_Test",
+    "prj_lnk": "www.naver.com",
+    "version_number": "v0.0.4",
+    "rgst_user_id": 52,
+    "user_name": "최지완",
+    "step_number": 0,
+    "step_status": "검토중",
+    "rgst_dtm": "2024-08-29 17:32:59",
+    "updt_dtm": null
+  },
+  {
+    "prj_id": 17,
+    "prj_name": "test",
+    "prj_description": "decription_Test",
+    "prj_lnk": "www.naver.com",
+    "version_number": "v0.0.3",
+    "rgst_user_id": 52,
+    "user_name": "최지완",
+    "step_number": 0,
+    "step_status": "검토중",
+    "rgst_dtm": "2024-08-29 17:32:56",
+    "updt_dtm": null
+  },
+  {
+    "prj_id": 17,
+    "prj_name": "test",
+    "prj_description": "dwqdwqdwq",
+    "prj_lnk": "www.naver.com",
+    "version_number": "v0.0.2",
+    "rgst_user_id": 52,
+    "user_name": "최지완",
+    "step_number": 0,
+    "step_status": "검토중",
+    "rgst_dtm": "2024-08-29 17:32:02",
+    "updt_dtm": null
+  },
+  {
+    "prj_id": 17,
+    "prj_name": "최지완프로젝트테스트",
+    "prj_description": "최지완프로젝트테스트디스크립션",
+    "prj_lnk": "1",
+    "version_number": "v0.0.1",
+    "rgst_user_id": 1,
+    "user_name": "양진호",
+    "step_number": 0,
+    "step_status": "검토중",
+    "rgst_dtm": "2024-08-29 17:24:58",
+    "updt_dtm": null
+  },
+  {
+    "prj_id": 16,
+    "prj_name": "스리",
+    "prj_description": "스리다",
+    "prj_lnk": "https://yagsill.com/das-sdl-swagger/#/prj",
+    "version_number": "123",
+    "rgst_user_id": 13,
+    "user_name": "스리스리",
+    "step_number": 4,
+    "step_status": "운영중",
+    "rgst_dtm": "2024-08-29 11:26:37",
+    "updt_dtm": null
+  },
+  {
+    "prj_id": 15,
+    "prj_name": "스리",
+    "prj_description": "스리다",
+    "prj_lnk": "https://yagsill.com/das-sdl-swagger/#/prj",
+    "version_number": "1",
+    "rgst_user_id": 13,
+    "user_name": "스리스리",
+    "step_number": 3,
+    "step_status": "검토중",
+    "rgst_dtm": "2024-08-29 11:26:04",
+    "updt_dtm": null
+  },
+  {
+    "prj_id": 14,
+    "prj_name": "나도집에가고싶어요",
+    "prj_description": "이제곧갈듯?",
+    "prj_lnk": "https://naver.com",
+    "version_number": "v2.0.0",
+    "rgst_user_id": 1,
+    "user_name": "양진호",
+    "step_number": 2,
+    "step_status": "검토중",
+    "rgst_dtm": "2024-08-28 19:00:10",
+    "updt_dtm": null
+  },
+  {
+    "prj_id": 13,
+    "prj_name": "집에가고싶다프로젝트_2",
+    "prj_description": "집에언제쯤갈 수 있을까_2",
+    "prj_lnk": "https://google.com",
+    "version_number": "v1.0.0",
+    "rgst_user_id": 53,
+    "user_name": "진호",
+    "step_number": 1,
+    "step_status": "검토중",
+    "rgst_dtm": "2024-08-28 18:44:48",
+    "updt_dtm": null
+  },
+  {
+    "prj_id": 12,
+    "prj_name": "집에가고싶다프로젝트",
+    "prj_description": "집에언제쯤갈 수 있을까",
+    "prj_lnk": "https://google.com",
+    "version_number": "v1.0.0",
+    "rgst_user_id": 53,
+    "user_name": "진호",
+    "step_number": 0,
+    "step_status": "검토중",
+    "rgst_dtm": "2024-08-28 18:42:54",
+    "updt_dtm": null
+  },
+  {
+    "prj_id": 10,
+    "prj_name": "프로젝트테스트중입니다",
+    "prj_description": "테스트하기위해서 생성합니다",
+    "prj_lnk": "https://naver.com",
+    "version_number": "v0.0.1",
+    "rgst_user_id": 53,
+    "user_name": "진호",
+    "step_number": 0,
+    "step_status": "검토중",
+    "rgst_dtm": "2024-08-28 17:51:20",
+    "updt_dtm": null
+  },
+  {
+    "prj_id": 9,
+    "prj_name": "프로젝트테스트중입니다",
+    "prj_description": "테스트하기위해서 생성합니다",
+    "prj_lnk": "https://naver.com",
+    "version_number": "v0.0.1",
+    "rgst_user_id": 53,
+    "user_name": "진호",
+    "step_number": 0,
+    "step_status": "검토중",
+    "rgst_dtm": "2024-08-28 17:44:27",
+    "updt_dtm": null
+  },
+  {
+    "prj_id": 1,
+    "prj_name": "변경테스트",
+    "prj_description": "변경하는거 테스트함",
+    "prj_lnk": "",
+    "version_number": "v0.0.2",
+    "rgst_user_id": 1,
+    "user_name": "양진호",
+    "step_number": 0,
+    "step_status": "검토중",
+    "rgst_dtm": "2024-08-26 20:40:21",
+    "updt_dtm": "2024-08-28 17:35:41"
+  },
+  {
+    "prj_id": 8,
+    "prj_name": "프로젝트입니다07",
+    "prj_description": "일곱번째 테스트 프로젝트입니다",
+    "prj_lnk": "https://google.com",
+    "version_number": "v0.0.1",
+    "rgst_user_id": 1,
+    "user_name": "양진호",
+    "step_number": 0,
+    "step_status": "검토중",
+    "rgst_dtm": "2024-08-26 20:15:19",
+    "updt_dtm": "2024-08-28 17:33:24"
+  },
+  {
+    "prj_id": 7,
+    "prj_name": "프로젝트입니다06",
+    "prj_description": "여섯번째 테스트 프로젝트입니다",
+    "prj_lnk": "",
+    "version_number": "v0.0.1",
+    "rgst_user_id": 1,
+    "user_name": "양진호",
+    "step_number": 0,
+    "step_status": "검토중",
+    "rgst_dtm": "2024-08-26 20:10:38",
+    "updt_dtm": "2024-08-28 17:33:24"
+  },
+  {
+    "prj_id": 6,
+    "prj_name": "프로젝트입니다06",
+    "prj_description": "여섯번째 테스트 프로젝트입니다",
+    "prj_lnk": "",
+    "version_number": "v0.0.1",
+    "rgst_user_id": 1,
+    "user_name": "양진호",
+    "step_number": 0,
+    "step_status": "검토중",
+    "rgst_dtm": "2024-08-26 20:06:09",
+    "updt_dtm": "2024-08-28 17:33:24"
+  },
+  {
+    "prj_id": 5,
+    "prj_name": "프로젝트입니다05",
+    "prj_description": "다섯번째 프로젝트 버전업!!!",
+    "prj_lnk": "",
+    "version_number": "v2.0.1",
+    "rgst_user_id": 1,
+    "user_name": "양진호",
+    "step_number": 0,
+    "step_status": "검토중",
+    "rgst_dtm": "2024-08-26 20:03:46",
+    "updt_dtm": "2024-08-28 17:33:24"
+  },
+  {
+    "prj_id": 5,
+    "prj_name": "프로젝트입니다05",
+    "prj_description": "다섯번째 테스트 프로젝트입니다.",
+    "prj_lnk": "",
+    "version_number": "v2.0.0",
+    "rgst_user_id": 1,
+    "user_name": "양진호",
+    "step_number": 0,
+    "step_status": "검토중",
+    "rgst_dtm": "2024-08-26 20:03:14",
+    "updt_dtm": "2024-08-28 17:33:24"
+  },
+  {
+    "prj_id": 4,
+    "prj_name": "프로젝트입니다04",
+    "prj_description": "네번째프로젝트 버전업!",
+    "prj_lnk": "",
+    "version_number": "v2.0.1",
+    "rgst_user_id": 1,
+    "user_name": "양진호",
+    "step_number": 0,
+    "step_status": "검토중",
+    "rgst_dtm": "2024-08-26 20:00:16",
+    "updt_dtm": "2024-08-28 17:33:24"
+  },
+  {
+    "prj_id": 4,
+    "prj_name": "프로젝트입니다04",
+    "prj_description": "네번째 테스트 프로젝트입니다.",
+    "prj_lnk": "",
+    "version_number": "v2.0.0",
+    "rgst_user_id": 1,
+    "user_name": "양진호",
+    "step_number": 0,
+    "step_status": "검토중",
+    "rgst_dtm": "2024-08-26 19:58:56",
+    "updt_dtm": "2024-08-28 17:33:24"
+  },
+  {
+    "prj_id": 3,
+    "prj_name": "프로젝트입니다03",
+    "prj_description": "세번째 테스트 프로젝트입니다.",
+    "prj_lnk": "",
+    "version_number": "v2.0.0",
+    "rgst_user_id": 1,
+    "user_name": "양진호",
+    "step_number": 0,
+    "step_status": "검토중",
+    "rgst_dtm": "2024-08-26 19:56:52",
+    "updt_dtm": "2024-08-28 17:33:24"
+  },
+  {
+    "prj_id": 2,
+    "prj_name": "프로젝트입니다02",
+    "prj_description": "두번째테스트프로젝트생성",
+    "prj_lnk": "",
+    "version_number": "v0.0.1",
+    "rgst_user_id": 1,
+    "user_name": "양진호",
+    "step_number": 0,
+    "step_status": "검토중",
+    "rgst_dtm": "2024-08-26 16:45:43",
+    "updt_dtm": "2024-08-28 17:33:24"
+  },
+  {
+    "prj_id": 1,
+    "prj_name": "테스트프로젝트버전다른거임",
+    "prj_description": "프로젝트인데 버전이 다른거임",
+    "prj_lnk": "",
+    "version_number": "v1.0.1",
+    "rgst_user_id": 1,
+    "user_name": "양진호",
+    "step_number": 0,
+    "step_status": "검토중",
+    "rgst_dtm": "2024-08-26 16:17:14",
+    "updt_dtm": "2024-08-28 17:33:24"
+  },
+  {
+    "prj_id": 1,
+    "prj_name": "테스트프로젝트_01",
+    "prj_description": "테스트프로젝트입니다01",
+    "prj_lnk": "",
+    "version_number": "v1.0.0",
+    "rgst_user_id": 1,
+    "user_name": "양진호",
+    "step_number": 0,
+    "step_status": "검토중",
+    "rgst_dtm": "2024-08-26 16:11:39",
+    "updt_dtm": "2024-08-28 17:33:24"
+  }
+]
+2024-09-03 14:27:46 [API CALL LOG] info: ===== selectId :  "selectPrjDevUser"
+2024-09-03 14:27:46 [API CALL LOG] info: ===== Parameter :  {}
+2024-09-03 14:27:46 [API CALL LOG] info: ===== Data :  [
+  {
+    "prj_id": 1,
+    "version_number": "v1.0.0",
+    "dev_ids": "9",
+    "user_name": "스리스리스리"
+  },
+  {
+    "prj_id": 1,
+    "version_number": "v1.0.1",
+    "dev_ids": "10,2",
+    "user_name": "한슬희,홍길동"
+  },
+  {
+    "prj_id": 2,
+    "version_number": "v0.0.1",
+    "dev_ids": "12,10,13",
+    "user_name": "양진호,한슬희,스리스리"
+  },
+  {
+    "prj_id": 3,
+    "version_number": "v2.0.0",
+    "dev_ids": "13,10",
+    "user_name": "스리스리,한슬희"
+  },
+  {
+    "prj_id": 4,
+    "version_number": "v2.0.0",
+    "dev_ids": "13,10",
+    "user_name": "스리스리,한슬희"
+  },
+  {
+    "prj_id": 4,
+    "version_number": "v2.0.1",
+    "dev_ids": "10,9",
+    "user_name": "한슬희,스리스리스리"
+  },
+  {
+    "prj_id": 5,
+    "version_number": "v2.0.0",
+    "dev_ids": "13,10",
+    "user_name": "스리스리,한슬희"
+  },
+  {
+    "prj_id": 5,
+    "version_number": "v2.0.1",
+    "dev_ids": "10,9",
+    "user_name": "한슬희,스리스리스리"
+  },
+  {
+    "prj_id": 6,
+    "version_number": "v0.0.1",
+    "dev_ids": "12,13",
+    "user_name": "양진호,스리스리"
+  },
+  {
+    "prj_id": 7,
+    "version_number": "v0.0.1",
+    "dev_ids": "9",
+    "user_name": "스리스리스리"
+  },
+  {
+    "prj_id": 8,
+    "version_number": "v0.0.1",
+    "dev_ids": "9",
+    "user_name": "스리스리스리"
+  },
+  {
+    "prj_id": 9,
+    "version_number": "v0.0.1",
+    "dev_ids": "12,13",
+    "user_name": "양진호,스리스리"
+  },
+  {
+    "prj_id": 10,
+    "version_number": "v0.0.1",
+    "dev_ids": "12,13",
+    "user_name": "양진호,스리스리"
+  },
+  {
+    "prj_id": 11,
+    "version_number": "v1.0.0",
+    "dev_ids": "52,13",
+    "user_name": "최지완,스리스리"
+  },
+  {
+    "prj_id": 12,
+    "version_number": "v1.0.0",
+    "dev_ids": "52,13",
+    "user_name": "최지완,스리스리"
+  },
+  {
+    "prj_id": 13,
+    "version_number": "v1.0.0",
+    "dev_ids": "52,13",
+    "user_name": "최지완,스리스리"
+  },
+  {
+    "prj_id": 14,
+    "version_number": "v2.0.0",
+    "dev_ids": "10,51",
+    "user_name": "한슬희,스리술"
+  },
+  {
+    "prj_id": 15,
+    "version_number": "1",
+    "dev_ids": "13",
+    "user_name": "스리스리"
+  },
+  {
+    "prj_id": 16,
+    "version_number": "123",
+    "dev_ids": "13",
+    "user_name": "스리스리"
+  },
+  {
+    "prj_id": 17,
+    "version_number": "v0.0.1",
+    "dev_ids": "1",
+    "user_name": "양진호"
+  },
+  {
+    "prj_id": 17,
+    "version_number": "v0.0.2",
+    "dev_ids": "1,1,1,1,1",
+    "user_name": "양진호,양진호,양진호,양진호,양진호"
+  },
+  {
+    "prj_id": 17,
+    "version_number": "v0.0.3",
+    "dev_ids": "1",
+    "user_name": "양진호"
+  },
+  {
+    "prj_id": 17,
+    "version_number": "v0.0.4",
+    "dev_ids": "1",
+    "user_name": "양진호"
+  },
+  {
+    "prj_id": 17,
+    "version_number": "v0.0.5",
+    "dev_ids": "1",
+    "user_name": "양진호"
+  },
+  {
+    "prj_id": 17,
+    "version_number": "v0.0.6",
+    "dev_ids": "1",
+    "user_name": "양진호"
+  },
+  {
+    "prj_id": 17,
+    "version_number": "v0.0.7",
+    "dev_ids": "1",
+    "user_name": "양진호"
+  },
+  {
+    "prj_id": 17,
+    "version_number": "v0.0.8",
+    "dev_ids": "1",
+    "user_name": "양진호"
+  },
+  {
+    "prj_id": 17,
+    "version_number": "v0.0.9",
+    "dev_ids": "1",
+    "user_name": "양진호"
+  },
+  {
+    "prj_id": 17,
+    "version_number": "v1.0.0",
+    "dev_ids": "1",
+    "user_name": "양진호"
+  },
+  {
+    "prj_id": 17,
+    "version_number": "v1.0.1",
+    "dev_ids": "1",
+    "user_name": "양진호"
+  },
+  {
+    "prj_id": 17,
+    "version_number": "v1.0.2",
+    "dev_ids": "1",
+    "user_name": "양진호"
+  },
+  {
+    "prj_id": 17,
+    "version_number": "v1.0.3",
+    "dev_ids": "1",
+    "user_name": "양진호"
+  },
+  {
+    "prj_id": 18,
+    "version_number": "v0.0.1",
+    "dev_ids": "1",
+    "user_name": "양진호"
+  },
+  {
+    "prj_id": 19,
+    "version_number": "v0.0.1",
+    "dev_ids": "52",
+    "user_name": "최지완"
+  },
+  {
+    "prj_id": 19,
+    "version_number": "v0.0.2",
+    "dev_ids": "9",
+    "user_name": "스리스리스리"
+  },
+  {
+    "prj_id": 20,
+    "version_number": "v0.0.2",
+    "dev_ids": "1",
+    "user_name": "양진호"
+  },
+  {
+    "prj_id": 21,
+    "version_number": "v0.0.1",
+    "dev_ids": "1",
+    "user_name": "양진호"
+  },
+  {
+    "prj_id": 22,
+    "version_number": "v0.0.1",
+    "dev_ids": "1",
+    "user_name": "양진호"
+  },
+  {
+    "prj_id": 23,
+    "version_number": "v0.0.5",
+    "dev_ids": "1",
+    "user_name": "양진호"
+  },
+  {
+    "prj_id": 24,
+    "version_number": "v0.0.6",
+    "dev_ids": "1",
+    "user_name": "양진호"
+  },
+  {
+    "prj_id": 25,
+    "version_number": "v0.0.6",
+    "dev_ids": "1",
+    "user_name": "양진호"
+  },
+  {
+    "prj_id": 25,
+    "version_number": "v0.0.7",
+    "dev_ids": "1",
+    "user_name": "양진호"
+  },
+  {
+    "prj_id": 26,
+    "version_number": "v0.0.1",
+    "dev_ids": "1",
+    "user_name": "양진호"
+  },
+  {
+    "prj_id": 27,
+    "version_number": "v0.0.1",
+    "dev_ids": "1",
+    "user_name": "양진호"
+  },
+  {
+    "prj_id": 28,
+    "version_number": "v2.0.4",
+    "dev_ids": "2",
+    "user_name": "홍길동"
+  }
+]
+2024-09-03 14:27:46 [API CALL LOG] info: ===== selectId :  "selectPrjSecUser"
+2024-09-03 14:27:46 [API CALL LOG] info: ===== Parameter :  {}
+2024-09-03 14:27:46 [API CALL LOG] info: ===== Data :  [
+  {
+    "prj_id": 1,
+    "version_number": "v0.0.2",
+    "sec_ids": "8",
+    "user_name": "메로롱"
+  },
+  {
+    "prj_id": 1,
+    "version_number": "v1.0.0",
+    "sec_ids": "8",
+    "user_name": "메로롱"
+  },
+  {
+    "prj_id": 1,
+    "version_number": "v1.0.1",
+    "sec_ids": "8",
+    "user_name": "메로롱"
+  },
+  {
+    "prj_id": 2,
+    "version_number": "v0.0.1",
+    "sec_ids": "8",
+    "user_name": "메로롱"
+  },
+  {
+    "prj_id": 3,
+    "version_number": "v2.0.0",
+    "sec_ids": "8",
+    "user_name": "메로롱"
+  },
+  {
+    "prj_id": 4,
+    "version_number": "v2.0.0",
+    "sec_ids": "8",
+    "user_name": "메로롱"
+  },
+  {
+    "prj_id": 4,
+    "version_number": "v2.0.1",
+    "sec_ids": "8",
+    "user_name": "메로롱"
+  },
+  {
+    "prj_id": 5,
+    "version_number": "v2.0.0",
+    "sec_ids": "8",
+    "user_name": "메로롱"
+  },
+  {
+    "prj_id": 5,
+    "version_number": "v2.0.1",
+    "sec_ids": "8",
+    "user_name": "메로롱"
+  },
+  {
+    "prj_id": 6,
+    "version_number": "v0.0.1",
+    "sec_ids": "8",
+    "user_name": "메로롱"
+  },
+  {
+    "prj_id": 7,
+    "version_number": "v0.0.1",
+    "sec_ids": "8",
+    "user_name": "메로롱"
+  },
+  {
+    "prj_id": 8,
+    "version_number": "v0.0.1",
+    "sec_ids": "8",
+    "user_name": "메로롱"
+  },
+  {
+    "prj_id": 9,
+    "version_number": "v0.0.1",
+    "sec_ids": "55",
+    "user_name": "스리관리자"
+  },
+  {
+    "prj_id": 10,
+    "version_number": "v0.0.1",
+    "sec_ids": "55",
+    "user_name": "스리관리자"
+  },
+  {
+    "prj_id": 11,
+    "version_number": "v1.0.0",
+    "sec_ids": "53,8",
+    "user_name": "진호,메로롱"
+  },
+  {
+    "prj_id": 12,
+    "version_number": "v1.0.0",
+    "sec_ids": "8,53",
+    "user_name": "메로롱,진호"
+  },
+  {
+    "prj_id": 13,
+    "version_number": "v1.0.0",
+    "sec_ids": "8,53",
+    "user_name": "메로롱,진호"
+  },
+  {
+    "prj_id": 14,
+    "version_number": "v2.0.0",
+    "sec_ids": "55,8",
+    "user_name": "스리관리자,메로롱"
+  },
+  {
+    "prj_id": 15,
+    "version_number": "1",
+    "sec_ids": "13",
+    "user_name": "스리스리"
+  },
+  {
+    "prj_id": 16,
+    "version_number": "123",
+    "sec_ids": "13",
+    "user_name": "스리스리"
+  },
+  {
+    "prj_id": 17,
+    "version_number": "v0.0.1",
+    "sec_ids": "1",
+    "user_name": "양진호"
+  },
+  {
+    "prj_id": 17,
+    "version_number": "v0.0.2",
+    "sec_ids": "1,1,1,1,1",
+    "user_name": "양진호,양진호,양진호,양진호,양진호"
+  },
+  {
+    "prj_id": 17,
+    "version_number": "v0.0.3",
+    "sec_ids": "1",
+    "user_name": "양진호"
+  },
+  {
+    "prj_id": 17,
+    "version_number": "v0.0.4",
+    "sec_ids": "1",
+    "user_name": "양진호"
+  },
+  {
+    "prj_id": 17,
+    "version_number": "v0.0.5",
+    "sec_ids": "1",
+    "user_name": "양진호"
+  },
+  {
+    "prj_id": 17,
+    "version_number": "v0.0.6",
+    "sec_ids": "1",
+    "user_name": "양진호"
+  },
+  {
+    "prj_id": 17,
+    "version_number": "v0.0.7",
+    "sec_ids": "1",
+    "user_name": "양진호"
+  },
+  {
+    "prj_id": 17,
+    "version_number": "v0.0.8",
+    "sec_ids": "1",
+    "user_name": "양진호"
+  },
+  {
+    "prj_id": 17,
+    "version_number": "v0.0.9",
+    "sec_ids": "1",
+    "user_name": "양진호"
+  },
+  {
+    "prj_id": 17,
+    "version_number": "v1.0.0",
+    "sec_ids": "1",
+    "user_name": "양진호"
+  },
+  {
+    "prj_id": 17,
+    "version_number": "v1.0.1",
+    "sec_ids": "1",
+    "user_name": "양진호"
+  },
+  {
+    "prj_id": 17,
+    "version_number": "v1.0.2",
+    "sec_ids": "1",
+    "user_name": "양진호"
+  },
+  {
+    "prj_id": 17,
+    "version_number": "v1.0.3",
+    "sec_ids": "1",
+    "user_name": "양진호"
+  },
+  {
+    "prj_id": 18,
+    "version_number": "v0.0.1",
+    "sec_ids": "1",
+    "user_name": "양진호"
+  },
+  {
+    "prj_id": 19,
+    "version_number": "v0.0.1",
+    "sec_ids": "8",
+    "user_name": "메로롱"
+  },
+  {
+    "prj_id": 19,
+    "version_number": "v0.0.2",
+    "sec_ids": "55,53",
+    "user_name": "스리관리자,진호"
+  },
+  {
+    "prj_id": 20,
+    "version_number": "v0.0.1",
+    "sec_ids": "1,2",
+    "user_name": "양진호,홍길동"
+  },
+  {
+    "prj_id": 20,
+    "version_number": "v0.0.2",
+    "sec_ids": "1",
+    "user_name": "양진호"
+  },
+  {
+    "prj_id": 21,
+    "version_number": "v0.0.1",
+    "sec_ids": "1",
+    "user_name": "양진호"
+  },
+  {
+    "prj_id": 22,
+    "version_number": "v0.0.1",
+    "sec_ids": "1",
+    "user_name": "양진호"
+  },
+  {
+    "prj_id": 23,
+    "version_number": "v0.0.5",
+    "sec_ids": "1",
+    "user_name": "양진호"
+  },
+  {
+    "prj_id": 24,
+    "version_number": "v0.0.6",
+    "sec_ids": "1",
+    "user_name": "양진호"
+  },
+  {
+    "prj_id": 25,
+    "version_number": "v0.0.6",
+    "sec_ids": "1",
+    "user_name": "양진호"
+  },
+  {
+    "prj_id": 25,
+    "version_number": "v0.0.7",
+    "sec_ids": "1",
+    "user_name": "양진호"
+  },
+  {
+    "prj_id": 26,
+    "version_number": "v0.0.1",
+    "sec_ids": "1",
+    "user_name": "양진호"
+  },
+  {
+    "prj_id": 27,
+    "version_number": "v0.0.1",
+    "sec_ids": "1",
+    "user_name": "양진호"
+  },
+  {
+    "prj_id": 28,
+    "version_number": "v2.0.4",
+    "sec_ids": "13",
+    "user_name": "스리스리"
   }
 ]

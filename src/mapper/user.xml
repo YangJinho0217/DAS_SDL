@@ -39,6 +39,7 @@
   <select id="selectUserInfo">
     SELECT  user_id                                      AS userId
           , login_id                                     AS loginId
+          , login_pw                                     AS loginPw
           , isfirst                                      AS isFirst
           , user_name                                    AS userName
           , user_level                                   AS userLevel
