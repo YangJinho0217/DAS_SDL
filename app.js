@@ -12,7 +12,9 @@ const app = express();
 app.use(cors({
   origin: 'localhost:3000',
   methods: ['POST', 'PUT', 'GET', 'OPTIONS', 'HEAD'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'token'],
 }))
+
 app.use('/file', express.static(path.join(__dirname, 'file')));
 app.use(bodyParser.json({limit: '200mb'}));
 app.use(bodyParser.urlencoded({limit: '200mb', extended: true, parameterLimit: 1000000}));

@@ -4,6 +4,9 @@ const mysql = require("../loaders/mysql");
 const upload = require("../loaders/multer");
 const db = require('../config/db');
 const verifyToken = require('../loaders/token').verify
+const sql = require("mysql2/promise");
+const dbconfig = require("../config/db");
+const pool = sql.createPool(dbconfig);
 
 var specificString = '';
 if (db.host == process.env.PROD_DB_HOST) {
@@ -23,109 +26,124 @@ router.get('/prcInfo', verifyToken, async(req,res) => {
         step_number : req.query.step_number
     }
 
-    const prcInfoList = await mysql.select('prc' ,'selectPrcStepInfo', param);
-    const prcInfoFileList = await mysql.query('prc', 'selectPrcStepInfoFile', param);
-    const prcCommentList = await mysql.query('prc', 'selectPrcComment', param);
+    const con = await pool.getConnection();
+    try {
+        await con.beginTransaction();
+        const prcInfoList = await mysql.select('prc' ,'selectPrcStepInfo', param, con);
+        const prcInfoFileList = await mysql.query('prc', 'selectPrcStepInfoFile', param, con);
+        const prcCommentList = await mysql.query('prc', 'selectPrcComment', param, con);
 
-    const fileList = [];
-    const commentList = [];
+        const fileList = [];
+        const commentList = [];
 
 
-    if (Object.keys(prcInfoList).length !== 0) {
+        if (Object.keys(prcInfoList).length !== 0) {
 
-        if (prcInfoList.lstc_file_path != null) {
-            if(db.host == process.env.DEV_DB_HOST || db.host == process.env.PROD_DB_HOST) {
-                // '/file' 이전의 부분을 제거
-                const newPath = prcInfoList.lstc_file_path.split('/develop')[1];
-                // 특정 문자열과 합치기
-                const data = specificString + newPath;
-                // prcInfoList.lstc_file_path = data
+            if (prcInfoList.lstc_file_path != null) {
+                if(db.host == process.env.DEV_DB_HOST || db.host == process.env.PROD_DB_HOST) {
+                    // '/file' 이전의 부분을 제거
+                    const newPath = prcInfoList.lstc_file_path.split('/develop')[1];
+                    // 특정 문자열과 합치기
+                    const data = specificString + newPath;
+                    // prcInfoList.lstc_file_path = data
+                }
             }
+
+            /* 리스트 체크 파일 서버에 박아둠 그냥 하드코딩으로(변경될 일이 없음) */
+            prcInfoList.lstc_file_path = 'https://yagsill.com/file/default/20240829.09.36.44_das_sdl_storyboard_240813.pdf'
+            prcInfoList.lstc_file_name = '20240829.09.36.44_das_sdl_storyboard_240813.pdf'
         }
 
-        /* 리스트 체크 파일 서버에 박아둠 그냥 하드코딩으로(변경될 일이 없음) */
-        prcInfoList.lstc_file_path = 'https://yagsill.com/file/default/20240829.09.36.44_das_sdl_storyboard_240813.pdf'
-        prcInfoList.lstc_file_name = '20240829.09.36.44_das_sdl_storyboard_240813.pdf'
-    }
+        
 
-    
+        if (param.step_number == 0) {
 
-    if (param.step_number == 0) {
+            if (prcInfoFileList.length > 0) {
 
-        if (prcInfoFileList.length > 0) {
+                for (const i in prcInfoFileList) {
+                    fileList.push(prcInfoFileList[i])
+                }
 
-            for (const i in prcInfoFileList) {
-                fileList.push(prcInfoFileList[i])
+                const modifiedPaths = fileList.map(item => {
+                    if(db.host == process.env.DEV_DB_HOST || db.host == process.env.PROD_DB_HOST) {
+                        // '/file' 이전의 부분을 제거
+                        const newPath = item.file_path.split('/develop')[1];
+                        // 특정 문자열과 합치기
+                        return {file_path: specificString + newPath, file_name : item.file_name };
+                    } else {
+                        return {
+                            file_path : item.file_path,
+                            file_name : item.file_name
+                        }
+                    }
+                });
+                prcInfoList.file = modifiedPaths
             }
 
-            const modifiedPaths = fileList.map(item => {
+        }
+        
+        if (prcCommentList.length > 0) {
+            for (const i in prcCommentList) {
+                const data = {
+                    comm_id : prcCommentList[i].comm_id,
+                    rgst_user_id : prcCommentList[i].rgst_user_id,
+                    user_name : prcCommentList[i].user_name,
+                    comment_description : prcCommentList[i].comment_description,
+                    user_role : prcCommentList[i].user_role,
+                    rgst_dtm : prcCommentList[i].rgst_dtm
+                }
+                
+                commentList.push(data);
+            }
+            const prcCommentFileList = await mysql.query('prc', 'selectPrcCommentFile', param, con)
+
+            // 특정 문자열
+            const modifiedPaths = prcCommentFileList.map(item => {
                 if(db.host == process.env.DEV_DB_HOST || db.host == process.env.PROD_DB_HOST) {
                     // '/file' 이전의 부분을 제거
                     const newPath = item.file_path.split('/develop')[1];
                     // 특정 문자열과 합치기
-                    return {file_path: specificString + newPath, file_name : item.file_name };
+                    return { comm_file_id : item.comm_file_id, comm_id : item.comm_id, file_path: specificString + newPath, file_name : item.file_name };
                 } else {
                     return {
+                        comm_file_id : item.comm_file_id,
+                        comm_id : item.comm_id,
                         file_path : item.file_path,
                         file_name : item.file_name
                     }
                 }
             });
-            prcInfoList.file = modifiedPaths
-        }
 
-    }
-    
-    if (prcCommentList.length > 0) {
-        for (const i in prcCommentList) {
-            const data = {
-                comm_id : prcCommentList[i].comm_id,
-                rgst_user_id : prcCommentList[i].rgst_user_id,
-                user_name : prcCommentList[i].user_name,
-                comment_description : prcCommentList[i].comment_description,
-                user_role : prcCommentList[i].user_role,
-                rgst_dtm : prcCommentList[i].rgst_dtm
-            }
-            
-            commentList.push(data);
-        }
-        const prcCommentFileList = await mysql.query('prc', 'selectPrcCommentFile', param)
-
-        // 특정 문자열
-        const modifiedPaths = prcCommentFileList.map(item => {
-            if(db.host == process.env.DEV_DB_HOST || db.host == process.env.PROD_DB_HOST) {
-                // '/file' 이전의 부분을 제거
-                const newPath = item.file_path.split('/develop')[1];
-                // 특정 문자열과 합치기
-                return { comm_file_id : item.comm_file_id, comm_id : item.comm_id, file_path: specificString + newPath, file_name : item.file_name };
-            } else {
+            const combined = commentList.map(comment => {
+                // 해당 comment의 comm_id에 맞는 파일들을 찾음
+                const relatedFiles = modifiedPaths.filter(file => file.comm_id === comment.comm_id);
+                // comment와 관련된 파일들을 결합
                 return {
-                    comm_file_id : item.comm_file_id,
-                    comm_id : item.comm_id,
-                    file_path : item.file_path,
-                    file_name : item.file_name
-                }
-            }
-        });
+                    ...comment,
+                    files: relatedFiles.length > 0 ? relatedFiles : [] // 파일이 없을 경우 빈 배열
+                };
+            });
 
-        const combined = commentList.map(comment => {
-            // 해당 comment의 comm_id에 맞는 파일들을 찾음
-            const relatedFiles = modifiedPaths.filter(file => file.comm_id === comment.comm_id);
-            // comment와 관련된 파일들을 결합
-            return {
-                ...comment,
-                files: relatedFiles.length > 0 ? relatedFiles : [] // 파일이 없을 경우 빈 배열
-            };
-        });
+            prcInfoList.commentList = combined;
+        }
 
-        prcInfoList.commentList = combined;
+        await con.commit();
+        return res.json({
+            resultCode : 200,
+            resultMsg : "프로세스 조회 성공",
+            data : prcInfoList
+        })
+
+    } catch(error) {
+        console.log(error)
+        await con.rollback();
+        return res.json({
+            resultCode : 500,
+            resultMsg : 'SERVER ERROR'
+        })
+    } finally {
+        await con.release();
     }
-
-    return res.json({
-        resultCode : 200,
-        resultMsg : "프로세스 조회 성공",
-        data : prcInfoList
-    })
 })
 
 /* ========== ============= ========== */
@@ -140,8 +158,10 @@ router.post('/addLstc', verifyToken, upload.single('file'), async(req, res) => {
         lstc_file_path : req.file.path
     }
 
+    const con = await pool.getConnection();
     try {
-        const prcInfoList = await mysql.query('prc' ,'selectPrcStepInfo', param)
+        await con.beginTransaction();
+        const prcInfoList = await mysql.query('prc' ,'selectPrcStepInfo', param, con)
         param.file_name = req.file.originalname
         if (prcInfoList.length < 1) {
             return res.json({
@@ -149,17 +169,21 @@ router.post('/addLstc', verifyToken, upload.single('file'), async(req, res) => {
                 resultMsg : '프로젝트 또는 프로젝트 버전이 존재하지 않습니다'
             })
         }
-        await mysql.proc('prc','updateListCheckFile', param);
+        await mysql.proc('prc','updateListCheckFile', param, con);
+        await con.commit();
         return res.json({
             resultCode : 200,
             resultMsg : '리스트 체크파일 등록 완료'
         })
     } catch(error) {
         console.log(error)
+        await con.rollback();
         return res.json({
             resultCode : 500,
             resultMsg : 'SERVER ERROR'
         })
+    } finally {
+        await con.release();
     }
 })
 
@@ -177,8 +201,10 @@ router.post('/addCmt', verifyToken, upload.array('files'), async(req, res) => {
         file : typeof req.files == "undefined" ? null : req.files
     }
 
+    const con = await pool.getConnection();
     try {
-        const prjlist = await mysql.query('prj', 'selectPrjVersion', param);
+        await con.beginTransaction();
+        const prjlist = await mysql.query('prj', 'selectPrjVersion', param, con);
 
         if (prjlist.length < 1) {
             return res.json({
@@ -187,12 +213,12 @@ router.post('/addCmt', verifyToken, upload.array('files'), async(req, res) => {
             })
         }
 
-        param.comm_id = await mysql.value('prc', 'nextvalId', {id : 'comm_id'});
-        await mysql.proc('prc', 'insertPrcComment', param);
+        param.comm_id = await mysql.value('prc', 'nextvalId', {id : 'comm_id'}, con);
+        await mysql.proc('prc', 'insertPrcComment', param, con);
 
         for (const i in param.file) {
 
-            const comm_file_id = await mysql.value('prc', 'nextvalId', {id : 'comm_file_id'});
+            const comm_file_id = await mysql.value('prc', 'nextvalId', {id : 'comm_file_id'}, con);
             const data = {
                 comm_file_id : comm_file_id,
                 comm_id : param.comm_id,
@@ -200,9 +226,10 @@ router.post('/addCmt', verifyToken, upload.array('files'), async(req, res) => {
                 file_name : param.file[i].originalname
             };
 
-            await mysql.proc('prc', 'insertPrcCommentFile', data);
+            await mysql.proc('prc', 'insertPrcCommentFile', data, con);
         }
 
+        await con.commit();
         return res.json({
             resultCode : 200,
             resultMsg : '코멘트 등록 성공'
@@ -210,10 +237,13 @@ router.post('/addCmt', verifyToken, upload.array('files'), async(req, res) => {
 
     } catch(error) {
         console.log(error)
+        await con.rollback();
         return res.json({
             resultCode : 500,
             resultMsg : 'SERVER ERROR'
         })
+    } finally {
+        await con.release();
     }
 })
 
@@ -229,10 +259,11 @@ router.put('/updtCmt', verifyToken, upload.array('files'), async(req, res) => {
         file : typeof req.files == "undefined" ? null : req.files
     }
 
+    const con = await pool.getConnection();
     try {
-
+        await con.beginTransaction();
         // 코멘트 리스트 확인
-        const commentList = await mysql.query('prc', 'selectPrcCommentList', param);
+        const commentList = await mysql.query('prc', 'selectPrcCommentList', param, con);
 
         if(commentList.length < 1) {
             return res.json({
@@ -242,7 +273,7 @@ router.put('/updtCmt', verifyToken, upload.array('files'), async(req, res) => {
         }
 
         // 코멘트 내용 수정
-        await mysql.proc('prc', 'updatePrcComment', param);
+        await mysql.proc('prc', 'updatePrcComment', param, con);
 
         // 기존 파일 삭제
         if (param.del_file_id != undefined) {
@@ -251,23 +282,24 @@ router.put('/updtCmt', verifyToken, upload.array('files'), async(req, res) => {
                 const data = {
                     del_file_id : delFileId[i]
                 };
-                await mysql.proc('prc', 'deletePrcCommentFiles', data);
+                await mysql.proc('prc', 'deletePrcCommentFiles', data, con);
             }   
         }
 
         // 파일 새로 등록
         for (const i in param.file) {
 
-            const comm_file_id = await mysql.value('prc', 'nextvalId', {id : 'comm_file_id'});
+            const comm_file_id = await mysql.value('prc', 'nextvalId', {id : 'comm_file_id'}, con);
             const data = {
                 comm_file_id : comm_file_id,
                 comm_id : param.comm_id,
                 file_path : param.file[i].path,
             };
 
-            await mysql.proc('prc', 'insertPrcCommentFile', data);
+            await mysql.proc('prc', 'insertPrcCommentFile', data, con);
         }
 
+        await con.commit();
         return res.json({
             resultCode : 200,
             resultMsg : '코멘트 수정 성공'
@@ -275,10 +307,13 @@ router.put('/updtCmt', verifyToken, upload.array('files'), async(req, res) => {
 
     } catch(error) {
         console.log(error)
+        await con.rollback();
         return res.json({
             resultCode : 500,
             resultMsg : 'SEVER ERROR'
         })
+    } finally {
+        await con.release();
     }
     
 })
@@ -291,23 +326,37 @@ router.delete('/delCmt', verifyToken, async(req, res) => {
     var param = {
         comm_id : req.body.comm_id
     }
+     
+    const con = await pool.getConnection();
+    try {
+        await con.beginTransaction();
+        const commentList = await mysql.query('prc', 'selectPrcCommentList', param, con);
+        
+        if(commentList.length < 1) {
+            return res.json({
+                resultCode : 400,
+                resultMsg : '코멘트가 존재하지 않습니다 코멘트 번호를 다시 입력해 주세요'
+            })
+        }
 
-    const commentList = await mysql.query('prc', 'selectPrcCommentList', param);
-    
-    if(commentList.length < 1) {
+        await mysql.proc('prc', 'deletePrcComment', param, con)
+        await mysql.proc('prc', 'deletePrcCommentFile', param, con)
+        
+        await con.commit();
         return res.json({
-            resultCode : 400,
-            resultMsg : '코멘트가 존재하지 않습니다 코멘트 번호를 다시 입력해 주세요'
+            resultCode : 200,
+            resultMsg : "OK"
         })
+    } catch(error) {
+        console.log(error)
+        await con.rollback();
+        return res.json({
+            resultCode : 500,
+            resultMsg : 'SERVER ERROR'
+        })
+    } finally {
+        await con.release();
     }
-
-    await mysql.proc('prc', 'deletePrcComment', param)
-    await mysql.proc('prc', 'deletePrcCommentFile', param)
-    
-    return res.json({
-        resultCode : 200,
-        resultMsg : "OK"
-    })
 
 })
 
@@ -325,9 +374,10 @@ router.post('/lstnRgst', verifyToken, upload.array('files'), async(req,res) => {
         file : typeof req.files == "undefined" ? null : req.files
     }
 
+    const con = await pool.getConnection();
     try {
-        
-        const prjStepList = await mysql.query('prj', 'selectPrjStepInfo', param);
+        await con.beginTransaction();
+        const prjStepList = await mysql.query('prj', 'selectPrjStepInfo', param, con);
 
         if (prjStepList.length < 1) {
             return res.json({
@@ -336,12 +386,12 @@ router.post('/lstnRgst', verifyToken, upload.array('files'), async(req,res) => {
             })
         }
 
-        await mysql.proc('prc', 'updatePrcStepInfo', param);
+        await mysql.proc('prc', 'updatePrcStepInfo', param, con);
 
         // 파일 새로 등록
         for (const i in param.file) {
 
-            const prc_file_id = await mysql.value('prc', 'nextvalId', {id : 'prc_file_id'});
+            const prc_file_id = await mysql.value('prc', 'nextvalId', {id : 'prc_file_id'}, con);
             const data = {
                 prc_file_id : prc_file_id,
                 prj_id : param.prj_id,
@@ -352,9 +402,10 @@ router.post('/lstnRgst', verifyToken, upload.array('files'), async(req,res) => {
             };
             console.log(param.file[i]);
 
-            await mysql.proc('prj', 'insertPrcStepInfoFile', data);
+            await mysql.proc('prj', 'insertPrcStepInfoFile', data, con);
         }
 
+        await con.commit();
         return res.json({
             resultCode : 200,
             resultMsg : '프로젝트 최종 정보 등록 성공'
@@ -362,11 +413,14 @@ router.post('/lstnRgst', verifyToken, upload.array('files'), async(req,res) => {
 
     } catch(error) {
         console.log(error)
+        await con.rollback();
         return res.json({
             resultCode : 500,
             resultMsg : 'SERVER ERROR'
         })
-    } 
+    } finally {
+        await con.release();
+    }
 
 })
 

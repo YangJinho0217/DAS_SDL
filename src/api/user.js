@@ -2,56 +2,30 @@ const express = require("express");
 const router = express.Router();
 const mysql = require("../loaders/mysql");
 const calc = require('../module/calc');
-const jwt = require('jsonwebtoken');
 const verifyToken = require('../loaders/token').verify
 const token = require('../loaders/token')
 require('dotenv').config();
-
-
-/* ========== ============= ========== */
-/* ========== 유저 리스트 GET ========== */
-/* ========== ============= ========== */
-router.get('/', async (req, res) => {
-    var param = {
-        page_no : req.query.page_no
-    }
-
-    // 전체 데이터 개수
-    const count = await mysql.select("user", "selctCountUserInfoList");
-
-    // === 페이징 처리 내부 함수 === //
-    const itemPerPage = 10;
-    const currentPage = (param.page_no - 1) * itemPerPage;
-    // 페이지당 처리 개수 10개로 고정
-    param.itemPerPage = 10;
-    // 페이지번호
-    param.currentPage = currentPage;
-
-    const userList = await mysql.query("user", "selectUserInfoList", param);
-
-    const totalPageCount = Math.ceil(count.totalCount / itemPerPage);
-    return res.json({
-        resultCode : 200,
-        resultCode : '유저 리스트 출력 완료',
-        totalPageCount : totalPageCount,
-        data : userList
-    })
-
-})
+const sql = require("mysql2/promise");
+const dbconfig = require("../config/db");
+const pool = sql.createPool(dbconfig);
+const logger = require('../config/logger');
 
 /* ========== ============= ========== */
 /* ========== 유저 로그인 POST ========== */
 /* ========== ============= ========== */
 router.post('/signIn', async (req, res) => {
 
+    
     var param = {
         login_id : req.body.login_id,
         login_pw : req.body.login_pw
     };
 
+    const con = await pool.getConnection();
     try {
 
-        const user = await mysql.query("user", "selectUserInfo", param);
+        await con.beginTransaction();
+        const user = await mysql.query("user", "selectUserInfo", param, con);
 
         /* 아이디 존재 체크 */
         if (user.length < 1) {
@@ -62,11 +36,11 @@ router.post('/signIn', async (req, res) => {
         };
 
         if (user[0].isFirst == 1) {
-            await mysql.proc('user', 'updateUserInfoIsFirst', param);
+            await mysql.proc('user', 'updateUserInfoIsFirst', param, con);
         }
 
         /* 비밀번호 체크 */
-        const userPassword = await mysql.select("user", "selectUserPassword", param);
+        const userPassword = await mysql.select("user", "selectUserPassword", param, con);
         const userDBPassword = userPassword.loginPw;
         const decryptPassword = await calc.decryptPassword(userDBPassword);
 
@@ -77,6 +51,7 @@ router.post('/signIn', async (req, res) => {
             })
         };
 
+        await con.commit();
         return res.json({
             resultCode : 200,
             resultMsg : '로그인 성공',
@@ -86,10 +61,13 @@ router.post('/signIn', async (req, res) => {
 
     } catch(error) {
         console.log(error)
+        await con.rollback();
         return res.json({
             resultCode : 500,
             resultMsg : 'SERVER ERROR'
         })
+    } finally {
+        con.release(); // 연결 해제
     }
     
 })
@@ -103,14 +81,16 @@ router.post('/sendEmailAuth', async (req, res) => {
         login_id : req.body.login_id
     }
 
+    const con = await pool.getConnection();
     try {
 
+        await con.beginTransaction();
         const emailAuthCode = await calc.createEmailAuthCode();
         // /* 이메일 전송  */
         await calc.emailAuthSend(param.login_id, emailAuthCode).then(async (response) => {
             if (response.resultCode == 200) {
                 param.auth_code = response.data
-                await mysql.proc('user', 'insertUserAuth', param)
+                await mysql.proc('user', 'insertUserAuth', param, con)
             } else {
                 return res.json({
                     resultCode : response.resultCode,
@@ -119,17 +99,21 @@ router.post('/sendEmailAuth', async (req, res) => {
             }
         })
     
+        await con.commit();
         return res.json({
             resultCode : 200,
             resultMsg : '인증코드 발송 성공'
         })
 
     } catch(error) {
+        await con.rollback();
         console.log(error)
         return res.json({
             resultCode : 500,
             resultMsg : 'SERVER ERROR'
         })
+    } finally {
+        await con.release();
     }
    
 })
@@ -144,9 +128,11 @@ router.post('/authEmailCode', async (req, res) => {
         auth_code : req.body.auth_code
     }
 
+    const con = await pool.getConnection();
     try {
 
-        const user = await mysql.query('user', 'selectUserAuth', param);
+        await con.beginTransaction();
+        const user = await mysql.query('user', 'selectUserAuth', param, con);
 
         if(user.length < 1) {
             return res.json({
@@ -163,16 +149,20 @@ router.post('/authEmailCode', async (req, res) => {
             })
         }
 
+        await con.commit();
         return res.json({
             resultCode : 200,
             resultMsg : '이메일 인증에 성공했습니다'
         })
     } catch(error) {
         console.log(error)
+        await con.rollback();
         return res.json({
             resultCode : 500,
             resultMsg : 'SERVER ERROR'
         })
+    } finally {
+        await con.release();
     }
     
 
@@ -192,9 +182,11 @@ router.post('/signUp', async (req, res) => {
         user_status : 'A'
     };
 
+    const con = await pool.getConnection();
     try {
         /* 회원가입 이메일 중복확인 */
-        var user = await mysql.query("user", "selectUserInfo", param);
+        await con.beginTransaction();
+        var user = await mysql.query("user", "selectUserInfo", param, con);
 
         if (user.length > 0) {
             return res.json({
@@ -210,14 +202,15 @@ router.post('/signUp', async (req, res) => {
             })
         }
 
-        param.user_id = await mysql.value('user', 'nextvalAppUserId', {id : 'user_id'});
+        param.user_id = await mysql.value('user', 'nextvalAppUserId', {id : 'user_id'}, con);
 
         const encryptNewPassword = await calc.encryptPassword(param.login_pw);
         param.login_pw = encryptNewPassword;
 
         // /* 회원가입 insert */
-        await mysql.proc("user", "insertUserInfo", param);
+        await mysql.proc("user", "insertUserInfo", param, con);
         
+        await con.commit();
         return res.json({
             resultCode : 200,
             resultMsg : '회원가입 요청 성공'
@@ -225,10 +218,13 @@ router.post('/signUp', async (req, res) => {
 
     } catch(error) {
         console.log(error)
+        await con.rollback();
         return res.json({
             resultCode : 500,
             resultMsg : 'SERVER ERROR'
         })
+    } finally {
+        await con.release();
     }
 
 })
@@ -244,8 +240,11 @@ router.put('/signOn' , async(req,res) => {
         admin_id : req.body.admin_id
     }
 
+    const con = await pool.getConnection();
     try {
-        const user = await mysql.query("user", "selectUserInfo", param);
+
+        await con.beginTransaction();
+        const user = await mysql.query("user", "selectUserInfo", param, con);
 
         /* 아이디 존재 체크 */
         if (user.length < 1) {
@@ -255,8 +254,9 @@ router.put('/signOn' , async(req,res) => {
             })
         };
 
-        await mysql.proc("user", "updateUserStatus", param);
+        await mysql.proc("user", "updateUserStatus", param, con);
 
+        await con.commit();
         return res.json({
             resultCode : 200,
             resultMsg : '사용자 상태 변경 완료'
@@ -264,10 +264,13 @@ router.put('/signOn' , async(req,res) => {
 
     } catch(error) {
         console.log(error)
+        await con.rollback();
         return res.json({
             resultCode : 500,
             resultMsg : 'SERVER ERROR'
         })
+    } finally {
+        await con.release();
     }
 
 })
@@ -281,9 +284,12 @@ router.post('/frgtEml' , async(req,res) => {
         login_id : req.body.login_id
     }
 
+    const con = await pool.getConnection();
     try {
 
-        const user = await mysql.query("user", "selectUserInfo", param);
+        await con.beginTransaction();
+        const user = await mysql.query("user", "selectUserInfo", param, con);
+        
         /* 아이디 존재 체크 */
         if (user.length < 1) {
             return res.json({
@@ -292,7 +298,7 @@ router.post('/frgtEml' , async(req,res) => {
             })
         };
 
-        const userPassword = await mysql.select("user", "selectUserPassword", param);
+        const userPassword = await mysql.select("user", "selectUserPassword", param, con);
         const userDBPassword = userPassword.loginPw;
         const decryptPassword = await calc.decryptPassword(userDBPassword);
 
@@ -310,14 +316,17 @@ router.post('/frgtEml' , async(req,res) => {
                     resultMsg : response.resultMsg
                 })
             }
-
         })
+        await con.commit();
     } catch(error) {
         console.log(error)
+        await con.rollback();
         return res.json({
             resultCode : 500,
             resultMsg : 'SERVER ERROR'
         })
+    } finally {
+        await con.release();
     }
 })
 
@@ -333,8 +342,11 @@ router.put('/modify', verifyToken, async(req,res) => {
         new_password : req.body.new_password,
     }
 
+    const con = await pool.getConnection();
     try {
-        const user = await mysql.query("user", "selectUserInfo", param);
+
+        await con.beginTransaction();
+        const user = await mysql.query("user", "selectUserInfo", param, con);
 
         /* 아이디 존재 체크 */
         if (user.length < 1) {
@@ -345,7 +357,7 @@ router.put('/modify', verifyToken, async(req,res) => {
         };
 
         /* 비밀번호 체크 */
-        const userPassword = await mysql.select("user", "selectUserPassword", param);
+        const userPassword = await mysql.select("user", "selectUserPassword", param, con);
         const userDBPassword = userPassword.loginPw;
         const decryptPassword = await calc.decryptPassword(userDBPassword);
 
@@ -359,8 +371,9 @@ router.put('/modify', verifyToken, async(req,res) => {
         const encryptNewPassword = await calc.encryptPassword(param.new_password);
         param.new_password = encryptNewPassword;
 
-        await mysql.proc("user", "updateModify", param)
+        await mysql.proc("user", "updateModify", param, con)
 
+        await con.commit();
         return res.json({
             resultCode : 200,
             resultMsg : '비밀번호 변경 성공'
@@ -368,10 +381,13 @@ router.put('/modify', verifyToken, async(req,res) => {
         
     } catch(error) {
         console.log(error)
+        await con.rollback();
         return res.json({
             resultCode : 500,
             resultMsg : 'SERVER ERROR'
         })
+    } finally {
+        await con.release();
     }
     
 })
@@ -385,23 +401,73 @@ router.get('/dvList',verifyToken, async(req,res) => {
         user_level : req.query.user_level
     }
 
+    const con = await pool.getConnection();
     try {
-        const dvList = await mysql.query("user", "selectDvList", param)
 
+        await con.beginTransaction();
+        const dvList = await mysql.query("user", "selectDvList", param, con)
+
+        // 성공 로그 기록
+        logger.info({
+            message:`CALL API ======== /dvList `,
+            message: `================ Parameter : ${JSON.stringify(param, null, 2)}`,
+            message: `================ hedaers : ${JSON.stringify(req.headers, null, 2)}`,
+            message: `================ data    : ${JSON.stringify(dvList, null, 2)}`
+        });
+
+        await con.commit();
         return res.json({
             resultCode : 200,
             resultMsg : 'OK',
             data : dvList
         })
     } catch(error) {
-        console.log(error)
+        logger.error({
+            message: `API /dvList 호출 중 에러 발생: ${error.message}`,
+            label: 'API /dvList',
+            headers: JSON.stringify(req.headers), // 에러 발생 시에도 헤더 정보 기록
+            queryParams: JSON.stringify(req.query) // 쿼리 파라미터 기록
+        });
+        await con.rollback();
         return res.json({
             resultCode : 500,
             resultMsg : 'SERVER ERROR'
         })
+    } finally {
+        await con.release();
     }
 
 })
 
+/* ========== ============= ========== */
+/* ========== 유저 패스워드 복호화 POST ========== */
+/* ========== ============= ========== */
+router.post('/chPw', async(req,res) => {
 
+    var param = {
+        password : req.body.password
+    }
+
+    const con = await pool.getConnection();
+    try {
+        const userPassword = await calc.decryptPassword(param.password);
+        return res.json({
+            resultCode : 200,
+            resultMsg : '복호화 성공',
+            data : userPassword
+        })
+    } catch(error) {
+        console.log(error)
+        await con.rollback();
+        return res.json({
+            resultCode : 500,
+            resultMsg : 'SERVER ERROR'
+        })
+    } finally {
+        await con.release();
+    }
+   
+    
+
+})
 module.exports = router;

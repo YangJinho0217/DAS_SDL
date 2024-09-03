@@ -2,6 +2,9 @@ const express = require("express");
 const router = express.Router();
 const mysql = require("../loaders/mysql");
 const verifyToken = require('../loaders/token').verify
+const sql = require("mysql2/promise");
+const dbconfig = require("../config/db");
+const pool = sql.createPool(dbconfig);
 
 /* ========== ============= ========== */
 /* ========== 공지사항 등록 POST ========== */
@@ -14,22 +17,28 @@ router.post('/addNoti', verifyToken, async (req, res) => {
         rgst_user_id : req.body.rgst_user_id
     }
 
-   try {
-        const noti_id = await mysql.value('comm', 'nextvalId', {id : 'noti_id'});
+    const con = await pool.getConnection();
+    try {
+        await con.beginTransaction();
+        const noti_id = await mysql.value('comm', 'nextvalId', {id : 'noti_id'}, con);
         param.noti_id = noti_id;
-        await mysql.proc('comm', 'insertNoticeList', param);
+        await mysql.proc('comm', 'insertNoticeList', param, con);
 
+        await con.commit();
         return res.json({
             resultCode : 200,
             resultMsg : '공지사항 등록 성공'
         })
-   } catch(error) {
+    } catch(error) {
         console.log(error)
+        await con.rollback();
         return res.json({
             resultCode : 500,
             resultMsg : 'SERVER ERROR'
         })
-   }
+    } finally {
+        await con.release();
+    }
 
 })
 
@@ -38,10 +47,12 @@ router.post('/addNoti', verifyToken, async (req, res) => {
 /* ========== ============= ========== */
 router.get('/notiInfo', verifyToken, async(req, res) => {
 
+    const con = await pool.getConnection();
     try {
+        await con.beginTransaction();
+        const notiList = await mysql.query('comm', 'selectNoticeList', null, con);
 
-        const notiList = await mysql.query('comm', 'selectNoticeList');
-
+        await con.commit();
         return res.json({
             resultCode : 200,
             resultMsg : '공지사항 조회 성공',
@@ -49,10 +60,14 @@ router.get('/notiInfo', verifyToken, async(req, res) => {
         })
 
     } catch(error) {
+        console.log(error)
+        await con.rollback();
         return res.json({
             resultCode : 500,
             resultMsg : 'SERVER ERROR'
         })
+    } finally {
+        await con.release();
     }
 })
 
@@ -65,20 +80,26 @@ router.get('/detail', verifyToken, async(req, res) => {
         noti_id : req.query.noti_id
     }
 
+    const con = await pool.getConnection();
     try {
+        await con.beginTransaction();
+        const notiListDetail = await mysql.select('comm', 'selectNoticeListDetail', param, con)
 
-        const notiListDetail = await mysql.select('comm', 'selectNoticeListDetail', param)
-
+        await con.commit();
         return res.json({
             resultCode : 200,
             resultMsg : '공지사항 상세 조회 성공',
             data : notiListDetail
         })
     } catch(error) {
+        console.log(error)
+        await con.rollback();
         return res.json({
             resultCode : 500,
             resultMsg : 'SERVER ERROR'
         })
+    } finally {
+        await con.release();
     }
 
 })

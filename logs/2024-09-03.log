@@ -1,0 +1,289 @@
+2024-09-03 10:40:46 [Winston 연습 어플리케이션] info: [object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object]
+2024-09-03 10:41:12 [Winston 연습 어플리케이션] info: [object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object]
+2024-09-03 10:41:14 [Winston 연습 어플리케이션] info: [object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object]
+2024-09-03 10:41:21 [Winston 연습 어플리케이션] info: [object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object]
+2024-09-03 10:41:22 [Winston 연습 어플리케이션] info: [object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object],[object Object]
+2024-09-03 10:41:42 [Winston 연습 어플리케이션] info: [object Object]
+2024-09-03 10:45:11 [API /dvList] info: API /dvList 호출 성공: 사용자 레벨=undefined
+2024-09-03 10:45:32 [API /dvList] info: API /dvList 호출 성공: 사용자 레벨=1
+2024-09-03 10:46:11 [API /dvList] info: [object Object]
+2024-09-03 10:47:15 [API /dvList] info: [
+  {
+    "userId": 1,
+    "loginId": "altm56@gmail.com",
+    "isFirst": 0,
+    "userName": "양진호",
+    "userLevel": 1,
+    "userStatus": "A",
+    "userRole": "시스템관리자",
+    "rgstDtm": "2024/08/26 20:28:23"
+  }
+]
+2024-09-03 10:47:25 [API /dvList] info: [
+  {
+    "userId": 59,
+    "loginId": "test04@gmail.com",
+    "isFirst": 0,
+    "userName": "홍길동",
+    "userLevel": 3,
+    "userStatus": "A",
+    "userRole": "개발담당자",
+    "rgstDtm": "2024/09/02 15:57:07"
+  },
+  {
+    "userId": 58,
+    "loginId": "gymhub500@gmail.com",
+    "isFirst": 0,
+    "userName": "한스리스리",
+    "userLevel": 3,
+    "userStatus": "A",
+    "userRole": "개발담당자",
+    "rgstDtm": "2024/09/01 16:37:33"
+  },
+  {
+    "userId": 54,
+    "loginId": "",
+    "isFirst": 0,
+    "userName": "",
+    "userLevel": 3,
+    "userStatus": "A",
+    "userRole": "개발담당자",
+    "rgstDtm": "2024/08/28 12:03:48"
+  },
+  {
+    "userId": 53,
+    "loginId": "wlsgh132@naver.com",
+    "isFirst": 0,
+    "userName": "진호",
+    "userLevel": 2,
+    "userStatus": "A",
+    "userRole": "보안담당자",
+    "rgstDtm": "2024/08/27 22:07:07"
+  },
+  {
+    "userId": 52,
+    "loginId": "jiwan.choi@dasvers.com",
+    "isFirst": 0,
+    "userName": "최지완",
+    "userLevel": 3,
+    "userStatus": "A",
+    "userRole": "개발담당자",
+    "rgstDtm": "2024/08/27 15:12:54"
+  },
+  {
+    "userId": 51,
+    "loginId": "asd@gmail.com",
+    "isFirst": 0,
+    "userName": "스리술",
+    "userLevel": 3,
+    "userStatus": "A",
+    "userRole": "개발담당자",
+    "rgstDtm": "2024/08/27 15:11:23"
+  },
+  {
+    "userId": 1,
+    "loginId": "altm56@gmail.com",
+    "isFirst": 0,
+    "userName": "양진호",
+    "userLevel": 1,
+    "userStatus": "A",
+    "userRole": "시스템관리자",
+    "rgstDtm": "2024/08/26 20:28:23"
+  },
+  {
+    "userId": 13,
+    "loginId": "seulhyi@dasvers.com",
+    "isFirst": 0,
+    "userName": "스리스리",
+    "userLevel": 3,
+    "userStatus": "W",
+    "userRole": "개발담당자",
+    "rgstDtm": "2024/08/20 11:08:11"
+  },
+  {
+    "userId": 12,
+    "loginId": "yagsill@dasvers.com",
+    "isFirst": 0,
+    "userName": "양진호",
+    "userLevel": 3,
+    "userStatus": "A",
+    "userRole": "개발담당자",
+    "rgstDtm": "2024/08/20 10:25:36"
+  },
+  {
+    "userId": 10,
+    "loginId": "3021062@gmail.com",
+    "isFirst": 0,
+    "userName": "한슬희",
+    "userLevel": 3,
+    "userStatus": "W",
+    "userRole": "개발담당자",
+    "rgstDtm": "2024/08/20 09:59:03"
+  },
+  {
+    "userId": 9,
+    "loginId": "aaaasdf@gmail.com",
+    "isFirst": 0,
+    "userName": "스리스리스리",
+    "userLevel": 3,
+    "userStatus": "W",
+    "userRole": "개발담당자",
+    "rgstDtm": "2024/08/20 09:57:07"
+  },
+  {
+    "userId": 8,
+    "loginId": "asdf@gmail.com",
+    "isFirst": 0,
+    "userName": "메로롱",
+    "userLevel": 2,
+    "userStatus": "W",
+    "userRole": "보안담당자",
+    "rgstDtm": "2024/08/20 09:56:02"
+  },
+  {
+    "userId": 2,
+    "loginId": "jiwan001@gmail.com",
+    "isFirst": 0,
+    "userName": "홍길동",
+    "userLevel": 3,
+    "userStatus": "W",
+    "userRole": "개발담당자",
+    "rgstDtm": "2024/08/19 15:54:00"
+  }
+]
+2024-09-03 10:48:21 [API /dvList] info: API /dvList 호출 성공: 사용자 레벨=undefined
+2024-09-03 10:48:42 [API /dvList] info: API /dvList 호출 성공: 사용자 레벨=3
+2024-09-03 10:50:02 [API /dvList] info: API /dvList 호출 성공: 사용자 레벨=undefined
+2024-09-03 10:59:22 [API /dvList] info: API /dvList ===== Parameter : [object Object]
+2024-09-03 11:12:42 [undefined] info: ================ data    : [
+  {
+    "userId": 59,
+    "loginId": "test04@gmail.com",
+    "isFirst": 0,
+    "userName": "홍길동",
+    "userLevel": 3,
+    "userStatus": "A",
+    "userRole": "개발담당자",
+    "rgstDtm": "2024/09/02 15:57:07"
+  },
+  {
+    "userId": 58,
+    "loginId": "gymhub500@gmail.com",
+    "isFirst": 0,
+    "userName": "한스리스리",
+    "userLevel": 3,
+    "userStatus": "A",
+    "userRole": "개발담당자",
+    "rgstDtm": "2024/09/01 16:37:33"
+  },
+  {
+    "userId": 54,
+    "loginId": "",
+    "isFirst": 0,
+    "userName": "",
+    "userLevel": 3,
+    "userStatus": "A",
+    "userRole": "개발담당자",
+    "rgstDtm": "2024/08/28 12:03:48"
+  },
+  {
+    "userId": 53,
+    "loginId": "wlsgh132@naver.com",
+    "isFirst": 0,
+    "userName": "진호",
+    "userLevel": 2,
+    "userStatus": "A",
+    "userRole": "보안담당자",
+    "rgstDtm": "2024/08/27 22:07:07"
+  },
+  {
+    "userId": 52,
+    "loginId": "jiwan.choi@dasvers.com",
+    "isFirst": 0,
+    "userName": "최지완",
+    "userLevel": 3,
+    "userStatus": "A",
+    "userRole": "개발담당자",
+    "rgstDtm": "2024/08/27 15:12:54"
+  },
+  {
+    "userId": 51,
+    "loginId": "asd@gmail.com",
+    "isFirst": 0,
+    "userName": "스리술",
+    "userLevel": 3,
+    "userStatus": "A",
+    "userRole": "개발담당자",
+    "rgstDtm": "2024/08/27 15:11:23"
+  },
+  {
+    "userId": 1,
+    "loginId": "altm56@gmail.com",
+    "isFirst": 0,
+    "userName": "양진호",
+    "userLevel": 1,
+    "userStatus": "A",
+    "userRole": "시스템관리자",
+    "rgstDtm": "2024/08/26 20:28:23"
+  },
+  {
+    "userId": 13,
+    "loginId": "seulhyi@dasvers.com",
+    "isFirst": 0,
+    "userName": "스리스리",
+    "userLevel": 3,
+    "userStatus": "W",
+    "userRole": "개발담당자",
+    "rgstDtm": "2024/08/20 11:08:11"
+  },
+  {
+    "userId": 12,
+    "loginId": "yagsill@dasvers.com",
+    "isFirst": 0,
+    "userName": "양진호",
+    "userLevel": 3,
+    "userStatus": "A",
+    "userRole": "개발담당자",
+    "rgstDtm": "2024/08/20 10:25:36"
+  },
+  {
+    "userId": 10,
+    "loginId": "3021062@gmail.com",
+    "isFirst": 0,
+    "userName": "한슬희",
+    "userLevel": 3,
+    "userStatus": "W",
+    "userRole": "개발담당자",
+    "rgstDtm": "2024/08/20 09:59:03"
+  },
+  {
+    "userId": 9,
+    "loginId": "aaaasdf@gmail.com",
+    "isFirst": 0,
+    "userName": "스리스리스리",
+    "userLevel": 3,
+    "userStatus": "W",
+    "userRole": "개발담당자",
+    "rgstDtm": "2024/08/20 09:57:07"
+  },
+  {
+    "userId": 8,
+    "loginId": "asdf@gmail.com",
+    "isFirst": 0,
+    "userName": "메로롱",
+    "userLevel": 2,
+    "userStatus": "W",
+    "userRole": "보안담당자",
+    "rgstDtm": "2024/08/20 09:56:02"
+  },
+  {
+    "userId": 2,
+    "loginId": "jiwan001@gmail.com",
+    "isFirst": 0,
+    "userName": "홍길동",
+    "userLevel": 3,
+    "userStatus": "W",
+    "userRole": "개발담당자",
+    "rgstDtm": "2024/08/19 15:54:00"
+  }
+]
