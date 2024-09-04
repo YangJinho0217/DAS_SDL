@@ -192,3 +192,23 @@ exports.logError = async function(label, data) {
 exports.isEmptyObject = async function(param) {
     return Object.keys(param).length === 0 && param.constructor === Object;
 }
+
+exports.resJson = async function(resultCode, resultMsg, data, token) {
+
+    var result = {
+        resultCode : resultCode,
+        resultMsg : resultMsg
+    }
+
+    if (data != null) {
+        result.data = data
+    }
+
+    if (token != null) {
+        result.token = token
+    }
+
+    await this.logInfo('Data', result)
+
+    return result
+}

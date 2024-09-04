@@ -6,6 +6,7 @@ const calc                          = require('../module/calc');
 const token                         = require('../loaders/token')
 const sql                           = require("mysql2/promise");
 const dbconfig                      = require("../config/db");
+const resultCode                    = require('../module/result');
 const pool                          = sql.createPool(dbconfig);
 const specificString                = calc.specificString();
 
@@ -30,10 +31,7 @@ router.post('/signIn', async (req, res) => {
 
         /* 아이디 존재 체크 */
         if (await calc.isEmptyObject(user)) {
-            return res.json({
-                resultCode : 400,
-                resultMsg : '아이디가 존재하지 않습니다'
-            })
+            return res.json(await calc.resJson(400, '아이디가 존재하지 않습니다', null, null))
         };
 
         if (user.isFirst == 1) {
@@ -45,10 +43,7 @@ router.post('/signIn', async (req, res) => {
         const decryptPassword = await calc.decryptPassword(userDBPassword);
 
         if (param.login_pw != decryptPassword) {
-            return res.json({
-                resultCode : 400,
-                resultMsg : '비밀번호가 일치하지 않습니다',
-            })
+            return res.json(await calc.resJson(400, '비밀번호가 일치하지 않습니다', null, null))
         };
 
         const data = {
@@ -63,20 +58,12 @@ router.post('/signIn', async (req, res) => {
         }
 
         await con.commit();
-        return res.json({
-            resultCode : 200,
-            resultMsg : '로그인 성공',
-            data : data,
-            token : token.create(user.userId)
-        });
+        return res.json(await calc.resJson(200, 'SUCCESS', data, token.create(user.userId)))
 
     } catch(error) {
         console.log(error)
         await con.rollback();
-        return res.json({
-            resultCode : 500,
-            resultMsg : 'SERVER ERROR'
-        })
+        return res.json(resultCode.SERVER_ERROR)
     } finally {
         con.release(); // 연결 해제
     }
@@ -99,6 +86,12 @@ router.post('/sendEmailAuth', async (req, res) => {
 
         await calc.logInfo('Interface', `${specificString}/das/user/sendEmailAuth`);
 
+        const user = await mysql.select('user', 'selectUserInfo', param, con);
+
+        if (!await calc.isEmptyObject(user)) {
+            return res.json(await calc.resJson(400, '이미 존재하는 이메일이 있습니다', null, null))
+        }
+
         const emailAuthCode = await calc.createEmailAuthCode();
         // /* 이메일 전송  */
         await calc.emailAuthSend(param.login_id, emailAuthCode).then(async (response) => {
@@ -114,18 +107,12 @@ router.post('/sendEmailAuth', async (req, res) => {
         })
     
         await con.commit();
-        return res.json({
-            resultCode : 200,
-            resultMsg : '인증코드 발송 성공'
-        })
+        return res.json(await calc.resJson(200, 'SUCCESS', null, null))
 
     } catch(error) {
         await con.rollback();
         console.log(error)
-        return res.json({
-            resultCode : 500,
-            resultMsg : 'SERVER ERROR'
-        })
+        return res.json(resultCode.SERVER_ERROR)
     } finally {
         await con.release();
     }
@@ -152,32 +139,20 @@ router.post('/authEmailCode', async (req, res) => {
         const user = await mysql.query('user', 'selectUserAuth', param, con);
 
         if(user.length < 1) {
-            return res.json({
-                resultCode : 400,
-                resultMsg : '아이디가 존재하지 않습니다'
-            })
+            return res.json(await calc.resJson(400, '아이디가 존재하지 않습니다', null, null))
         }
 
         const userDBauthCode = user[0].authCode;
         if(param.auth_code != userDBauthCode) {
-            return res.json({
-                resultCode : 400,
-                resultMsg : '인증번호가 일치하지 않습니다'
-            })
+            return res.json(await calc.resJson(400, '인증번호가 일치하지 않습니다', null, null))
         }
 
         await con.commit();
-        return res.json({
-            resultCode : 200,
-            resultMsg : '이메일 인증에 성공했습니다'
-        })
+        return res.json(await calc.resJson(200, 'SUCCESS', null, null))
     } catch(error) {
         console.log(error)
         await con.rollback();
-        return res.json({
-            resultCode : 500,
-            resultMsg : 'SERVER ERROR'
-        })
+        return res.json(resultCode.SERVER_ERROR)
     } finally {
         await con.release();
     }
@@ -208,18 +183,12 @@ router.post('/signUp', async (req, res) => {
 
         var user = await mysql.select("user", "selectUserInfo", param, con);
 
-        if (await calc.isEmptyObject(user)) {
-            return res.json({
-                resultCode : 400,
-                resultMsg : '아이디가 존재합니다.'
-            })
+        if (!await calc.isEmptyObject(user)) {
+            return res.json(await calc.resJson(400, '아이디가 존재합니다', null, null))
         };
 
         if (param.user_level == 1) {
-            return res.json({
-                resultCode : 400,
-                resultMsg : '시스템 관리자는 추가할 수 없습니다.'
-            })
+            return res.json(await calc.resJson(400, '시스템 관리자는 추가할 수 없습니다', null, null))
         }
 
         param.user_id = await mysql.value('user', 'nextvalAppUserId', {id : 'user_id'}, con);
@@ -230,18 +199,12 @@ router.post('/signUp', async (req, res) => {
         await mysql.proc("user", "insertUserInfo", param, con);
         
         await con.commit();
-        return res.json({
-            resultCode : 200,
-            resultMsg : '회원가입 요청 성공'
-        })
+        return res.json(await calc.resJson(200, 'SUCCESS', null, null))
 
     } catch(error) {
         console.log(error)
         await con.rollback();
-        return res.json({
-            resultCode : 500,
-            resultMsg : 'SERVER ERROR'
-        })
+        return res.json(resultCode.SERVER_ERROR)
     } finally {
         await con.release();
     }
@@ -270,27 +233,17 @@ router.put('/signOn' , async(req,res) => {
 
         /* 아이디 존재 체크 */
         if (user.length < 1) {
-            return res.json({
-                resultCode : 400,
-                resultMsg : '아이디가 존재하지 않습니다'
-            })
+            return res.json(await calc.resJson(400, '아이디가 존재하지 않습니다', null, null))
         };
 
         await mysql.proc("user", "updateUserStatus", param, con);
 
         await con.commit();
-        return res.json({
-            resultCode : 200,
-            resultMsg : '사용자 상태 변경 완료'
-        })
-
+        return res.json(await calc.resJson(200, 'SUCCESS', null, null))
     } catch(error) {
         console.log(error)
         await con.rollback();
-        return res.json({
-            resultCode : 500,
-            resultMsg : 'SERVER ERROR'
-        })
+        return res.json(resultCode.SERVER_ERROR)
     } finally {
         await con.release();
     }
@@ -317,10 +270,7 @@ router.post('/frgtEml' , async(req,res) => {
         
         /* 아이디 존재 체크 */
         if (await calc.isEmptyObject(user)) {
-            return res.json({
-                resultCode : 400,
-                resultMsg : '가입되어 있지 않은 이메일 입니다'
-            })
+            return res.json(await calc.resJson(400, '가입되어 있지 않은 이메일 입니다', null, null))
         };
 
         const userDBPassword = user.loginPw;
@@ -345,10 +295,7 @@ router.post('/frgtEml' , async(req,res) => {
     } catch(error) {
         console.log(error)
         await con.rollback();
-        return res.json({
-            resultCode : 500,
-            resultMsg : 'SERVER ERROR'
-        })
+        return res.json(resultCode.SERVER_ERROR)
     } finally {
         await con.release();
     }
@@ -377,10 +324,7 @@ router.put('/modify', verifyToken, async(req,res) => {
 
         /* 아이디 존재 체크 */
         if (await calc.isEmptyObject(user)) {
-            return res.json({
-                resultCode : 400,
-                resultMsg : '아이디가 존재하지 않습니다'
-            })
+            return res.json(await calc.resJson(400, '아이디가 존재하지 않습니다', null, null))
         };
 
         /* 비밀번호 체크 */
@@ -388,10 +332,7 @@ router.put('/modify', verifyToken, async(req,res) => {
         const decryptPassword = await calc.decryptPassword(userDBPassword);
 
         if (param.current_password != decryptPassword) {
-            return res.json({
-                resultCode : 400,
-                resultMsg : '비밀번호가 일치하지 않습니다',
-            })
+            return res.json(await calc.resJson(400, '비밀번호가 일치하지 않습니다', null, null))
         };
 
         const encryptNewPassword = await calc.encryptPassword(param.new_password);
@@ -400,18 +341,11 @@ router.put('/modify', verifyToken, async(req,res) => {
         await mysql.proc("user", "updateModify", param, con)
 
         await con.commit();
-        return res.json({
-            resultCode : 200,
-            resultMsg : '비밀번호 변경 성공'
-        });
-        
+        return res.json(await calc.resJson(200, 'SUCCESS', null, null))
     } catch(error) {
         console.log(error)
         await con.rollback();
-        return res.json({
-            resultCode : 500,
-            resultMsg : 'SERVER ERROR'
-        })
+        return res.json(resultCode.SERVER_ERROR)
     } finally {
         await con.release();
     }
@@ -435,20 +369,13 @@ router.get('/dvList',verifyToken, async(req,res) => {
         await calc.logInfo('Interface', `${specificString}/das/user/dvList`);
 
         const dvList = await mysql.query("user", "selectDvList", param, con)
-
+        
         await con.commit();
-        return res.json({
-            resultCode : 200,
-            resultMsg : 'OK',
-            data : dvList
-        })
+        return res.json(await calc.resJson(200, 'SUCCESS', dvList, null))
     } catch(error) {
         await calc.logError('/dvList', error.message)
         await con.rollback();
-        return res.json({
-            resultCode : 500,
-            resultMsg : 'SERVER ERROR'
-        })
+        return res.json(resultCode.SERVER_ERROR)
     } finally {
         await con.release();
     }
@@ -466,18 +393,12 @@ router.post('/chPw', async(req,res) => {
 
     try {
         const userPassword = await calc.decryptPassword(param.password);
-        return res.json({
-            resultCode : 200,
-            resultMsg : '복호화 성공',
-            data : userPassword
-        })
+        
+        return res.json(await calc.resJson(200, 'SUCCESS', userPassword, null))
     } catch(error) {
         console.log(error)
         await con.rollback();
-        return res.json({
-            resultCode : 500,
-            resultMsg : 'SERVER ERROR'
-        })
+        return res.json(resultCode.SERVER_ERROR)
     } finally {
         await con.release();
     }

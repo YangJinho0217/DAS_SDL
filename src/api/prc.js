@@ -7,10 +7,12 @@ const calc                          = require('../module/calc');
 const db                            = require('../config/db');
 const sql                           = require("mysql2/promise");
 const dbconfig                      = require("../config/db");
+const resultCode                    = require('../module/result');
 const pool                          = sql.createPool(dbconfig);
 const specificString                = calc.specificString();
 
 require('dotenv').config()
+
 /* ========== ============= ========== */
 /* ========== 프로세스 스텝별 리스트 GET ========== */
 /* ========== ============= ========== */
@@ -27,7 +29,7 @@ router.get('/prcInfo', verifyToken, async(req,res) => {
 
         await con.beginTransaction();
 
-        await calc.logInfo('Interface', `${specificString}/das/user/prcInfo`);
+        await calc.logInfo('Interface', `${specificString}/das/prc/prcInfo`);
 
         const prcInfoList = await mysql.select('prc' ,'selectPrcStepInfo', param, con);
         const prcInfoFileList = await mysql.query('prc', 'selectPrcStepInfoFile', param, con);
@@ -50,9 +52,12 @@ router.get('/prcInfo', verifyToken, async(req,res) => {
             }
 
             /* 리스트 체크 파일 서버에 박아둠 그냥 하드코딩으로(변경될 일이 없음) */
-            prcInfoList.lstc_file_path = 'https://yagsill.com/file/default/20240829.09.36.44_das_sdl_storyboard_240813.pdf'
-            prcInfoList.lstc_file_name = '20240829.09.36.44_das_sdl_storyboard_240813.pdf'
+            // prcInfoList.lstc_file_path = 'https://yagsill.com/file/default/20240829.09.36.44_das_sdl_storyboard_240813.pdf'
+            // prcInfoList.lstc_file_name = '20240829.09.36.44_das_sdl_storyboard_240813.pdf'
         }
+        /* 리스트 체크 파일 서버에 박아둠 그냥 하드코딩으로(변경될 일이 없음) */
+        prcInfoList.lstc_file_path = 'https://yagsill.com/file/default/20240829.09.36.44_das_sdl_storyboard_240813.pdf'
+        prcInfoList.lstc_file_name = '20240829.09.36.44_das_sdl_storyboard_240813.pdf'
 
         
 
@@ -129,19 +134,12 @@ router.get('/prcInfo', verifyToken, async(req,res) => {
         }
 
         await con.commit();
-        return res.json({
-            resultCode : 200,
-            resultMsg : "프로세스 조회 성공",
-            data : prcInfoList
-        })
+        return res.json(await calc.resJson(200, 'SUCCESS', prcInfoList, null))
 
     } catch(error) {
         console.log(error)
         await con.rollback();
-        return res.json({
-            resultCode : 500,
-            resultMsg : 'SERVER ERROR'
-        })
+        return res.json(resultCode.SERVER_ERROR)
     } finally {
         await con.release();
     }
@@ -164,29 +162,20 @@ router.post('/addLstc', verifyToken, upload.single('file'), async(req, res) => {
 
         await con.beginTransaction();
 
-        await calc.logInfo('Interface', `${specificString}/das/user/addLstc`);
+        await calc.logInfo('Interface', `${specificString}/das/prc/addLstc`);
 
         const prcInfoList = await mysql.query('prc' ,'selectPrcStepInfo', param, con)
         param.file_name = req.file.originalname
         if (prcInfoList.length < 1) {
-            return res.json({
-                resultCode : 400,
-                resultMsg : '프로젝트 또는 프로젝트 버전이 존재하지 않습니다'
-            })
+            return res.json(await calc.resJson(400, '프로젝트 또는 프로젝트 버전이 존재하지 않습니다', null, null))
         }
         await mysql.proc('prc','updateListCheckFile', param, con);
         await con.commit();
-        return res.json({
-            resultCode : 200,
-            resultMsg : '리스트 체크파일 등록 완료'
-        })
+        return res.json(await calc.resJson(200, 'SUCCESS', null, null))
     } catch(error) {
         console.log(error)
         await con.rollback();
-        return res.json({
-            resultCode : 500,
-            resultMsg : 'SERVER ERROR'
-        })
+        return res.json(resultCode.SERVER_ERROR)
     } finally {
         await con.release();
     }
@@ -211,15 +200,12 @@ router.post('/addCmt', verifyToken, upload.array('files'), async(req, res) => {
 
         await con.beginTransaction();
 
-        await calc.logInfo('Interface', `${specificString}/das/user/addCmt`);
+        await calc.logInfo('Interface', `${specificString}/das/prc/addCmt`);
 
         const prjlist = await mysql.query('prj', 'selectPrjVersion', param, con);
 
         if (prjlist.length < 1) {
-            return res.json({
-                resultCode : 400,
-                resultMsg : '프로젝트 또는 프로젝트 버전이 존재하지 않습니다'
-            })
+            return res.json(await calc.resJson(400, '프로젝트 또는 프로젝트 버전이 존재하지 않습니다', null, null))
         }
 
         param.comm_id = await mysql.value('prc', 'nextvalId', {id : 'comm_id'}, con);
@@ -239,18 +225,12 @@ router.post('/addCmt', verifyToken, upload.array('files'), async(req, res) => {
         }
 
         await con.commit();
-        return res.json({
-            resultCode : 200,
-            resultMsg : '코멘트 등록 성공'
-        })
+        return res.json(await calc.resJson(200, 'SUCCESS', null, null))
 
     } catch(error) {
         console.log(error)
         await con.rollback();
-        return res.json({
-            resultCode : 500,
-            resultMsg : 'SERVER ERROR'
-        })
+        return res.json(resultCode.SERVER_ERROR)
     } finally {
         await con.release();
     }
@@ -273,15 +253,12 @@ router.put('/updtCmt', verifyToken, upload.array('files'), async(req, res) => {
 
         await con.beginTransaction();
 
-        await calc.logInfo('Interface', `${specificString}/das/user/updtCmt`);
+        await calc.logInfo('Interface', `${specificString}/das/prc/updtCmt`);
 
         const commentList = await mysql.query('prc', 'selectPrcCommentList', param, con);
 
         if(commentList.length < 1) {
-            return res.json({
-                resultCode : 400,
-                resultMsg : '코멘트가 존재하지 않습니다.'
-            })
+            return res.json(await calc.resJson(400, '코멘트가 존재하지 않습니다', null, null))
         }
 
         // 코멘트 내용 수정
@@ -312,18 +289,11 @@ router.put('/updtCmt', verifyToken, upload.array('files'), async(req, res) => {
         }
 
         await con.commit();
-        return res.json({
-            resultCode : 200,
-            resultMsg : '코멘트 수정 성공'
-        })
-
+        return res.json(await calc.resJson(200, 'SUCCESS', null, null))
     } catch(error) {
         console.log(error)
         await con.rollback();
-        return res.json({
-            resultCode : 500,
-            resultMsg : 'SEVER ERROR'
-        })
+        return res.json(resultCode.SERVER_ERROR)
     } finally {
         await con.release();
     }
@@ -344,32 +314,23 @@ router.delete('/delCmt', verifyToken, async(req, res) => {
 
         await con.beginTransaction();
 
-        await calc.logInfo('Interface', `${specificString}/das/user/delCmt`);
+        await calc.logInfo('Interface', `${specificString}/das/prc/delCmt`);
 
         const commentList = await mysql.query('prc', 'selectPrcCommentList', param, con);
         
         if(commentList.length < 1) {
-            return res.json({
-                resultCode : 400,
-                resultMsg : '코멘트가 존재하지 않습니다 코멘트 번호를 다시 입력해 주세요'
-            })
+            return res.json(await calc.resJson(400, '코멘트가 존재하지 않습니다 코멘트 번호를 다시 입력해 주세요', null, null))
         }
 
         await mysql.proc('prc', 'deletePrcComment', param, con)
         await mysql.proc('prc', 'deletePrcCommentFile', param, con)
         
         await con.commit();
-        return res.json({
-            resultCode : 200,
-            resultMsg : "OK"
-        })
+        return res.json(await calc.resJson(200, 'SUCCESS', null, null))
     } catch(error) {
         console.log(error)
         await con.rollback();
-        return res.json({
-            resultCode : 500,
-            resultMsg : 'SERVER ERROR'
-        })
+        return res.json(resultCode.SERVER_ERROR)
     } finally {
         await con.release();
     }
@@ -395,49 +356,42 @@ router.post('/lstnRgst', verifyToken, upload.array('files'), async(req,res) => {
 
         await con.beginTransaction();
 
-        await calc.logInfo('Interface', `${specificString}/das/user/lstnRgst`);
+        await calc.logInfo('Interface', `${specificString}/das/prc/lstnRgst`);
 
         const prjStepList = await mysql.query('prj', 'selectPrjStepInfo', param, con);
 
-        if (prjStepList.length < 1) {
-            return res.json({
-                resultCode : 400,
-                 resultMsg : '프로젝트 아이디 또는 버전이 잘못되었습니다'
-            })
-        }
+        // if (prjStepList.length < 1) {
+        //     return res.json(await calc.resJson(400, '프로젝트 아이디 또는 버전이 잘못되었습니다', null, null))
+        // }
 
-        await mysql.proc('prc', 'updatePrcStepInfo', param, con);
+        param.prc_id = await mysql.value('prj', 'nextvalId', {id : 'prc_id'}, con);
+        // // await mysql.proc('prc', 'updatePrcStepInfo', param, con);
+        await mysql.proc('prc', 'insertPrcStepInfo', param, con);
 
-        // 파일 새로 등록
-        for (const i in param.file) {
+        // // 파일 새로 등록
+        // for (const i in param.file) {
 
-            const prc_file_id = await mysql.value('prc', 'nextvalId', {id : 'prc_file_id'}, con);
-            const data = {
-                prc_file_id : prc_file_id,
-                prj_id : param.prj_id,
-                version_number : param.version_number,
-                step_number : param.step_number,
-                file_path : param.file[i].path,
-                file_name : param.file[i].originalname
-            };
-            console.log(param.file[i]);
+        //     const prc_file_id = await mysql.value('prc', 'nextvalId', {id : 'prc_file_id'}, con);
+        //     const data = {
+        //         prc_file_id : prc_file_id,
+        //         prj_id : param.prj_id,
+        //         version_number : param.version_number,
+        //         step_number : param.step_number,
+        //         file_path : param.file[i].path,
+        //         file_name : param.file[i].originalname
+        //     };
+        //     console.log(param.file[i]);
 
-            await mysql.proc('prj', 'insertPrcStepInfoFile', data, con);
-        }
+        //     await mysql.proc('prj', 'insertPrcStepInfoFile', data, con);
+        // }
 
         await con.commit();
-        return res.json({
-            resultCode : 200,
-            resultMsg : '프로젝트 최종 정보 등록 성공'
-        })
+        return res.json(await calc.resJson(200, 'SUCCESS', null, null))
 
     } catch(error) {
         console.log(error)
         await con.rollback();
-        return res.json({
-            resultCode : 500,
-            resultMsg : 'SERVER ERROR'
-        })
+        return res.json(resultCode.SERVER_ERROR)
     } finally {
         await con.release();
     }

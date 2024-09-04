@@ -42,6 +42,7 @@
              , b.user_name
              , a.rgst_dtm
         FROM notice_list a, user_info b
-        WHERE a.noti_id = #{noti_id}
+        WHERE a.rgst_user_id = b.user_id
+        AND a.noti_id = #{noti_id}
     </select>
 </mapper>

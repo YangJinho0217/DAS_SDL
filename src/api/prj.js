@@ -7,6 +7,7 @@ const db                            = require('../config/db');
 const sql                           = require("mysql2/promise");
 const dbconfig                      = require("../config/db");
 const calc                          = require('../module/calc');
+const resultCode                    = require('../module/result');
 const pool                          = sql.createPool(dbconfig);
 const specificString                = calc.specificString();
 
@@ -39,7 +40,7 @@ router.post('/ctPrj', verifyToken, upload.array('files'), async (req, res) => {
         param.prj_id = await mysql.value('prj', 'nextvalId', {id : 'prj_id'}, con);
         param.version_id = await mysql.value('prj', 'nextvalId', {id : 'version_id'}, con);
         param.step_id = await mysql.value('prj', 'nextvalId', {id : 'step_id'}, con);
-        param.prc_id = await mysql.value('prj', 'nextvalId', {id : 'prc_id'}, con);
+        // param.prc_id = await mysql.value('prj', 'nextvalId', {id : 'prc_id'}, con);
         param.version_number = param.prj_start_version;
         param.step_number = 0;
         param.step_status = 'W';
@@ -95,20 +96,14 @@ router.post('/ctPrj', verifyToken, upload.array('files'), async (req, res) => {
         await mysql.proc('prj', 'insertPrjStepCreate', param, con);
 
         // process_step_info 테이블에 insert
-        await mysql.proc('prj', 'insertPrcStepInfo', param, con);
+        // await mysql.proc('prj', 'insertPrcStepInfo', param, con);
 
         await con.commit();
-        return res.json({
-            resultCode : 200,
-            resultMsg : "프로젝트 생성 완료"
-        });
+        return res.json(await calc.resJson(200, 'SUCCESS', null, null))
     } catch(error) {
         console.log(error)
         await con.rollback();
-        return res.json({
-            resultCode : 500,
-            resultMsg : 'SERVER ERROR'
-        })
+        return res.json(resultCode.SERVER_ERROR)
     } finally {
         await con.release();
     }
@@ -142,22 +137,16 @@ router.post('/addPrjVer', verifyToken, upload.array('files'), async(req, res) =>
         const version = await mysql.query('prj', 'selectPrjVersion', param, con);
     
         if (prj.length < 1) {
-            return res.json({
-                resultCode : 400,
-                resultMsg : '프로젝트가 존재하지 않습니다.'
-            })
+            return res.json(await calc.resJson(400, '프로젝트가 존재하지 않습니다', null, null))
         }
     
         if (version.length > 0) {
-            return res.json({
-                resultCode : 400,
-                resultMsg : '해당 버전이 존재합니다'
-            })
+            return res.json(await calc.resJson(400, '해당 버전이 존재합니다', null, null))
         }
 
         param.version_id = await mysql.value('prj', 'nextvalId', {id : 'version_id'}, con);
         param.step_id = await mysql.value('prj', 'nextvalId', {id : 'step_id'}, con);
-        param.prc_id = await mysql.value('prj', 'nextvalId', {id : 'prc_id'}, con);
+        // param.prc_id = await mysql.value('prj', 'nextvalId', {id : 'prc_id'}, con);
         param.step_number = 0;
         param.step_status = 'W';
         param.step_lnk = param.prj_lnk;
@@ -213,20 +202,14 @@ router.post('/addPrjVer', verifyToken, upload.array('files'), async(req, res) =>
         await mysql.proc('prj', 'insertPrjStepCreate', param, con);
 
         // process_step_info 테이블에 insert
-        await mysql.proc('prj', 'insertPrcStepInfo', param, con);
+        // await mysql.proc('prj', 'insertPrcStepInfo', param, con);
 
         await con.commit();
-        return res.json({
-            resultCode : 200,
-            resultMsg : "프로젝트 버전 생성 완료"
-        });
+        return res.json(await calc.resJson(200, 'SUCCESS', null, null))
     } catch(error) {
         console.log(error)
         await con.rollback();
-        return res.json({
-            resultCode : 500,
-            resultMsg : 'SERVER ERROR'
-        })
+        return res.json(resultCode.SERVER_ERROR)
     } finally {
         await con.release();
     }
@@ -308,20 +291,11 @@ router.get('/prjList',verifyToken, async(req, res) => {
         }).filter(item => item !== null);
 
         await con.commit();
-        return res.json({
-            resultCode : 200,
-            resultMsg : '프로젝트 조회 완료',
-            // totalPage : totalPage,
-            data : combinedProjectList
-        })
-
+        return res.json(await calc.resJson(200, 'SUCCESS', combinedProjectList, null))
     } catch(error) {
         console.log(error)
         await con.rollback();
-        return res.json({
-            resultCode : 500,
-            resultMsg : 'SERVER ERROR'
-        })
+        return res.json(resultCode.SERVER_ERROR)
     } finally {
         await con.release();
     }
@@ -350,10 +324,7 @@ router.get('/detail', verifyToken, async(req, res) => {
 
 
         if (value.del_yn != 'Y') {
-            return res.json({
-                resultCode : 400,
-                resultMsg : '버전이 없습니다.'
-            })
+            return res.json(await calc.resJson(400, '버전이 없습니다', null, null))
         }
         const modifiedPaths = myProjectListFile.map(item => {
 
@@ -382,23 +353,36 @@ router.get('/detail', verifyToken, async(req, res) => {
         value.file = modifiedPaths
         
         await con.commit();
-        return res.json({
-            resultCode : 200,
-            resultMsg : '프로젝트 특정 버전 조회 성공',
-            data : value
-        })
-
+        return res.json(await calc.resJson(200, 'SUCCESS', value, null))
     } catch(error) {
         console.log(error)
         await con.rollback();
-        return res.json({
-            resultCode : 500,
-            resultMsg : 'SERVER ERROR'
-        })
+        return res.json(resultCode.SERVER_ERROR)
     } finally {
         await con.release();
     }
     
+})
+
+router.get('/lstVer', async(req,res) => {
+    var param = {
+        prj_id : req.query.prj_id
+    }
+
+    const con = await pool.getConnection();
+    try {
+        await con.beginTransaction();
+        await calc.logInfo('interface', `${specificString}/das/prj/lstVer`)
+        const lstVer = await mysql.select('prj', 'selectPrjLastVersion', param, con);
+
+        await con.commit();
+        return res.json(await calc.resJson(200, 'SUCCESS', lstVer, null))
+    } catch(error) {
+        await con.rollback();
+        return res.json(resultCode.SERVER_ERROR)
+    } finally {
+        await con.release();
+    }
 })
 
 /* ========== ============= ========== */
@@ -447,19 +431,12 @@ router.get('/prjHst', verifyToken, async(req,res) => {
         });
 
         await con.commit();
-        return res.json({
-            resultCode : 200,
-            resultMsg : '특정 프로젝트 히스토리 조회 완료',
-            data : combinedProjectList
-        })
+        return res.json(await calc.resJson(200, 'SUCCESS', combinedProjectList, null))
 
     } catch(error) {
         console.log(error)
         await con.rollback();
-        return res.json({
-            resultCode : 500,
-            resultMsg : 'SERVER ERROR'
-        })
+        return res.json(resultCode.SERVER_ERROR)
     } finally {
         await con.release();
     }
@@ -495,106 +472,97 @@ router.put('/updtPrj', verifyToken, upload.array('files'), async(req, res) => {
         // 버전 변경 불가
         const projectList = await mysql.query('prj','selectPrjVersion', param, con);
         if (projectList.length < 1) {
-            return res.json({
-                resultCode : 400,
-                resultMsg : '프로젝트 또는 버전이 존재하지 않습니다'
-            })
+            return res.json(await calc.resJson(400, '프로젝트 또는 버전이 존재하지 않습니다', null, null))
         }
         
         await mysql.proc('prj', 'updatePrjVersion', param, con);
 
-        if (param.prj_sec_user != undefined) {
-            const secUser = param.prj_sec_user.split(',');
+        // if (param.prj_sec_user != undefined) {
+        //     const secUser = param.prj_sec_user.split(',');
         
-            // project_security_manager 테이블 insert
-            for (var i = 0; i < secUser.length; i ++) {
-                const data = {
-                    prj_sec_id : await mysql.value('prj', 'nextvalId', {id : 'prj_sec_id'}, con),
-                    prj_id : param.prj_id,
-                    version_number : param.version_number,
-                    sec_id : secUser[i]
-                };
-                await mysql.proc('prj', 'insertPrjSecManager', data, con);
-            }
+        //     // project_security_manager 테이블 insert
+        //     for (var i = 0; i < secUser.length; i ++) {
+        //         const data = {
+        //             prj_sec_id : await mysql.value('prj', 'nextvalId', {id : 'prj_sec_id'}, con),
+        //             prj_id : param.prj_id,
+        //             version_number : param.version_number,
+        //             sec_id : secUser[i]
+        //         };
+        //         await mysql.proc('prj', 'insertPrjSecManager', data, con);
+        //     }
             
-        }
+        // }
 
-        if (param.prj_dev_user != undefined) {
-            const devUser = param.prj_dev_user.split(',');
+        // if (param.prj_dev_user != undefined) {
+        //     const devUser = param.prj_dev_user.split(',');
 
-            // project_develop_manager 테이블 insert
-            for (var i = 0; i < devUser.length; i++) {
-                const data = {
-                    prj_dev_id : await mysql.value('prj', 'nextvalId', {id : 'prj_dev_id'}, con),
-                    prj_id : param.prj_id,
-                    version_number : param.version_number,
-                    dev_id : devUser[i]
-                };
-                await mysql.proc('prj', 'insertPrjDevManager', data, con);
-            }
-        }
+        //     // project_develop_manager 테이블 insert
+        //     for (var i = 0; i < devUser.length; i++) {
+        //         const data = {
+        //             prj_dev_id : await mysql.value('prj', 'nextvalId', {id : 'prj_dev_id'}, con),
+        //             prj_id : param.prj_id,
+        //             version_number : param.version_number,
+        //             dev_id : devUser[i]
+        //         };
+        //         await mysql.proc('prj', 'insertPrjDevManager', data, con);
+        //     }
+        // }
 
-        if (param.step_file.length > 0) {
-            for (var i = 0; i < param.step_file.length; i++) {
-                const file_id = await mysql.value('prj', 'nextvalId', {id : 'file_id'}, con);
-                const data = {
-                    file_id : file_id,
-                    prj_id : param.prj_id,
-                    version_number : param.version_number,
-                    file_path : param.step_file[i].path,
-                    file_name : param.step_file[i].originalname
-                };
-                await mysql.proc('prj', 'insertPrjFile', data, con);
-            }   
-        }
+        // if (param.step_file.length > 0) {
+        //     for (var i = 0; i < param.step_file.length; i++) {
+        //         const file_id = await mysql.value('prj', 'nextvalId', {id : 'file_id'}, con);
+        //         const data = {
+        //             file_id : file_id,
+        //             prj_id : param.prj_id,
+        //             version_number : param.version_number,
+        //             file_path : param.step_file[i].path,
+        //             file_name : param.step_file[i].originalname
+        //         };
+        //         await mysql.proc('prj', 'insertPrjFile', data, con);
+        //     }   
+        // }
 
-        if (param.del_sec_user != undefined) {
-            const delSecUser = param.del_sec_user.split(',');
-            for (var i = 0; i < delSecUser.length; i ++) {
-                const data = {
-                    prj_id : param.prj_id,
-                    version_number : param.version_number,
-                    del_sec_user : delSecUser[i]
-                };
-                await mysql.proc('prj', 'deletePrjSecManager', data, con);
-            }
-        }
+        // if (param.del_sec_user != undefined) {
+        //     const delSecUser = param.del_sec_user.split(',');
+        //     for (var i = 0; i < delSecUser.length; i ++) {
+        //         const data = {
+        //             prj_id : param.prj_id,
+        //             version_number : param.version_number,
+        //             del_sec_user : delSecUser[i]
+        //         };
+        //         await mysql.proc('prj', 'deletePrjSecManager', data, con);
+        //     }
+        // }
 
-        if (param.del_dev_user != undefined) {
-            const delDecUser = param.del_dev_user.split(',');
-            for (var i = 0; i < delDecUser.length; i ++) {
-                const data = {
-                    prj_id : param.prj_id,
-                    version_number : param.version_number,
-                    del_dev_user : delDecUser[i]
-                };
-                await mysql.proc('prj', 'deletePrjDevManager', data, con);
-            }
-        }
+        // if (param.del_dev_user != undefined) {
+        //     const delDecUser = param.del_dev_user.split(',');
+        //     for (var i = 0; i < delDecUser.length; i ++) {
+        //         const data = {
+        //             prj_id : param.prj_id,
+        //             version_number : param.version_number,
+        //             del_dev_user : delDecUser[i]
+        //         };
+        //         await mysql.proc('prj', 'deletePrjDevManager', data, con);
+        //     }
+        // }
 
-        if (param.del_file_id != undefined) {
-            const delFileId = param.del_file_id.split(',');
-            for (var i = 0; i < delFileId.length; i++) {
-                const data = {
-                    del_file_id : delFileId[i]
-                };
-                await mysql.proc('prj', 'deletePrjFile', data, con);
-            }   
-        }
+        // if (param.del_file_id != undefined) {
+        //     const delFileId = param.del_file_id.split(',');
+        //     for (var i = 0; i < delFileId.length; i++) {
+        //         const data = {
+        //             del_file_id : delFileId[i]
+        //         };
+        //         await mysql.proc('prj', 'deletePrjFile', data, con);
+        //     }   
+        // }
 
         await con.commit();
-        return res.json({
-            resultCode : 200,
-            resultMsg : '프로젝트 수정 완료'
-        })
+        return res.json(await calc.resJson(200, 'SUCCESS', null, null))
 
     } catch (error) {
         console.log(error)
         await con.rollback();
-        return res.json({
-            resultCode : 500,
-            resultMsg : error
-        })
+        return res.json(resultCode.SERVER_ERROR)
     } finally {
         await con.release();
     }
@@ -613,19 +581,13 @@ router.post('/agrStp', verifyToken, async(req,res) => {
         const prjStepList = await mysql.query('prj', 'selectPrjStep', param, con);
 
         if(prjStepList.length < 1) {
-            return res.json({
-                resultCode : 400,
-                resultMsg : '프로젝트의 스텝아이디가 존재하지 않습니다'
-            })
+            return res.json(await calc.resJson(400, '프로젝트의 스텝아이디가 존재하지 않습니다', null, null))
         };
 
         param.prj_id = prjStepList[0].prj_id;
         param.version_number = prjStepList[0].version_number;
-        if (prjStepList[0].step_number >= 5) {
-            return res.json({
-                resultCode : 400,
-                resultMsg : '스텝 넘버가 잘못되었습니다' + ' ' + '현재 : ' + prjStepList[0].step_number
-            })
+        if (prjStepList[0].step_number >= 4) {
+            return res.json(await calc.resJson(400, '스텝 넘버가 잘못되었습니다' + ' ' + '현재 : ' + prjStepList[0].step_number, null, null))
         }
         param.updt_step_number = prjStepList[0].step_number + 1;
         param.prc_id = await mysql.value('prj', 'nextvalId', {id : 'prc_id'}, con);
@@ -634,18 +596,12 @@ router.post('/agrStp', verifyToken, async(req,res) => {
         await mysql.proc('prj', 'insertPrcStepInfoDefault', param, con);
 
         await con.commit();
-        return res.json({
-            resultCode : 200,
-            resultMsg : '승인 완료'
-        })
+        return res.json(await calc.resJson(200, 'SUCCESS', null, null))
 
     } catch(error) {
         console.log(error)
         await con.rollback();
-        return res.json({
-            resultCode : 500,
-            resultMsg : 'SERVER ERROR'
-        })
+        return res.json(resultCode.SERVER_ERROR)
     } finally {
         await con.release();
     }

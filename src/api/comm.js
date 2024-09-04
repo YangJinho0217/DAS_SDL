@@ -5,6 +5,7 @@ const mysql                         = require("../loaders/mysql");
 const calc                          = require('../module/calc');
 const sql                           = require("mysql2/promise");
 const dbconfig                      = require("../config/db");
+const resultCode                    = require('../module/result');
 const pool                          = sql.createPool(dbconfig);
 const specificString                = calc.specificString();
 
@@ -24,24 +25,18 @@ router.post('/addNoti', verifyToken, async (req, res) => {
 
         await con.beginTransaction();
 
-        await calc.logInfo('Interface', `${specificString}/das/user/addNoti`);
+        await calc.logInfo('Interface', `${specificString}/das/comm/addNoti`);
 
         const noti_id = await mysql.value('comm', 'nextvalId', {id : 'noti_id'}, con);
         param.noti_id = noti_id;
         await mysql.proc('comm', 'insertNoticeList', param, con);
 
         await con.commit();
-        return res.json({
-            resultCode : 200,
-            resultMsg : '공지사항 등록 성공'
-        })
+        return res.json(await calc.resJson(200, 'SUCCESS', null, null))
     } catch(error) {
         console.log(error)
         await con.rollback();
-        return res.json({
-            resultCode : 500,
-            resultMsg : 'SERVER ERROR'
-        })
+        return res.json(resultCode.SERVER_ERROR)
     } finally {
         await con.release();
     }
@@ -58,24 +53,17 @@ router.get('/notiInfo', verifyToken, async(req, res) => {
 
         await con.beginTransaction();
 
-        await calc.logInfo('Interface', `${specificString}/das/user/notiInfo`);
+        await calc.logInfo('Interface', `${specificString}/das/comm/notiInfo`);
 
         const notiList = await mysql.query('comm', 'selectNoticeList', null, con);
 
         await con.commit();
-        return res.json({
-            resultCode : 200,
-            resultMsg : '공지사항 조회 성공',
-            data : notiList
-        })
+        return res.json(await calc.resJson(200, 'SUCCESS', notiList, null))
 
     } catch(error) {
         console.log(error)
         await con.rollback();
-        return res.json({
-            resultCode : 500,
-            resultMsg : 'SERVER ERROR'
-        })
+        return res.json(resultCode.SERVER_ERROR)
     } finally {
         await con.release();
     }
@@ -95,23 +83,19 @@ router.get('/detail', verifyToken, async(req, res) => {
 
         await con.beginTransaction();
 
-        await calc.logInfo('Interface', `${specificString}/das/user/detail`);
+        await calc.logInfo('Interface', `${specificString}/das/comm/detail`);
         
         const notiListDetail = await mysql.select('comm', 'selectNoticeListDetail', param, con)
+        if (await calc.isEmptyObject(notiListDetail)) {
+            return res.json(await calc.resJson(400, '공지사항이 존재하지 않습니다', null, null))
+        }
 
         await con.commit();
-        return res.json({
-            resultCode : 200,
-            resultMsg : '공지사항 상세 조회 성공',
-            data : notiListDetail
-        })
+        return res.json(await calc.resJson(200, 'SUCCESS', notiListDetail, null))
     } catch(error) {
         console.log(error)
         await con.rollback();
-        return res.json({
-            resultCode : 500,
-            resultMsg : 'SERVER ERROR'
-        })
+        return res.json(resultCode.SERVER_ERROR)
     } finally {
         await con.release();
     }

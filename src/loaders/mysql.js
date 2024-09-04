@@ -8,10 +8,9 @@ const query = {
         console.log(sql);
         console.log('----------------------------------------');
         const [rows, fields] = await connection.query(sql);
-        console.log(rows);
+        // console.log(rows);
         await calc.logInfo('selectId', selectId)
         await calc.logInfo('Parameter', param)
-        await calc.logInfo('Data', rows);
         return rows;
     },
     select: async (nameSpace, selectId, param, connection) => {
@@ -20,10 +19,8 @@ const query = {
         console.log(sql);
         console.log('----------------------------------------');
         const [rows, fields] = await connection.query(sql);
-        console.log(rows[0]);
         await calc.logInfo('selectId', selectId)
         await calc.logInfo('Parameter', param)
-        await calc.logInfo('Data', rows);
         return typeof rows[0] == 'undefined' ? {} : rows[0];
     },
     proc: async (nameSpace, selectId, param, connection) => {
@@ -42,7 +39,6 @@ const query = {
         console.log(sql);
         console.log('----------------------------------------');
         const [rows, fields] = await connection.query(sql);
-        console.log(rows);
         await calc.logInfo('selectId', selectId)
         await calc.logInfo('Parameter', param)
         await calc.logInfo('Data', rows);

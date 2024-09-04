@@ -176,9 +176,55 @@
         <if test="step_description != undefined">
             , step_description = #{step_description}
         </if>
+        <if test="step_number == 4">
+            , step_status = 'A'
+        </if>
     </trim>
     WHERE prj_id = #{prj_id}
     AND version_number = #{version_number}
     AND step_number = #{step_number}
   </update>
+
+  <insert id="insertPrcStepInfo">
+    INSERT INTO process_step_info
+    (
+        prc_id
+      , prj_id
+      , version_number
+      , step_number
+      , step_lnk
+      , step_description
+    )
+    VALUES
+    (
+        #{prc_id}
+      , #{prj_id}
+      , #{version_number}
+      , #{step_number}
+      , #{step_lnk}
+      , #{step_description}
+    )
+  </insert>
+
+  <insert id="insertPrcStepInfoFile">
+    INSERT INTO process_step_info_file
+    (
+        prc_file_id
+      , prj_id
+      , version_number
+      , step_number
+      , file_path
+      , file_name
+    ) 
+    VALUES
+    (
+        #{prc_file_id}
+      , #{prj_id}
+      , #{version_number}
+      , #{step_number}
+      , #{file_path}
+      , #{file_name}
+    )
+  </insert>
+
 </mapper>

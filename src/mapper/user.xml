@@ -6,23 +6,6 @@
     SELECT nextval(#{id}) as user_id FROM DUAL;
   </select>
 
-  <select id="selctCountUserInfoList">
-    SELECT count(*) AS totalCount FROM user_info;
-  </select>
-
-  <select id="selectUserInfoList">
-    SELECT user_id AS userId
-         , login_id AS loginId
-         , isfirst AS isFirst
-         , user_name AS userName
-         , user_level AS userLevel
-         , user_status AS userStatus
-         , rgst_dtm AS rgstDtm
-    FROM user_info
-    ORDER BY rgstDtm DESC
-    LIMIT ${currentPage}, ${itemPerPage};
-  </select>
-
   <update id="updateUserInfoIsFirst">
     UPDATE user_info 
     SET isfirst = 0

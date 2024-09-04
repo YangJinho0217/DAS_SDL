@@ -55,7 +55,7 @@
                 },
                 "resultMsg": {
                   "type": "string",
-                  "example": "인증코드 발송 성공"
+                  "example": "SUCESS"
                 }
               },
               "xml": {
@@ -99,7 +99,7 @@
                 },
                 "resultMsg": {
                   "type": "string",
-                  "example": "이메일 인증 성공"
+                  "example": "SUCESS"
                 }
               },
               "xml": {
@@ -145,7 +145,7 @@
                 },
                 "resultMsg": {
                   "type": "string",
-                  "example": "회원가입 성공"
+                  "example": "SUCESS"
                 }
               },
               "xml": {
@@ -188,7 +188,7 @@
                 },
                 "resultMsg": {
                   "type": "string",
-                  "example": "로그인 성공"
+                  "example": "SUCESS"
                 },
                 "data": {
                   "type": "object",
@@ -226,6 +226,10 @@
                       "example" : "2024/08/16 10:21:54"
                     }
                   }
+                },
+                "token" : {
+                  "type" : "string",
+                  "example" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoxLCJpYXQiOjE3MjU0MTczMDB9.7kFw3sdAjjtzb2MN2hKi8F-CQUTitghgfUn1K1JxunU"
                 }
               },
               "xml": {
@@ -267,7 +271,7 @@
                 },
                 "resultMsg": {
                   "type": "string",
-                  "example": "비밀번호 찾기 이메일 전송 성공"
+                  "example": "SUCESS"
                 }
               },
               "xml": {
@@ -311,7 +315,7 @@
                 },
                 "resultMsg": {
                   "type": "string",
-                  "example": "비밀번호 변경 성공"
+                  "example": "SUCESS"
                 }
               },
               "xml": {
@@ -358,7 +362,7 @@
                 },
                 "resultMsg": {
                   "type": "string",
-                  "example": "개발자 리스트 출력 완료"
+                  "example": "SUCESS"
                 },
                 "data": {
                   "type": "array",
@@ -504,7 +508,7 @@
                 },
                 "resultMsg": {
                   "type": "string",
-                  "example": "프로젝트 생성 완료"
+                  "example": "SUCESS"
                 }
               },
               "xml": {
@@ -626,7 +630,7 @@
                 },
                 "resultMsg": {
                   "type": "string",
-                  "example": "프로젝트 버전 생성 완료"
+                  "example": "SUCESS"
                 }
               },
               "xml": {
@@ -673,7 +677,7 @@
                 },
                 "resultMsg": {
                   "type": "string",
-                  "example": "프로젝트 조회 완료"
+                  "example": "SUCESS"
                 },
                 "totalPage" : {
                   "type" : "number",
@@ -792,7 +796,7 @@
                 },
                 "resultMsg": {
                   "type": "string",
-                  "example": "특정 프로젝트 히스토리 조회 성공"
+                  "example": "SUCESS"
                 },
                 "totalPage" : {"type" : "number", "example" : 1},
                 "data": {
@@ -910,7 +914,7 @@
                 },
                 "resultMsg": {
                   "type": "string",
-                  "example": "특정 프로젝트 히스토리 조회 성공"
+                  "example": "SUCESS"
                 },
                 "totalPage" : {"type" : "number", "example" : 1},
                 "data": {
@@ -1120,14 +1124,7 @@
                 },
                 "resultMsg": {
                   "type": "string",
-                  "example": "프로젝트 특정 버전 수정 완료"
-                },
-                "data": {
-                  "type": "object",
-                  "properties": {
-                    "resultCode" : { "type" : "number", "example" : 200 },
-                    "resultMsg" : { "type" : "string", "example" : "프로젝트 생성 완료"}
-                  }
+                  "example": "SUCESS"
                 }
               },
               "xml": {
@@ -1192,7 +1189,191 @@
                 },
                 "resultMsg": {
                   "type": "string",
-                  "example": "프로세스 단계 조회 성공"
+                  "example": "SUCESS"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "prj_id": {
+                      "type": "number",
+                      "example": 25
+                    },
+                    "prj_name": {
+                      "type": "string",
+                      "example": "[프로젝트] DAS SDL 프로젝트 2024_09_03"
+                    },
+                    "version_number": {
+                      "type": "string",
+                      "example": "v0.0.6"
+                    },
+                    "step_number": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "step_status": {
+                      "type": "string",
+                      "example": "검토중"
+                    },
+                    "step_id": {
+                      "type": "number",
+                      "example": 47
+                    },
+                    "step_lnk": {
+                      "type": "string",
+                      "example": "www.naver.com"
+                    },
+                    "step_description": {
+                      "type": "string",
+                      "example": "디스크립션"
+                    },
+                    "rgst_dtm": {
+                      "type": "string",
+                      "example": "2024-08-30 16:01:16"
+                    },
+                    "lstc_file_path": {
+                      "type": "string",
+                      "example": "https://yagsill.com/file/default/20240829.09.36.44_das_sdl_storyboard_240813.pdf"
+                    },
+                    "lstc_file_name": {
+                      "type": "string",
+                      "example": "20240829.09.36.44_das_sdl_storyboard_240813.pdf"
+                    },
+                    "file": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "file_id": {
+                            "type": "number"
+                          },
+                          "file_path": {
+                            "type": "string"
+                          },
+                          "file_name": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "example": [
+                        {
+                          "file_id": 43,
+                          "file_path": "https://yagsill.com/file/default/20240830.16.01.15_das_sdl_storyboard_240813.pptx",
+                          "file_name": "das_sdl_storyboard_240813.pptx"
+                        },
+                        {
+                          "file_id": 44,
+                          "file_path": "https://yagsill.com/file/default/20240830.16.01.15_microsoft_security_development_lifecycle.pdf",
+                          "file_name": "microsoft_security_development_lifecycle.pdf"
+                        },
+                        {
+                          "file_id": 45,
+                          "file_path": "https://yagsill.com/file/default/20240830.16.01.15_SDL_Brainstorming_최지완_240809.pdf (1).pdf",
+                          "file_name": "SDL_Brainstorming_최지완_240809.pdf (1).pdf"
+                        }
+                      ]
+                    },
+                    "commentList": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "comm_id": {
+                            "type": "number"
+                          },
+                          "rgst_user_id": {
+                            "type": "number"
+                          },
+                          "user_name": {
+                            "type": "string"
+                          },
+                          "comment_description": {
+                            "type": "string"
+                          },
+                          "user_role": {
+                            "type": "string"
+                          },
+                          "rgst_dtm": {
+                            "type": "string"
+                          },
+                          "files": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "comm_file_id": {
+                                  "type": "number"
+                                },
+                                "comm_id": {
+                                  "type": "number"
+                                },
+                                "file_path": {
+                                  "type": "string"
+                                },
+                                "file_name": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "example": [
+                        {
+                          "comm_id": 10,
+                          "rgst_user_id": 1,
+                          "user_name": "양진호",
+                          "comment_description": "test",
+                          "user_role": "시스템관리자",
+                          "rgst_dtm": "2024-09-02 10:20:54",
+                          "files": []
+                        },
+                        {
+                          "comm_id": 16,
+                          "rgst_user_id": 1,
+                          "user_name": "양진호",
+                          "comment_description": "테스트 네번쟤ㅤㅉㅒㅤㅒ",
+                          "user_role": "시스템관리자",
+                          "rgst_dtm": "2024-09-03 17:41:35",
+                          "files": [
+                            {
+                              "comm_file_id": 25,
+                              "comm_id": 16,
+                              "file_path": "https://yagsill.com/file/25/v0.0.6/0/20240903.17.41.35_20240829.09.36.44_das_sdl_storyboard_240813 (1).pdf",
+                              "file_name": "20240829.09.36.44_das_sdl_storyboard_240813 (1).pdf"
+                            },
+                            {
+                              "comm_file_id": 26,
+                              "comm_id": 16,
+                              "file_path": "https://yagsill.com/file/25/v0.0.6/0/20240903.17.41.35_das_sdl_storyboard_240813 (5).pptx",
+                              "file_name": "das_sdl_storyboard_240813 (5).pptx"
+                            }
+                          ]
+                        },
+                        {
+                          "comm_id": 17,
+                          "rgst_user_id": 1,
+                          "user_name": "양진호",
+                          "comment_description": "ㅇㄴㅇㄴㅇㄴㅇㄴ",
+                          "user_role": "시스템관리자",
+                          "rgst_dtm": "2024-09-03 17:41:43",
+                          "files": [
+                            {
+                              "comm_file_id": 27,
+                              "comm_id": 17,
+                              "file_path": "https://yagsill.com/file/25/v0.0.6/0/20240903.17.41.43_20240829.09.36.44_das_sdl_storyboard_240813 (1).pdf",
+                              "file_name": "20240829.09.36.44_das_sdl_storyboard_240813 (1).pdf"
+                            },
+                            {
+                              "comm_file_id": 28,
+                              "comm_id": 17,
+                              "file_path": "https://yagsill.com/file/25/v0.0.6/0/20240903.17.41.43_das_sdl_storyboard_240813 (5).pptx",
+                              "file_name": "das_sdl_storyboard_240813 (5).pptx"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
                 }
               },
               "xml": {
@@ -1257,7 +1438,7 @@
                 },
                 "resultMsg": {
                   "type": "string",
-                  "example": "리스트 체크 파일 등록 성공"
+                  "example": "SUCESS"
                 }
               },
               "xml": {
@@ -1312,7 +1493,7 @@
                 },
                 "resultMsg": {
                   "type": "string",
-                  "example": "코멘트 삭제 완료"
+                  "example": "SUCESS"
                 }
               },
               "xml": {
@@ -1403,7 +1584,7 @@
                 },
                 "resultMsg": {
                   "type": "string",
-                  "example": "코멘트 등록 성공"
+                  "example": "SUCESS"
                 }
               },
               "xml": {
@@ -1479,7 +1660,7 @@
                 },
                 "resultMsg": {
                   "type": "string",
-                  "example": "코멘트 수정 완료"
+                  "example": "SUCESS"
                 }
               },
               "xml": {
@@ -1534,7 +1715,7 @@
                 },
                 "resultMsg": {
                   "type": "string",
-                  "example": "코멘트 삭제 완료"
+                  "example": "SUCESS"
                 }
               },
               "xml": {
@@ -1623,7 +1804,7 @@
                 },
                 "resultMsg": {
                   "type": "string",
-                  "example": "프로젝트 최종 정보 등록 성공"
+                  "example": "SUCESS"
                 }
               },
               "xml": {
@@ -1664,7 +1845,7 @@
                 },
                 "resultMsg": {
                   "type": "string",
-                  "example": "공지사항 조회 성공"
+                  "example": "SUCESS"
                 },
                 "data": {
                   "type": "array",
@@ -1757,7 +1938,7 @@
                 },
                 "resultMsg": {
                   "type": "string",
-                  "example": "공지사항 등록 성공"
+                  "example": "SUCESS"
                 }
               },
               "xml": {
@@ -1806,7 +1987,7 @@
                 },
                 "resultMsg": {
                   "type": "string",
-                  "example": "공지사항 상세 조회 성공"
+                  "example": "SUCESS"
                 },
                 "data": {
                   "type": "object",

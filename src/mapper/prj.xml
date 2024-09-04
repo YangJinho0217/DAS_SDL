@@ -228,6 +228,14 @@
     </if>
   </select>
 
+  <select id="selectPrjLastVersion">
+    SELECT version_number
+    FROM project_version
+    WHERE prj_id = #{prj_id}
+    ORDER BY version_id DESC
+    LIMIT 1;
+  </select>
+
   <insert id="insertPrjSecManager">
     INSERT INTO project_security_manager
     (
@@ -260,37 +268,6 @@
       , #{version_number}
       , #{dev_id}
     )
-  </insert>
-
-  <insert id="insertPrjStep">
-    INSERT INTO project_step
-    (
-        step_id
-      , prj_id
-      , version_number
-      , step_number
-      , step_status
-      , step_result_comment
-      , step_result_file
-      , step_result_url
-    )
-    VALUES
-    (
-        #{step_id}
-      , #{prj_id}
-      , #{version_number}
-      , #{step_number}
-      , #{step_status}
-      , #{step_result_comment}
-      , #{step_result_file}
-      , #{step_result_url}
-    )
-    ON DUPLICATE KEY UPDATE
-        step_number         = #{step_number}
-      , step_status         = #{step_status}
-      , step_result_comment = #{step_result_comment}
-      , step_result_file    = #{step_result_file}
-      , step_result_url     = #{step_result_url}
   </insert>
 
   <update id="updatePrjVersion">
