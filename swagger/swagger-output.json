@@ -1073,36 +1073,6 @@
             "description" : "변경할 프로젝트 개발 담당자(다중)"
           },
           {
-            "name": "del_sec_user",
-            "in": "formData",
-            "type": "array",
-            "items" : {
-              "type" : "number"
-            },
-            "example": 2,
-            "description" : "삭제할 프로젝트 보안 담당자(다중)"
-          },
-          {
-            "name": "del_dev_user",
-            "in": "formData",
-            "type": "array",
-            "items" : {
-              "type" : "number"
-            },
-            "example": 1,
-            "description" : "삭제할 프로젝트 개발 담당자(다중)"
-          },
-          {
-            "name": "del_file_id",
-            "in": "formData",
-            "type": "array",
-            "items" : {
-              "type" : "number"
-            },
-            "example": 1,
-            "description" : "삭제할 프로젝트 파일 아이디(다중)"
-          },
-          {
             "name": "files",
             "in": "formData",
             "type": "array",
@@ -1629,16 +1599,6 @@
             "description" : "변경하려는 내용"
           },
           {
-            "name": "del_file_id",
-            "in": "formData",
-            "type": "array",
-            "items" : {
-              "type" : "number"
-            },
-            "example": 1,
-            "description" : "삭제할 코멘트 파일 번호(다중)"
-          },
-          {
             "name": "files",
             "in": "formData",
             "type": "array",
@@ -1773,14 +1733,16 @@
             "in": "formData",
             "type": "string",
             "example": "https://naver.com",
-            "description" : "등록하려는 링크"
+            "description" : "등록하려는 링크",
+            "required" : true
           },
           {
             "name": "step_description",
             "in": "formData",
             "type": "string",
             "example": "어쩌구저쩌구 왈왈",
-            "description" : "등록하려는 내용"
+            "description" : "등록하려는 내용",
+            "required" : true
           },
           {
             "name": "files",
@@ -1789,7 +1751,8 @@
             "items" : {
               "type" : "file"
             },
-            "description" : "등록하려는 파일 (다중)"
+            "description" : "등록하려는 파일 (다중)",
+            "required" : true
           }
         ],
         "responses": {

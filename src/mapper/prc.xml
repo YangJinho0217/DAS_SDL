@@ -151,6 +151,13 @@
     SET comment_description = #{comment_description}
     WHERE comm_id = #{comm_id}
   </update>
+  
+  <delete id="deletePrcStepInfoFile">
+    DELETE FROM process_step_info_file
+    WHERE prj_id = #{prj_id}
+    AND version_number = #{version_number}
+    AND step_number = #{step_number}
+  </delete>
 
   <delete id="deletePrcComment">
     DELETE FROM process_comment
@@ -162,10 +169,16 @@
     WHERE comm_id = #{comm_id}
   </delete>
 
-  <delete id="deletePrcCommentFiles">
-    DELETE FROM process_comment_file
-    WHERE comm_file_id = #{del_file_id}
-  </delete>
+  <select id="selectPrjStepInfo">
+    SELECT  step_id             
+          , prj_id             
+          , version_number     
+          , step_number
+    FROM  project_step
+    WHERE prj_id = #{prj_id}
+    AND version_number = #{version_number}
+    AND step_number = #{step_number}
+  </select>
 
   <update id="updatePrcStepInfo">
     UPDATE process_step_info

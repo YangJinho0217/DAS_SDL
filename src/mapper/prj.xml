@@ -317,11 +317,6 @@
     AND dev_id = #{del_dev_user};
   </delete>
 
-  <delete id="deletePrjFile">
-    DELETE from project_file
-    WHERE file_id = #{del_file_id}
-  </delete>
-
   <insert id="insertPrcStepInfoFile">
     INSERT INTO process_step_info_file
     (
@@ -373,38 +368,28 @@
     WHERE step_id = #{step_id}
   </select>
 
-  <select id="selectPrjStepInfo">
-    SELECT  step_id             
-          , prj_id             
-          , version_number     
-          , step_number
-    FROM  project_step
-    WHERE prj_id = #{prj_id}
-    AND version_number = #{version_number}
-    AND step_number = #{step_number}
-  </select>
-
   <update id="updatePrjStep">
     UPDATE project_step
     SET step_number = #{updt_step_number}
     WHERE step_id = #{step_id}
   </update>
 
-  <insert id="insertPrcStepInfoDefault">
-    INSERT INTO process_step_info
-    (
-        prc_id
-      , prj_id
-      , version_number
-      , step_number
-    )
-    VALUES
-    (
-        #{prc_id}
-      , #{prj_id}
-      , #{version_number}
-      , #{updt_step_number}
-    )
-  </insert>
+  <delete id="deletePrjSecManager">
+    DELETE FROM project_security_manager
+    WHERE prj_id = #{prj_id}
+    AND version_number = #{version_number}
+  </delete>
+
+  <delete id="deletePrjDevManager">
+    DELETE FROM project_develop_manager
+    WHERE prj_id = #{prj_id}
+    AND version_number = #{version_number}
+  </delete>
+
+  <delete id="deletePrjFile">
+    DELETE FROM project_file
+    WHERE prj_id = #{prj_id}
+    AND version_number = #{version_number}
+  </delete>
 
 </mapper>

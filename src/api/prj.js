@@ -458,8 +458,6 @@ router.put('/updtPrj', verifyToken, upload.array('files'), async(req, res) => {
         prj_lnk : req.body.prj_lnk,
         prj_sec_user : req.body.prj_sec_user,
         prj_dev_user : req.body.prj_dev_user,
-        del_sec_user : req.body.del_sec_user,
-        del_dev_user : req.body.del_dev_user,
         del_file_id : req.body.del_file_id,
         step_file : typeof req.files == "undefined" ? null : req.files
     }
@@ -477,84 +475,50 @@ router.put('/updtPrj', verifyToken, upload.array('files'), async(req, res) => {
         
         await mysql.proc('prj', 'updatePrjVersion', param, con);
 
-        // if (param.prj_sec_user != undefined) {
-        //     const secUser = param.prj_sec_user.split(',');
-        
-        //     // project_security_manager 테이블 insert
-        //     for (var i = 0; i < secUser.length; i ++) {
-        //         const data = {
-        //             prj_sec_id : await mysql.value('prj', 'nextvalId', {id : 'prj_sec_id'}, con),
-        //             prj_id : param.prj_id,
-        //             version_number : param.version_number,
-        //             sec_id : secUser[i]
-        //         };
-        //         await mysql.proc('prj', 'insertPrjSecManager', data, con);
-        //     }
-            
-        // }
+        if (param.prj_sec_user != undefined) {
+            const secUser = param.prj_sec_user.split(',');
+            await mysql.proc('prj', 'deletePrjSecManager', param, con);
+            // project_security_manager 테이블 insert
+            for (var i = 0; i < secUser.length; i ++) {
+                const data = {
+                    prj_sec_id : await mysql.value('prj', 'nextvalId', {id : 'prj_sec_id'}, con),
+                    prj_id : param.prj_id,
+                    version_number : param.version_number,
+                    sec_id : secUser[i]
+                };
+                await mysql.proc('prj', 'insertPrjSecManager', data, con);
+            }
+        }
 
-        // if (param.prj_dev_user != undefined) {
-        //     const devUser = param.prj_dev_user.split(',');
+        if (param.prj_dev_user != undefined) {
+            const devUser = param.prj_dev_user.split(',');
+            await mysql.proc('prj', 'deletePrjDevManager', param, con);
+            // project_develop_manager 테이블 insert
+            for (var i = 0; i < devUser.length; i++) {
+                const data = {
+                    prj_dev_id : await mysql.value('prj', 'nextvalId', {id : 'prj_dev_id'}, con),
+                    prj_id : param.prj_id,
+                    version_number : param.version_number,
+                    dev_id : devUser[i]
+                };
+                await mysql.proc('prj', 'insertPrjDevManager', data, con);
+            }
+        }
 
-        //     // project_develop_manager 테이블 insert
-        //     for (var i = 0; i < devUser.length; i++) {
-        //         const data = {
-        //             prj_dev_id : await mysql.value('prj', 'nextvalId', {id : 'prj_dev_id'}, con),
-        //             prj_id : param.prj_id,
-        //             version_number : param.version_number,
-        //             dev_id : devUser[i]
-        //         };
-        //         await mysql.proc('prj', 'insertPrjDevManager', data, con);
-        //     }
-        // }
-
-        // if (param.step_file.length > 0) {
-        //     for (var i = 0; i < param.step_file.length; i++) {
-        //         const file_id = await mysql.value('prj', 'nextvalId', {id : 'file_id'}, con);
-        //         const data = {
-        //             file_id : file_id,
-        //             prj_id : param.prj_id,
-        //             version_number : param.version_number,
-        //             file_path : param.step_file[i].path,
-        //             file_name : param.step_file[i].originalname
-        //         };
-        //         await mysql.proc('prj', 'insertPrjFile', data, con);
-        //     }   
-        // }
-
-        // if (param.del_sec_user != undefined) {
-        //     const delSecUser = param.del_sec_user.split(',');
-        //     for (var i = 0; i < delSecUser.length; i ++) {
-        //         const data = {
-        //             prj_id : param.prj_id,
-        //             version_number : param.version_number,
-        //             del_sec_user : delSecUser[i]
-        //         };
-        //         await mysql.proc('prj', 'deletePrjSecManager', data, con);
-        //     }
-        // }
-
-        // if (param.del_dev_user != undefined) {
-        //     const delDecUser = param.del_dev_user.split(',');
-        //     for (var i = 0; i < delDecUser.length; i ++) {
-        //         const data = {
-        //             prj_id : param.prj_id,
-        //             version_number : param.version_number,
-        //             del_dev_user : delDecUser[i]
-        //         };
-        //         await mysql.proc('prj', 'deletePrjDevManager', data, con);
-        //     }
-        // }
-
-        // if (param.del_file_id != undefined) {
-        //     const delFileId = param.del_file_id.split(',');
-        //     for (var i = 0; i < delFileId.length; i++) {
-        //         const data = {
-        //             del_file_id : delFileId[i]
-        //         };
-        //         await mysql.proc('prj', 'deletePrjFile', data, con);
-        //     }   
-        // }
+        if (param.step_file.length > 0) {
+            await mysql.proc('prj', 'deletePrjFile', param, con);
+            for (var i = 0; i < param.step_file.length; i++) {
+                const file_id = await mysql.value('prj', 'nextvalId', {id : 'file_id'}, con);
+                const data = {
+                    file_id : file_id,
+                    prj_id : param.prj_id,
+                    version_number : param.version_number,
+                    file_path : param.step_file[i].path,
+                    file_name : param.step_file[i].originalname
+                };
+                await mysql.proc('prj', 'insertPrjFile', data, con);
+            }   
+        }
 
         await con.commit();
         return res.json(await calc.resJson(200, 'SUCCESS', null, null))
@@ -590,10 +554,9 @@ router.post('/agrStp', verifyToken, async(req,res) => {
             return res.json(await calc.resJson(400, '스텝 넘버가 잘못되었습니다' + ' ' + '현재 : ' + prjStepList[0].step_number, null, null))
         }
         param.updt_step_number = prjStepList[0].step_number + 1;
-        param.prc_id = await mysql.value('prj', 'nextvalId', {id : 'prc_id'}, con);
+        // param.prc_id = await mysql.value('prj', 'nextvalId', {id : 'prc_id'}, con);
 
         await mysql.proc('prj', 'updatePrjStep', param, con);
-        await mysql.proc('prj', 'insertPrcStepInfoDefault', param, con);
 
         await con.commit();
         return res.json(await calc.resJson(200, 'SUCCESS', null, null))

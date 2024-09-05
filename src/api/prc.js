@@ -51,41 +51,33 @@ router.get('/prcInfo', verifyToken, async(req,res) => {
                 }
             }
 
-            /* 리스트 체크 파일 서버에 박아둠 그냥 하드코딩으로(변경될 일이 없음) */
-            // prcInfoList.lstc_file_path = 'https://yagsill.com/file/default/20240829.09.36.44_das_sdl_storyboard_240813.pdf'
-            // prcInfoList.lstc_file_name = '20240829.09.36.44_das_sdl_storyboard_240813.pdf'
         }
-        /* 리스트 체크 파일 서버에 박아둠 그냥 하드코딩으로(변경될 일이 없음) */
-        prcInfoList.lstc_file_path = 'https://yagsill.com/file/default/20240829.09.36.44_das_sdl_storyboard_240813.pdf'
-        prcInfoList.lstc_file_name = '20240829.09.36.44_das_sdl_storyboard_240813.pdf'
-
-        
 
         if (param.step_number == 0) {
+            /* 리스트 체크 파일 서버에 박아둠 그냥 하드코딩으로(변경될 일이 없음) */
+            prcInfoList.lstc_file_path = 'https://yagsill.com/file/default/20240829.09.36.44_das_sdl_storyboard_240813.pdf'
+            prcInfoList.lstc_file_name = '20240829.09.36.44_das_sdl_storyboard_240813.pdf'
+        }
 
-            if (prcInfoFileList.length > 0) {
-
-                for (const i in prcInfoFileList) {
-                    fileList.push(prcInfoFileList[i])
-                }
-
-                const modifiedPaths = fileList.map(item => {
-                    if(db.host == process.env.DEV_DB_HOST || db.host == process.env.PROD_DB_HOST) {
-                        // '/file' 이전의 부분을 제거
-                        const newPath = item.file_path.split('/develop')[1];
-                        // 특정 문자열과 합치기
-                        return {file_id : item.prc_file_id, file_path: specificString + newPath, file_name : item.file_name };
-                    } else {
-                        return {
-                            file_id : item.prc_file_id,
-                            file_path : item.file_path,
-                            file_name : item.file_name
-                        }
-                    }
-                });
-                prcInfoList.file = modifiedPaths
+        if (prcInfoFileList.length > 0) {
+            for (const i in prcInfoFileList) {
+                fileList.push(prcInfoFileList[i])
             }
-
+            const modifiedPaths = fileList.map(item => {
+                if(db.host == process.env.DEV_DB_HOST || db.host == process.env.PROD_DB_HOST) {
+                    // '/file' 이전의 부분을 제거
+                    const newPath = item.file_path.split('/develop')[1];
+                    // 특정 문자열과 합치기
+                    return {file_id : item.prc_file_id, file_path: specificString + newPath, file_name : item.file_name };
+                } else {
+                    return {
+                        file_id : item.prc_file_id,
+                        file_path : item.file_path,
+                        file_name : item.file_name
+                    }
+                }
+            });
+            prcInfoList.file = modifiedPaths
         }
         
         if (prcCommentList.length > 0) {
@@ -244,7 +236,6 @@ router.put('/updtCmt', verifyToken, upload.array('files'), async(req, res) => {
     var param = {
         comm_id : req.body.comm_id,
         comment_description : req.body.comment_description,
-        del_file_id : req.body.del_file_id,
         file : typeof req.files == "undefined" ? null : req.files
     }
 
@@ -261,32 +252,26 @@ router.put('/updtCmt', verifyToken, upload.array('files'), async(req, res) => {
             return res.json(await calc.resJson(400, '코멘트가 존재하지 않습니다', null, null))
         }
 
-        // 코멘트 내용 수정
-        await mysql.proc('prc', 'updatePrcComment', param, con);
+        if (param.comment_description != undefined) {
+            // 코멘트 내용 수정
+            await mysql.proc('prc', 'updatePrcComment', param, con);
+        }
 
-        // 기존 파일 삭제
-        if (param.del_file_id != undefined) {
-            const delFileId = param.del_file_id.split(',');
-            for (var i = 0; i < delFileId.length; i++) {
+        if (param.file.length > 0) {
+            await mysql.proc('prc', 'deletePrcCommentFile', param, con);
+            for (const i in param.file) {
+                const comm_file_id = await mysql.value('prc', 'nextvalId', {id : 'comm_file_id'}, con);
                 const data = {
-                    del_file_id : delFileId[i]
+                    comm_file_id : comm_file_id,
+                    comm_id : param.comm_id,
+                    file_path : param.file[i].path,
+                    file_name : param.file[i].originalname
                 };
-                await mysql.proc('prc', 'deletePrcCommentFiles', data, con);
-            }   
+                // console.log(data);
+                await mysql.proc('prc', 'insertPrcCommentFile', data, con);
+            }
         }
-
-        // 파일 새로 등록
-        for (const i in param.file) {
-
-            const comm_file_id = await mysql.value('prc', 'nextvalId', {id : 'comm_file_id'}, con);
-            const data = {
-                comm_file_id : comm_file_id,
-                comm_id : param.comm_id,
-                file_path : param.file[i].path,
-            };
-
-            await mysql.proc('prc', 'insertPrcCommentFile', data, con);
-        }
+        
 
         await con.commit();
         return res.json(await calc.resJson(200, 'SUCCESS', null, null))
@@ -358,33 +343,33 @@ router.post('/lstnRgst', verifyToken, upload.array('files'), async(req,res) => {
 
         await calc.logInfo('Interface', `${specificString}/das/prc/lstnRgst`);
 
-        const prjStepList = await mysql.query('prj', 'selectPrjStepInfo', param, con);
+        const prcStepList = await mysql.query('prc', 'selectPrcStepInfo', param, con);
 
-        // if (prjStepList.length < 1) {
-        //     return res.json(await calc.resJson(400, '프로젝트 아이디 또는 버전이 잘못되었습니다', null, null))
-        // }
+        if (prcStepList.length < 1) {
+            param.prc_id = await mysql.value('prj', 'nextvalId', {id : 'prc_id'}, con);
+            await mysql.proc('prc', 'insertPrcStepInfo', param, con);
+        }
 
         param.prc_id = await mysql.value('prj', 'nextvalId', {id : 'prc_id'}, con);
-        // // await mysql.proc('prc', 'updatePrcStepInfo', param, con);
-        await mysql.proc('prc', 'insertPrcStepInfo', param, con);
+        await mysql.proc('prc', 'updatePrcStepInfo', param, con);
 
-        // // 파일 새로 등록
-        // for (const i in param.file) {
-
-        //     const prc_file_id = await mysql.value('prc', 'nextvalId', {id : 'prc_file_id'}, con);
-        //     const data = {
-        //         prc_file_id : prc_file_id,
-        //         prj_id : param.prj_id,
-        //         version_number : param.version_number,
-        //         step_number : param.step_number,
-        //         file_path : param.file[i].path,
-        //         file_name : param.file[i].originalname
-        //     };
-        //     console.log(param.file[i]);
-
-        //     await mysql.proc('prj', 'insertPrcStepInfoFile', data, con);
-        // }
-
+        if(param.file.length > 0) {
+            await mysql.proc('prc', 'deletePrcStepInfoFile', param, con);
+            for (const i in param.file) {
+                const prc_file_id = await mysql.value('prc', 'nextvalId', {id : 'prc_file_id'}, con);
+                const data = {
+                    prc_file_id : prc_file_id,
+                    prj_id : param.prj_id,
+                    version_number : param.version_number,
+                    step_number : param.step_number,
+                    file_path : param.file[i].path,
+                    file_name : param.file[i].originalname
+                };
+    
+                await mysql.proc('prj', 'insertPrcStepInfoFile', data, con);
+            }
+        }
+        
         await con.commit();
         return res.json(await calc.resJson(200, 'SUCCESS', null, null))
 
