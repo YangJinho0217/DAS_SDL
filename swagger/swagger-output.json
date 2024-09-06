@@ -492,7 +492,7 @@
             "items" : {
               "type" : "file"
             },
-            "required": true,
+            "required" : true,
             "description" : "프로젝트 파일(다중)"
           }
         ],

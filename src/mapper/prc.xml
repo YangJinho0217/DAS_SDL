@@ -117,6 +117,7 @@
          , a.step_number
          , a.comment_description
          , a.rgst_dtm
+         , a.updt_dtm
     FROM process_comment a, user_info b
     WHERE a.prj_id = #{prj_id}
     AND   a.version_number = #{version_number}
