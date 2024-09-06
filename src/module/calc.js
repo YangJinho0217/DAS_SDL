@@ -177,7 +177,7 @@ exports.specificString = function() {
     if (db.host == process.env.PROD_DB_HOST) {
         return process.env.PROD_SERVER_URL
     } else if (db.host == process.env.DEV_DB_HOST) {
-        return process.env.SERVER_URL
+        return process.env.DEV_SERVER_URL
     }
 }
 

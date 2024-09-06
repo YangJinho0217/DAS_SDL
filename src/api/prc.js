@@ -55,20 +55,16 @@ router.get('/prcInfo', verifyToken,
 
                 if (prcInfoList.lstc_file_path != null) {
                     if(db.host == process.env.DEV_DB_HOST || db.host == process.env.PROD_DB_HOST) {
-                        // '/file' 이전의 부분을 제거
                         const newPath = prcInfoList.lstc_file_path.split('/develop')[1];
-                        // 특정 문자열과 합치기
                         const data = specificString + newPath;
-                        // prcInfoList.lstc_file_path = data
                     }
                 }
 
             }
 
             if (param.step_number == 0) {
-                /* 리스트 체크 파일 서버에 박아둠 그냥 하드코딩으로(변경될 일이 없음) */
-                prcInfoList.lstc_file_path = 'https://yagsill.com/file/default/20240829.09.36.44_das_sdl_storyboard_240813.pdf'
-                prcInfoList.lstc_file_name = '20240829.09.36.44_das_sdl_storyboard_240813.pdf'
+                prcInfoList.lstc_file_path = `${process.env.DEV_SERVER_URL}/file/default/리스트체크파일.csv`
+                prcInfoList.lstc_file_name = '리스트체크파일.csv'
             }
 
             if (prcInfoFileList.length > 0) {

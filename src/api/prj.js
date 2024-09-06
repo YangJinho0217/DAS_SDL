@@ -141,7 +141,7 @@ router.post('/addPrjVer', verifyToken, upload.array('files'),
         body('prj_lnk').notEmpty().withMessage('Project link is required').isURL().withMessage('Project link is must be a URL'),
         body('prj_sec_user').notEmpty().withMessage('Project Security user is required').isString().withMessage('Security user must be an array of numbers.'),
         body('prj_dev_user').notEmpty().withMessage('Project Develop user is required').isString().withMessage('Developer user must be an array of numbers.'),
-        body('files').custom((value, { req }) => {
+        body('files').isArray().custom((value, { req }) => {
             if (req.files.length < 1) {
                 throw new Error('File is required.');
             }
