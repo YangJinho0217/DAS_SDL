@@ -10,7 +10,7 @@ const dbconfig                            = require("../config/db");
 const resultCode                          = require('../module/result');
 const pool                                = sql.createPool(dbconfig);
 const specificString                      = calc.specificString();
-const { body,query, validationResult }    = require('express-validator');
+const { body,query, validationResult, param, check }    = require('express-validator');
 
 require('dotenv').config()
 
@@ -339,19 +339,21 @@ router.put('/updtCmt', verifyToken, upload.array('files'),
 /* ========== 프로세스 코멘트 삭제 DELETE ========== */
 /* ========== ============= ========== */
 router.delete('/delCmt', verifyToken, 
-    [
-        body('comm_id').notEmpty().withMessage('Comment Id is required.').isNumeric().withMessage('Comment Id must be a number.'),
-    ],
+    // [
+    //     body('comm_id').notEmpty().withMessage('Comment Id is required.').isNumeric().withMessage('Comment Id must be a number.'),
+    // ],
     async(req, res) => {
 
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.json(await calc.resJson(400, errors.array(), null, null))
-        }
+        // const errors = validationResult(req);
+        // if (!errors.isEmpty()) {
+        //     return res.json(await calc.resJson(400, errors.array(), null, null))
+        // }
     
         var param = {
             comm_id : req.body.comm_id
         }
+
+        console.log(param)
         
         const con = await pool.getConnection();
         try {

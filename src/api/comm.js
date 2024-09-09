@@ -86,7 +86,7 @@ router.get('/notiInfo', verifyToken, async(req, res) => {
 /* ========== ============= ========== */
 router.get('/detail', verifyToken,
     [
-        body('noti_id').notEmpty().withMessage('Notice Id is required').isNumeric().withMessage('Notice Id must be a number.')
+        query('noti_id').notEmpty().withMessage('Notice Id is required').isNumeric().withMessage('Notice Id must be a number.')
     ],
     async(req, res) => {
 
