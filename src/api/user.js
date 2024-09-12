@@ -211,7 +211,7 @@ router.post('/signUp',
             login_pw  : req.body.login_pw,
             user_name : req.body.user_name,
             user_level : req.body.user_level,
-            isfirst : 1,
+            isfirst : 0,
             user_status : 'A'
         };
 
@@ -364,12 +364,11 @@ router.post('/frgtEml',
 /* ========== ============= ========== */
 /* ========== 유저 비밀번호 변경 POST ========== */
 /* ========== ============= ========== */
-router.put('/modify', verifyToken,
+router.put('/modify',
     [
         body('login_id').notEmpty().withMessage('Login Id is required').isString().withMessage('Login Id must be a string.'),
         body('current_password').notEmpty().withMessage('Current Password is required').isString().withMessage('Current Password must be a string.'),
         body('new_password').notEmpty().withMessage('New Password is required').isString().withMessage('New Password must be a string.'),
-
     ],
     async(req,res) => {
 
@@ -384,6 +383,7 @@ router.put('/modify', verifyToken,
             current_password : req.body.current_password,
             new_password : req.body.new_password,
         }
+
 
         const con = await pool.getConnection();
         try {

@@ -141,7 +141,7 @@ router.post('/addPrjVer', verifyToken, upload.array('files'),
         body('prj_lnk').notEmpty().withMessage('Project link is required').isURL().withMessage('Project link is must be a URL'),
         body('prj_sec_user').notEmpty().withMessage('Project Security user is required').isString().withMessage('Security user must be an array of numbers.'),
         body('prj_dev_user').notEmpty().withMessage('Project Develop user is required').isString().withMessage('Developer user must be an array of numbers.'),
-        body('files').isArray().custom((value, { req }) => {
+        body('files').custom((value, { req }) => {
             if (req.files.length < 1) {
                 throw new Error('File is required.');
             }
@@ -152,6 +152,7 @@ router.post('/addPrjVer', verifyToken, upload.array('files'),
 
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
+            console.log(errors)
             return res.json(await calc.resJson(400, errors.array(), null, null))
         }
 
@@ -626,6 +627,9 @@ router.put('/updtPrj', verifyToken, upload.array('files'),
     }
 )
 
+/* ========== ============= ========== */
+/* ========== 프로젝트 특정 버전 승인 POST ========== */
+/* ========== ============= ========== */
 router.post('/agrStp', verifyToken,
     [
         body('step_id').notEmpty().withMessage('Step ID is required.').isNumeric().withMessage('Step ID must be a number.')
@@ -652,8 +656,8 @@ router.post('/agrStp', verifyToken,
                 return res.json(await calc.resJson(400, '프로젝트의 스텝아이디가 존재하지 않습니다', null, null))
             };
 
-            param.prj_id = prjStepList[0].prj_id;
-            param.version_number = prjStepList[0].version_number;
+            // param.prj_id = prjStepList[0].prj_id;
+            // param.version_number = prjStepList[0].version_number;
             if (prjStepList[0].step_number >= 4) {
                 return res.json(await calc.resJson(400, '스텝 넘버가 잘못되었습니다' + ' ' + '현재 : ' + prjStepList[0].step_number, null, null))
             }
@@ -673,6 +677,57 @@ router.post('/agrStp', verifyToken,
         }
     }
 )
+
+/* ========== ============= ========== */
+/* ========== 프로젝트 특정 버전 운영 상태 변경 PUT ========== */
+/* ========== ============= ========== */
+router.put('/unStp',verifyToken, 
+    [
+        body('step_id').notEmpty().withMessage('Step ID is required.').isNumeric().withMessage('Step ID must be a number.'),
+        body('step_number').notEmpty().withMessage('Step Number is required.').isNumeric().withMessage('Step Number must be a number')
+    ],
+    async(req,res) => {
+
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.json(await calc.resJson(400, errors.array(), null, null))
+        }
+
+        var param = {
+            step_id : req.body.step_id,
+            step_number : req.body.step_number
+        }
+
+        const con = await pool.getConnection();
+
+        try {
+
+            await con.beginTransaction();
+
+            await calc.logInfo('Interface', `${specificString}/das/prj/unStp`)
+            const prjStepList = await mysql.query('prj', 'selectPrjStep', param, con);
+
+            if(prjStepList.length < 1) {
+                return res.json(await calc.resJson(400, '프로젝트의 스텝아이디가 존재하지 않습니다', null, null))
+            };
+
+            param.updt_step_number = param.step_number;
+
+            await mysql.proc('prj', 'updatePrjStep', param, con);
+
+            await con.commit();
+            return res.json(await calc.resJson(200, 'SUCCESS', null, null))
+
+        } catch(error) {
+            console.log(error)
+            await con.rollback();
+            return res.json(resultCode.SERVER_ERROR)
+        } finally {
+            await con.release();
+        }
+    }
+)
+
 
 
 module.exports = router;

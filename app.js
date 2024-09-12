@@ -11,7 +11,7 @@ const app = express();
 
 app.use(cors({
   origin: 'localhost:3000',
-  methods: ['POST', 'PUT', 'GET', 'OPTIONS', 'HEAD' ,'DELETE'],
+  methods: ['POST', 'PUT', 'GET', 'DELETE', 'OPTIONS', 'HEAD'],
   allowedHeaders: ['Content-Type', 'Authorization', 'token'],
 }))
 
@@ -23,15 +23,8 @@ app.use(router);
 
 // 개발서버 포트
 app.set('port', process.env.PORT || port);
-
 //swagger 모듈 호출하기
 app.use("/das-sdl-swagger", swaggerUi.serve, swaggerUi.setup(swaggerFile, {explorer : true}));
-// app.get("/", function(req, res) {
-//   // res.send("BackEnd Server index Page");
-//   res.sendFile(path.join(__dirname, '/react/build/index.html'))
-// });
-
-// 모든 요청을 index.html로 리다이렉트
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '/react/build/index.html'));
 });

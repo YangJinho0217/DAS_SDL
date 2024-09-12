@@ -323,16 +323,7 @@
               }
             }
           }
-        },
-        "security": [
-          {
-            "apiKeyAuth": [
-              {
-                "token": ""
-              }
-            ]
-          }
-        ]
+        }
       }
     },
     "/user/dvList": {
@@ -866,6 +857,67 @@
                         }
                       }
                     }
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": [
+              {
+                "token": ""
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "/prj/lstVer": {
+      "get": {
+        "tags": [
+          "prj"
+        ],
+        "summary": "특정 프로젝트 마지막 버전",
+        "description": "사용자가 특정 프로젝트의 마지막 버전을 확인한다",
+        "parameters" : [
+          {
+            "name" : "prj_id",
+            "description" : "프로젝트 아이디",
+            "in" : "query",
+            "type" : "number",
+            "required" : true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "resultCode": {
+                  "type": "number",
+                  "example": 200
+                },
+                "resultMsg": {
+                  "type": "string",
+                  "example": "SUCESS"
+                },
+                "totalPage" : {"type" : "number", "example" : 1},
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "version_number" : {
+                        "type" : "string",
+                        "example" : "v0.0.1"
+                      }
+                    } 
                   }
                 }
               },
@@ -1437,7 +1489,7 @@
         "description": "사용자가 프로젝트 특정 버전의 특정 단계를 승인한다.",
         "parameters" : [
           {
-            "name": "body",
+            "name": "step_id",
             "in": "body",
             "schema": {
               "type": "object",
@@ -1445,6 +1497,66 @@
                 "step_id": { 
                   "type": "number",
                   "example" : 1, 
+                  "required" : true
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "resultCode": {
+                  "type": "number",
+                  "example": 200
+                },
+                "resultMsg": {
+                  "type": "string",
+                  "example": "SUCESS"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": [
+              {
+                "token": ""
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "/prj/unStp": {
+      "put": {
+        "tags": [
+          "prj"
+        ],
+        "summary": "프로젝트 특정 버전 운영 상태 변경",
+        "description": "사용자가 프로젝트 특정 버전의 특정 단계의 운영 상태를 변경한다.",
+        "parameters" : [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "step_id": { 
+                  "type": "number",
+                  "example" : 5, 
+                  "required" : true
+                },
+                "step_number" : {
+                  "type" : "number",
+                  "example" : 4,
                   "required" : true
                 }
               }
