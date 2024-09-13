@@ -1498,6 +1498,11 @@
                   "type": "number",
                   "example" : 1, 
                   "required" : true
+                },
+                "rgst_user_id" : {
+                  "type" : "number",
+                  "example" : 1,
+                  "required" : true
                 }
               }
             }
@@ -1549,14 +1554,14 @@
             "schema": {
               "type": "object",
               "properties": {
-                "step_id": { 
+                "prj_id": { 
                   "type": "number",
                   "example" : 5, 
                   "required" : true
-                },
-                "step_number" : {
-                  "type" : "number",
-                  "example" : 4,
+                }, 
+                "version_number": { 
+                  "type": "string",
+                  "example" : "v0.0.1", 
                   "required" : true
                 }
               }
@@ -1854,6 +1859,14 @@
             "type": "string",
             "example": "어쩌구저쩌구 왈왈",
             "description" : "등록하려는 내용",
+            "required" : true
+          },
+          {
+            "name": "rgst_user_id",
+            "in": "formData",
+            "type": "number",
+            "example": 1,
+            "description" : "등록하려는 유저",
             "required" : true
           },
           {

@@ -240,4 +240,27 @@
     )
   </insert>
 
+  <select id="selectPrjSecManageList">
+    SELECT sec_id
+    FROM project_security_manager
+    WHERE prj_id = #{prj_id}
+    AND version_number = #{version_number}
+  </select>
+
+  <select id="selectPrjDecManageList">
+    SELECT dev_id
+    FROM project_develop_manager
+    WHERE prj_id = #{prj_id}
+    AND version_number = #{version_number}
+  </select>
+
+  <select id="selectUserEmail">
+    SELECT login_id
+    FROM user_info
+    WHERE user_id IN
+    <foreach collection='email_to_array' index='index' item='user_id' open='(' close=')' separator=','>
+    #{user_id}
+    </foreach>
+  </select>
+
 </mapper>

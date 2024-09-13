@@ -336,21 +336,9 @@ router.post('/frgtEml',
             const decryptPassword = await calc.decryptPassword(userDBPassword);
 
             /* 이메일 전송  */
-            await calc.emailSend(param.login_id, 'F', decryptPassword).then((response) => {
-
-                if (response.resultCode == 200) {
-                    return res.json({
-                        resultCode : 200,
-                        resultMsg : "비밀번호 찾기 이메일 전송 성공"
-                    })
-                } else {
-                    return res.json({
-                        resultCode : response.resultCode,
-                        resultMsg : response.resultMsg
-                    })
-                }
-            })
+            await calc.toEmail(param.login_id, 'F', decryptPassword)
             await con.commit();
+            return res.json(await calc.resJson(200, 'SUCCESS', null, null))
         } catch(error) {
             console.log(error)
             await con.rollback();

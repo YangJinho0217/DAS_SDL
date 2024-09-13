@@ -3,18 +3,29 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const port = 3200;
 const path = require('path');
-
 const router = require("./src/loaders/routes");
 const swaggerUi = require('swagger-ui-express');
 const swaggerFile = require('./swagger/swagger-output.json')
 const app = express();
+const helmet = require('helmet');
 
 app.use(cors({
   origin: 'localhost:3000',
   methods: ['POST', 'PUT', 'GET', 'DELETE', 'OPTIONS', 'HEAD'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'token'],
+  allowedHeaders: ['Origin', 'Content-Type', 'Accept', 'token'],
 }))
-
+const cspOptions = {
+	directives: {
+		...helmet.contentSecurityPolicy.getDefaultDirectives(),
+		"default-src" : ["'self'"],
+		"script-src" : ["'self'"],
+		"img-src" : ["'self'", "data:"],
+    "base-uri" : ["/","http:"]
+	}
+}
+app.use(helmet({
+  contentSecurityPolicy: cspOptions,
+}));
 app.use('/file', express.static(path.join(__dirname, 'file')));
 app.use(express.static(path.join(__dirname, 'react/build')));
 app.use(bodyParser.json({limit: '200mb'}));

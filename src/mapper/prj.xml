@@ -392,4 +392,20 @@
     AND version_number = #{version_number}
   </delete>
 
+  <select id="selectPrjStepList">
+    SELECT step_id
+    FROM project_step
+    WHERE prj_id = #{prj_id}
+    AND version_number = #{version_number}
+  </select>
+
+  <update id="updatePrjStepNumber">
+    UPDATE project_step
+    SET step_number = #{step_number}
+    WHERE prj_id = #{prj_id}
+    AND version_number = #{version_number}
+  </update>
+
+  
+
 </mapper>

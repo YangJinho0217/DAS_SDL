@@ -63,8 +63,14 @@ router.get('/prcInfo', verifyToken,
             }
 
             if (param.step_number == 0) {
-                prcInfoList.lstc_file_path = `${process.env.DEV_SERVER_URL}/file/default/리스트체크파일.csv`
-                prcInfoList.lstc_file_name = '리스트체크파일.csv'
+                let url = "";
+                if (db.host == process.env.DEV_DB_HOST) {
+                    url = process.env.DEV_SERVER_URL
+                } else {
+                    url = process.env.PROD_SERVER_URL
+                }
+                prcInfoList.lstc_file_path = `${url}/file/default/202409_리스트체크파일.xlsx`
+                prcInfoList.lstc_file_name = '202409_리스트체크파일.xlsx'
             }
 
             if (prcInfoFileList.length > 0) {
@@ -226,6 +232,8 @@ router.post('/addCmt', verifyToken, upload.array('files'),
             file : typeof req.files == "undefined" ? null : req.files
         }
 
+        const to_email_id = [];
+
         const con = await pool.getConnection();
         try {
 
@@ -234,7 +242,7 @@ router.post('/addCmt', verifyToken, upload.array('files'),
             await calc.logInfo('Interface', `${specificString}/das/prc/addCmt`);
 
             const prjlist = await mysql.query('prj', 'selectPrjVersion', param, con);
-
+    
             if (prjlist.length < 1) {
                 return res.json(await calc.resJson(400, '프로젝트 또는 프로젝트 버전이 존재하지 않습니다', null, null))
             }
@@ -255,6 +263,28 @@ router.post('/addCmt', verifyToken, upload.array('files'),
                 await mysql.proc('prc', 'insertPrcCommentFile', data, con);
             }
 
+            const prjSecUserList = await mysql.query('prc', 'selectPrjSecManageList', param, con);
+            const prjDevUserList = await mysql.query('prc', 'selectPrjDecManageList', param, con);
+
+            for (const i in prjSecUserList) {
+                if (prjSecUserList[i].sec_id == param.rgst_user_id) {
+                    continue;
+                }
+                to_email_id.push(prjSecUserList[i].sec_id)
+            }
+
+            for (const i in prjDevUserList) {
+                if (prjDevUserList[i].dev_id == param.rgst_user_id) {
+                    continue;
+                }
+                to_email_id.push(prjDevUserList[i].dev_id)
+            }
+
+            param.email_to_array = to_email_id;
+            const userEmail = await mysql.query('prc', 'selectUserEmail', param, con);
+            const mailOption = '[' + prjlist[0].prj_name + ']' + ' ' + '[' +prjlist[0].version_number + ']' + '의 코멘트가 등록 되었습니다.';;
+            /* 이메일 전송  */
+            await calc.toEmail(userEmail, 'D', mailOption)
             await con.commit();
             return res.json(await calc.resJson(200, 'SUCCESS', null, null))
 
@@ -339,21 +369,19 @@ router.put('/updtCmt', verifyToken, upload.array('files'),
 /* ========== 프로세스 코멘트 삭제 DELETE ========== */
 /* ========== ============= ========== */
 router.delete('/delCmt', verifyToken, 
-    // [
-    //     body('comm_id').notEmpty().withMessage('Comment Id is required.').isNumeric().withMessage('Comment Id must be a number.'),
-    // ],
+    [
+        body('comm_id').notEmpty().withMessage('Comment Id is required.').isNumeric().withMessage('Comment Id must be a number.'),
+    ],
     async(req, res) => {
 
-        // const errors = validationResult(req);
-        // if (!errors.isEmpty()) {
-        //     return res.json(await calc.resJson(400, errors.array(), null, null))
-        // }
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.json(await calc.resJson(400, errors.array(), null, null))
+        }
     
         var param = {
             comm_id : req.body.comm_id
         }
-
-        console.log(param)
         
         const con = await pool.getConnection();
         try {
@@ -393,6 +421,7 @@ router.post('/lstnRgst', verifyToken, upload.array('files'),
         body('step_number').notEmpty().withMessage('Step Number is required.').isNumeric().withMessage('Step Number must be a number.'),
         body('step_lnk').notEmpty().withMessage('Step link is required').isURL().withMessage('Step link is must be a URL'),
         body('step_description').notEmpty().withMessage('Step Description is required.').isString().withMessage('Step Description must be a string.'),
+        body('rgst_user_id').notEmpty().withMessage('Regist User ID is required.').isNumeric().withMessage('Regist User ID must be a number.'),
         body('files').custom((value, { req }) => {
             if (req.files.length < 1) {
                 throw new Error('File is required.');
@@ -407,15 +436,17 @@ router.post('/lstnRgst', verifyToken, upload.array('files'),
             return res.json(await calc.resJson(400, errors.array(), null, null))
         }
     
-
         var param = {
             prj_id : req.body.prj_id,
             version_number : req.body.version_number,
             step_number : req.body.step_number,
             step_lnk : req.body.step_lnk,
             step_description : req.body.step_description,
+            rgst_user_id : req.body.rgst_user_id,
             file : typeof req.files == "undefined" ? null : req.files
         }
+
+        const to_email_id = [];
 
         const con = await pool.getConnection();
         try {
@@ -426,12 +457,18 @@ router.post('/lstnRgst', verifyToken, upload.array('files'),
 
             const prcStepList = await mysql.query('prc', 'selectPrcStepInfo', param, con);
 
+            const prjlist = await mysql.query('prj', 'selectPrjVersion', param, con);
+
+            if (prjlist.length < 1) {
+                return res.json(await calc.resJson(400, '프로젝트 또는 프로젝트 버전이 존재하지 않습니다', null, null))
+            }
+
             if (prcStepList.length < 1) {
-                param.prc_id = await mysql.value('prj', 'nextvalId', {id : 'prc_id'}, con);
+                param.prc_id = await mysql.value('prc', 'nextvalId', {id : 'prc_id'}, con);
                 await mysql.proc('prc', 'insertPrcStepInfo', param, con);
             }
 
-            param.prc_id = await mysql.value('prj', 'nextvalId', {id : 'prc_id'}, con);
+            param.prc_id = await mysql.value('prc', 'nextvalId', {id : 'prc_id'}, con);
             await mysql.proc('prc', 'updatePrcStepInfo', param, con);
 
             if(param.file.length > 0) {
@@ -450,7 +487,29 @@ router.post('/lstnRgst', verifyToken, upload.array('files'),
                     await mysql.proc('prj', 'insertPrcStepInfoFile', data, con);
                 }
             }
+
+            const prjSecUserList = await mysql.query('prc', 'selectPrjSecManageList', param, con);
+            const prjDevUserList = await mysql.query('prc', 'selectPrjDecManageList', param, con);
             
+            for (const i in prjSecUserList) {
+                if (prjSecUserList[i].sec_id == param.rgst_user_id) {
+                    continue;
+                }
+                to_email_id.push(prjSecUserList[i].sec_id)
+            }
+
+            for (const i in prjDevUserList) {
+                if (prjDevUserList[i].dev_id == param.rgst_user_id) {
+                    continue;
+                }
+                to_email_id.push(prjDevUserList[i].dev_id)
+            }
+
+            param.email_to_array = to_email_id;
+            const userEmail = await mysql.query('prc', 'selectUserEmail', param, con);
+            const mailOption = '[' + prjlist[0].prj_name + ']' + ' ' + '[' +prjlist[0].version_number + ']' + '의 최종정보 항목이 등록 되었습니다.';
+            /* 이메일 전송  */
+            await calc.toEmail(userEmail, 'D', mailOption)
             await con.commit();
             return res.json(await calc.resJson(200, 'SUCCESS', null, null))
 
@@ -463,5 +522,6 @@ router.post('/lstnRgst', verifyToken, upload.array('files'),
         }
     }
 )
+
 
 module.exports = router;

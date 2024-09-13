@@ -123,4 +123,15 @@ router.get('/detail', verifyToken,
     }
 )
 
+router.post('/sendMail', verifyToken, 
+    [
+        body('sec_id').notEmpty().withMessage('Sec Id is required').isString().withMessage('Sec Id must be a string.'),
+        body('dev_id').notEmpty().withMessage('Dev Id is required').isString().withMessage('Dev Id must be a string.'),
+        body('prj_name').notEmpty().withMessage('Project Name is required').isString().withMessage('Project Name must be a string.'),
+        
+    ], 
+    async(req,res) => {
+
+    }
+)
 module.exports = router;

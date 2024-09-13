@@ -17,41 +17,27 @@ exports.emailAuthSend = async function(to, option) {
     });
 
     try {
-
         await transporter.sendMail({
             from : 'yagsill@dasvers.com',
             to : to,
-            subject : 'DAS SDL 회원가입 인증요청이 있습니다.',
+            subject : '[DAS SDL 회원가입 인증 코드] 알림이 도착했습니다',
             text : 'DAS SDL 회원가입 인증 코드입니다. : ' + option
         })
-        
-        const result = {
+        return result = {
             resultCode : 200,
             resultMsg : '회원가입 인증 요청 이메일 전송 성공',
             data : option
         }
-
-        return result;
-
     } catch (error) {
-        const result = {
+        return result = {
             resultCode : 401,
             resultMsg : error
         }
-        return result;
     }
 
 }
 
-/* 이메일 보내기 / 이메일 재전송 Function
-    to : 이메일 받는 유저
-    type : 이메일 타입 
-        N = 회원가입 시 전송
-        F = 이메일 재전송
-    option : 이메일 재전송 시 DB에 있는 값
-*/
-
-exports.emailSend = async function(to, type, option) {
+const emailSend = async function(to, type, option) {
 
     // /* 회원가입 이메일 전송을 위한 계정 세팅 */
     const transporter = nodemailer.createTransport({
@@ -67,60 +53,80 @@ exports.emailSend = async function(to, type, option) {
     /* 회원가입 이메일 전송 function */
     if (type == 'N') {
         try {
-
             await transporter.sendMail({
                 from : 'yagsill@dasvers.com',
                 to : to,
-                subject : 'DAS SDL 이메일 인증',
+                subject : '[DAS SDL 이메일 인증] 알림이 도착했습니다',
                 text : 'DAS SDL 이메일 인증 비밀번호 입니다 : ' + password
             })
-            
-            const result = {
+            return result = {
                 resultCode : 200,
                 resultMsg : 'success',
                 data : password
             }
-    
-            return result;
-    
         } catch (error) {
-            const result = {
+            return result = {
                 resultCode : 401,
                 resultMsg : error
             }
-            return result;
         }
     }
-    
+    /* 비밀번호 찾기 전송 function */
     if (type == 'F') {
-
         try {
-
             await transporter.sendMail({
                 from : 'yagsill@dasvers.com',
                 to : to,
-                subject : 'DAS SDL 비밀번호 찾기',
-                text : 'DAS SDL 비밀번호 찾기 입니다. 현재 비밀번호 : ' + option
+                subject : '[DAS SDL 비밀번호 확인] 알림이 도착했습니다',
+                text : 'DAS SDL 현재 비밀번호 입니다 : ' + option
             })
-            
-            const result = {
+            return result = {
                 resultCode : 200,
                 resultMsg : 'success',
                 data : option
             }
-    
-            return result;
-    
         } catch (error) {
-            const result = {
+            return result = {
                 resultCode : 401,
                 resultMsg : error
             }
-            return result;
         }
     }
-
+    /* 코멘트 등록 전송 function */
+    if (type == 'D') {
+        try {
+            for (const i in to) {
+                await transporter.sendMail({
+                    from : 'yagsill@dasvers.com',
+                    to : to[i].login_id,
+                    subject : '[DAS SDL] 알림이 도착했습니다',
+                    text : 'DAS SDL ' + option
+                })
+            }
+            return result = {
+                resultCode : 200,
+                resultMsg : 'success',
+                data : option
+            }
+        } catch(error) {
+            return result = {
+                resultCode : 401,
+                resultMsg : error
+            }
+        }
+    }
 };
+
+exports.toEmail = async function (userEmail, type, option) {
+
+    emailSend(userEmail, type, option).then((response) => {
+        if (response.resultCode == 200) {
+            console.log('Email Send Success')
+        } else {
+            console.log('Email Send Fail')
+        }
+    })
+}
 
 /* 패스워드 랜덤 조합 */
 function randomPassword() {

@@ -5,7 +5,7 @@ const fs                            = require('fs');
 // 파일 업로드 위치 지정
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    const prjId = req.body.prj_id; // prj_id를 요청 본문에서 읽기
+    const prjId = req.body.prj_id;
     const versionNumber = req.body.version_number;
     const stepNumber = req.body.step_number
 

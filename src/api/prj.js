@@ -88,7 +88,6 @@ router.post('/ctPrj', verifyToken, upload.array('files'),
                     version_number : param.version_number,
                     dev_id : devUser[i]
                 };
-
                 await mysql.proc('prj', 'insertPrjDevManager', data, con);
             }
 
@@ -632,7 +631,8 @@ router.put('/updtPrj', verifyToken, upload.array('files'),
 /* ========== ============= ========== */
 router.post('/agrStp', verifyToken,
     [
-        body('step_id').notEmpty().withMessage('Step ID is required.').isNumeric().withMessage('Step ID must be a number.')
+        body('step_id').notEmpty().withMessage('Step ID is required.').isNumeric().withMessage('Step ID must be a number.'),
+        body('rgst_user_id').notEmpty().withMessage('Regist User ID is required.').isNumeric().withMessage('Regist User ID must be a number.')
     ], 
     async(req,res) => {
 
@@ -643,7 +643,11 @@ router.post('/agrStp', verifyToken,
 
         var param = {
             step_id : req.body.step_id,
+            rgst_user_id : req.body.rgst_user_id
         }
+
+        const to_email_id = [];
+
         const con = await pool.getConnection();
         try {
 
@@ -656,15 +660,39 @@ router.post('/agrStp', verifyToken,
                 return res.json(await calc.resJson(400, '프로젝트의 스텝아이디가 존재하지 않습니다', null, null))
             };
 
-            // param.prj_id = prjStepList[0].prj_id;
-            // param.version_number = prjStepList[0].version_number;
             if (prjStepList[0].step_number >= 4) {
                 return res.json(await calc.resJson(400, '스텝 넘버가 잘못되었습니다' + ' ' + '현재 : ' + prjStepList[0].step_number, null, null))
             }
-            param.updt_step_number = prjStepList[0].step_number + 1;
 
+            param.prj_id = prjStepList[0].prj_id
+            param.version_number = prjStepList[0].version_number
+            const prjVersion = await mysql.query('prj', 'selectPrjVersion', param ,con);
+
+            param.updt_step_number = prjStepList[0].step_number + 1;
             await mysql.proc('prj', 'updatePrjStep', param, con);
 
+            const prjSecUserList = await mysql.query('prc', 'selectPrjSecManageList', param, con);
+            const prjDevUserList = await mysql.query('prc', 'selectPrjDecManageList', param, con);
+            for (const i in prjSecUserList) {
+                if (prjSecUserList[i].sec_id == param.rgst_user_id) {
+                    continue;
+                }
+                to_email_id.push(prjSecUserList[i].sec_id)
+            }
+
+            for (const i in prjDevUserList) {
+                if (prjDevUserList[i].dev_id == param.rgst_user_id) {
+                    continue;
+                }
+                to_email_id.push(prjDevUserList[i].dev_id)
+            }
+
+            param.email_to_array = to_email_id;
+            const userEmail = await mysql.query('prc', 'selectUserEmail', param, con);
+            const mailOption = '[' + prjVersion[0].prj_name + ']' + ' ' + '[' +prjVersion[0].version_number + ']' + ' ' + '[' + prjStepList[0].step_number + ']' + ' 이 승인 되었습니다';;
+        
+            /* 이메일 전송  */
+            await calc.toEmail(userEmail, 'D', mailOption)
             await con.commit();
             return res.json(await calc.resJson(200, 'SUCCESS', null, null))
 
@@ -683,8 +711,8 @@ router.post('/agrStp', verifyToken,
 /* ========== ============= ========== */
 router.put('/unStp',verifyToken, 
     [
-        body('step_id').notEmpty().withMessage('Step ID is required.').isNumeric().withMessage('Step ID must be a number.'),
-        body('step_number').notEmpty().withMessage('Step Number is required.').isNumeric().withMessage('Step Number must be a number')
+        body('prj_id').notEmpty().withMessage('Project ID is required.').isNumeric().withMessage('Project ID must be a number.'),
+        body('version_number').notEmpty().withMessage('Version Number is required.').isString().withMessage('Version Number must be a number')
     ],
     async(req,res) => {
 
@@ -694,8 +722,8 @@ router.put('/unStp',verifyToken,
         }
 
         var param = {
-            step_id : req.body.step_id,
-            step_number : req.body.step_number
+            prj_id : req.body.prj_id,
+            version_number : req.body.version_number
         }
 
         const con = await pool.getConnection();
@@ -705,15 +733,15 @@ router.put('/unStp',verifyToken,
             await con.beginTransaction();
 
             await calc.logInfo('Interface', `${specificString}/das/prj/unStp`)
-            const prjStepList = await mysql.query('prj', 'selectPrjStep', param, con);
 
-            if(prjStepList.length < 1) {
-                return res.json(await calc.resJson(400, '프로젝트의 스텝아이디가 존재하지 않습니다', null, null))
-            };
+            const prjStepList = await mysql.query('prj', 'selectPrjStepList', param, con);
 
-            param.updt_step_number = param.step_number;
+            if (prjStepList.length < 1) {
+                return res.json(await calc.resJson(400, '프로젝트 또는 버전이 존재하지 않습니다.', null, null))
+            }
 
-            await mysql.proc('prj', 'updatePrjStep', param, con);
+            param.step_number = 5;
+            await mysql.proc('prj', 'updatePrjStepNumber', param, con);
 
             await con.commit();
             return res.json(await calc.resJson(200, 'SUCCESS', null, null))
