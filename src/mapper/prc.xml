@@ -22,7 +22,7 @@
          , b.step_id
          , a.step_lnk
          , a.step_description
-         , a.rgst_dtm
+         , CONVERT_TZ(a.rgst_dtm, '+00:00', '+09:00') AS rgst_dtm
     FROM process_step_info a, project_step b, project_version c
     WHERE a.version_number = b.version_number
     AND a.prj_id = #{prj_id}
@@ -116,7 +116,7 @@
            END AS user_role
          , a.step_number
          , a.comment_description
-         , a.updt_dtm
+         , CONVERT_TZ(a.updt_dtm, '+00:00', '+09:00') AS updt_dtm
     FROM process_comment a, user_info b
     WHERE a.prj_id = #{prj_id}
     AND   a.version_number = #{version_number}

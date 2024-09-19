@@ -32,6 +32,15 @@ app.use(bodyParser.json({limit: '200mb'}));
 app.use(bodyParser.urlencoded({limit: '200mb', extended: true, parameterLimit: 1000000}));
 app.use(router);
 
+// 에러처리 미들웨어
+app.use((err, req, res, next) => {
+  console.log(err);
+  return res.json({
+      resultCode : 413,
+      resultMsg : err.toString()
+  });
+});
+
 // 개발서버 포트
 app.set('port', process.env.PORT || port);
 //swagger 모듈 호출하기

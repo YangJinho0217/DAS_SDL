@@ -116,8 +116,8 @@
                 WHEN b.step_Number = 5 THEN '미운영'
            ELSE ''
            END AS step_status
-         , a.rgst_dtm
-         , a.updt_dtm
+         , CONVERT_TZ(a.rgst_dtm, '+00:00', '+09:00') AS rgst_dtm
+         , CONVERT_TZ(a.updt_dtm, '+00:00', '+09:00') AS updt_dtm
     FROM project_version a, project_step b, user_info c
     WHERE a.del_yn = 'Y'
     AND a.prj_id = b.prj_id
@@ -185,8 +185,8 @@
                 WHEN b.step_Number = 5 THEN '미운영'
            ELSE ''
            END AS step_status
-         , b.rgst_dtm
-         , b.updt_dtm
+         , CONVERT_TZ(b.rgst_dtm, '+00:00', '+09:00') AS rgst_dtm
+         , CONVERT_TZ(b.updt_dtm, '+00:00', '+09:00') AS updt_dtm
     FROM project_version a, project_step b, user_info c
     WHERE a.prj_id = #{prj_id}
     AND a.prj_id = b.prj_id
@@ -213,8 +213,8 @@
                 WHEN b.step_Number = 5 THEN '미운영'
            ELSE ''
            END AS step_status
-         , b.rgst_dtm
-         , b.updt_dtm
+         , CONVERT_TZ(b.rgst_dtm, '+00:00', '+09:00') AS rgst_dtm
+         , CONVERT_TZ(b.updt_dtm, '+00:00', '+09:00') AS updt_dtm
     FROM project_version a, project_step b, user_info c
     WHERE a.del_yn = 'Y'
     AND a.prj_id = b.prj_id
@@ -405,7 +405,5 @@
     WHERE prj_id = #{prj_id}
     AND version_number = #{version_number}
   </update>
-
   
-
 </mapper>

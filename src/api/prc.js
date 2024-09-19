@@ -69,7 +69,7 @@ router.get('/prcInfo', verifyToken,
                 } else {
                     url = process.env.PROD_SERVER_URL
                 }
-                prcInfoList.lstc_file_path = `${url}/file/default/202409_리스트체크파일.xlsx`
+                prcInfoList.lstc_file_path = `${url}/file/default/리스트체크파일.xlsx`
                 prcInfoList.lstc_file_name = '202409_리스트체크파일.xlsx'
             }
 
@@ -105,7 +105,6 @@ router.get('/prcInfo', verifyToken,
                         rgst_dtm : prcCommentList[i].rgst_dtm,
                         updt_dtm : prcCommentList[i].updt_dtm
                     }
-                    
                     commentList.push(data);
                 }
                 const prcCommentFileList = await mysql.query('prc', 'selectPrcCommentFile', param, con)
@@ -126,7 +125,6 @@ router.get('/prcInfo', verifyToken,
                         }
                     }
                 });
-
                 const combined = commentList.map(comment => {
                     // 해당 comment의 comm_id에 맞는 파일들을 찾음
                     const relatedFiles = modifiedPaths.filter(file => file.comm_id === comment.comm_id);

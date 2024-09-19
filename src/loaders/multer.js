@@ -60,6 +60,8 @@ function getDate() {
   return  fullString
 }
 
-const upload = multer({ storage: storage });
+const upload = multer({ storage: storage, limits: { fileSize: 100 * 1024 * 1024 } });
+
+// const upload = multer({ storage: storage });
 
 module.exports = upload;
