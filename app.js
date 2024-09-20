@@ -10,7 +10,6 @@ const app = express();
 const helmet = require('helmet');
 const db = require('./src/config/db');
 require('dotenv').config();
-
 app.use(cors({
   origin: 'localhost:3000',
   methods: ['POST', 'PUT', 'GET', 'DELETE', 'OPTIONS', 'HEAD'],
