@@ -1,6 +1,8 @@
 const multer                        = require("multer");
 const path                          = require('path');
 const fs                            = require('fs');
+const db                            = require('../config/db');
+require('dotenv').config();
 
 // 파일 업로드 위치 지정
 var storage = multer.diskStorage({
@@ -11,20 +13,28 @@ var storage = multer.diskStorage({
 
     // 기본 경로 설정
     let uploadPath;
+    uploadPath = path.join(__dirname, '..', '..', 'file', 'default');
+    
+    
+    // if(db.host == process.env.DEV_DB_HOST) {
+    //   uploadPath = path.join(process.env.DEV_SERVER_URL, 'file', 'default');
+    // } else if (db.host == process.env.PROD_DB_HOST) {
+    //   uploadPath = path.join(process.env.PROD_SERVER_URL, 'file', 'default');
+    // }
 
-    if (!prjId) {
-      uploadPath = path.join(__dirname, '..', '..', 'file', 'default');
-    } else {
-      if(!versionNumber) {
-        uploadPath = path.join(__dirname, '..', '..', 'file', prjId);
-      } else {
-        if(!stepNumber) {
-          uploadPath = path.join(__dirname, '..', '..', 'file', prjId, versionNumber);
-        } else {
-          uploadPath = path.join(__dirname, '..', '..', 'file', prjId, versionNumber, stepNumber);
-        }
-      }
-    }
+    // if (!prjId) {
+    //   uploadPath = path.join(__dirname, '..', '..', 'file', 'default');
+    // } else {
+    //   if(!versionNumber) {
+    //     uploadPath = path.join(__dirname, '..', '..', 'file', prjId);
+    //   } else {
+    //     if(!stepNumber) {
+    //       uploadPath = path.join(__dirname, '..', '..', 'file', prjId, versionNumber);
+    //     } else {
+    //       uploadPath = path.join(__dirname, '..', '..', 'file', prjId, versionNumber, stepNumber);
+    //     }
+    //   }
+    // }
 
     // 디렉토리가 없으면 생성
     fs.mkdirSync(uploadPath, { recursive: true });
@@ -61,7 +71,6 @@ function getDate() {
 }
 
 const upload = multer({ storage: storage, limits: { fileSize: 100 * 1024 * 1024 } });
-
 // const upload = multer({ storage: storage });
 
 module.exports = upload;

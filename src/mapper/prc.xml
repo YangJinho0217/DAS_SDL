@@ -51,9 +51,7 @@
     FROM process_step_info_file a
     WHERE a.prj_id = #{prj_id}
     AND a.version_number = #{version_number}
-    <if test="step_number != undefined">
     AND a.step_number = #{step_number}
-    </if>
   </select>
 
   <update id="updateListCheckFile">
@@ -182,17 +180,12 @@
 
   <update id="updatePrcStepInfo">
     UPDATE process_step_info
-    <trim prefix="SET" prefixOverrides="," suffixOverrides=",">
-        <if test="step_lnk != undefined">
-            step_lnk = #{step_lnk}
-        </if>
-        <if test="step_description != undefined">
-            , step_description = #{step_description}
-        </if>
-        <if test="step_number == 4">
-            , step_status = 'A'
-        </if>
-    </trim>
+    SET step_number = #{step_number}
+      , step_lnk = #{step_lnk}
+      , step_description = #{step_description}
+    <if test="step_number == 4">
+        , step_status = 'A'
+    </if>
     WHERE prj_id = #{prj_id}
     AND version_number = #{version_number}
     AND step_number = #{step_number}

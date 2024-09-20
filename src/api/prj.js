@@ -10,9 +10,10 @@ const calc                                = require('../module/calc');
 const resultCode                          = require('../module/result');
 const pool                                = sql.createPool(dbconfig);
 const specificString                      = calc.specificString();
+const fs                                  = require('fs');
+const path                                = require('path');
 const { body,query, validationResult }    = require('express-validator');
-
-require('dotenv').config()
+require('dotenv').config();
 
 /* ========== ============= ========== */
 /* ========== 프로젝트 생성 POST ========== */
@@ -99,7 +100,7 @@ router.post('/ctPrj', verifyToken, upload.array('files'),
                     prj_id : param.prj_id,
                     step_number : param.step_number,
                     version_number : param.version_number,
-                    file_path : param.step_file[i].path,
+                    file_path : specificString + param.step_file[i].path.split('/develop')[1],
                     file_name : param.step_file[i].originalname
                 };
 
@@ -226,7 +227,7 @@ router.post('/addPrjVer', verifyToken, upload.array('files'),
                     prj_id : param.prj_id,
                     step_number : param.step_number,
                     version_number : param.version_number,
-                    file_path : param.step_file[i].path,
+                    file_path : specificString + param.step_file[i].path.split('/develop')[1],
                     file_name : param.step_file[i].originalname
                 };
 
@@ -382,18 +383,19 @@ router.get('/detail', verifyToken,
             }
             const modifiedPaths = myProjectListFile.map(item => {
 
-                if(db.host == process.env.DEV_DB_HOST || db.host == process.env.PROD_DB_HOST) {
-                    // '/file' 이전의 부분을 제거
-                    const newPath = item.file_path.split('/develop')[1];
-                    // 특정 문자열과 합치기
-                    return { file_id : item.file_id, file_path: specificString + newPath, file_name : item.file_name };
-                } else {
-                    return {
-                        file_id : item.file_id,
-                        file_path : item.file_path,
-                        file_name : item.file_name
-                    }
-                }
+                return { file_id : item.file_id, file_path: item.file_path, file_name : item.file_name };
+                // if(db.host == process.env.DEV_DB_HOST || db.host == process.env.PROD_DB_HOST) {
+                //     // '/file' 이전의 부분을 제거
+                //     // const newPath = item.file_path.split('/develop')[1];
+                //     // 특정 문자열과 합치기
+                //     return { file_id : item.file_id, file_path: item.file_path, file_name : item.file_name };
+                // } else {
+                //     return {
+                //         file_id : item.file_id,
+                //         file_path : item.file_path,
+                //         file_name : item.file_name
+                //     }
+                // }
                 
             });
             
@@ -606,7 +608,7 @@ router.put('/updtPrj', verifyToken, upload.array('files'),
                         file_id : file_id,
                         prj_id : param.prj_id,
                         version_number : param.version_number,
-                        file_path : param.step_file[i].path,
+                        file_path : specificString + param.step_file[i].path.split('/develop')[1],
                         file_name : param.step_file[i].originalname
                     };
                     await mysql.proc('prj', 'insertPrjFile', data, con);

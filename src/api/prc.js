@@ -10,6 +10,8 @@ const dbconfig                            = require("../config/db");
 const resultCode                          = require('../module/result');
 const pool                                = sql.createPool(dbconfig);
 const specificString                      = calc.specificString();
+const fs                                  = require('fs');
+const path                                = require('path');
 const { body,query, validationResult, param, check }    = require('express-validator');
 
 require('dotenv').config()
@@ -51,16 +53,16 @@ router.get('/prcInfo', verifyToken,
             const commentList = [];
 
 
-            if (Object.keys(prcInfoList).length !== 0) {
+            // if (Object.keys(prcInfoList).length !== 0) {
 
-                if (prcInfoList.lstc_file_path != null) {
-                    if(db.host == process.env.DEV_DB_HOST || db.host == process.env.PROD_DB_HOST) {
-                        const newPath = prcInfoList.lstc_file_path.split('/develop')[1];
-                        const data = specificString + newPath;
-                    }
-                }
+            //     if (prcInfoList.lstc_file_path != null) {
+            //         if(db.host == process.env.DEV_DB_HOST || db.host == process.env.PROD_DB_HOST) {
+            //             const newPath = prcInfoList.lstc_file_path.split('/develop')[1];
+            //             const data = specificString + newPath;
+            //         }
+            //     }
 
-            }
+            // }
 
             if (param.step_number == 0) {
                 let url = "";
@@ -70,7 +72,7 @@ router.get('/prcInfo', verifyToken,
                     url = process.env.PROD_SERVER_URL
                 }
                 prcInfoList.lstc_file_path = `${url}/file/default/리스트체크파일.xlsx`
-                prcInfoList.lstc_file_name = '202409_리스트체크파일.xlsx'
+                prcInfoList.lstc_file_name = '리스트체크파일.xlsx'
             }
 
             if (prcInfoFileList.length > 0) {
@@ -78,17 +80,22 @@ router.get('/prcInfo', verifyToken,
                     fileList.push(prcInfoFileList[i])
                 }
                 const modifiedPaths = fileList.map(item => {
-                    if(db.host == process.env.DEV_DB_HOST || db.host == process.env.PROD_DB_HOST) {
-                        // '/file' 이전의 부분을 제거
-                        const newPath = item.file_path.split('/develop')[1];
-                        // 특정 문자열과 합치기
-                        return {file_id : item.prc_file_id, file_path: specificString + newPath, file_name : item.file_name };
-                    } else {
-                        return {
-                            file_id : item.prc_file_id,
-                            file_path : item.file_path,
-                            file_name : item.file_name
-                        }
+                    // if(db.host == process.env.DEV_DB_HOST || db.host == process.env.PROD_DB_HOST) {
+                    //     // '/file' 이전의 부분을 제거
+                    //     const newPath = item.file_path.split('/develop')[1];
+                    //     // 특정 문자열과 합치기
+                    //     return {file_id : item.prc_file_id, file_path: specificString + newPath, file_name : item.file_name };
+                    // } else {
+                    //     return {
+                    //         file_id : item.prc_file_id,
+                    //         file_path : item.file_path,
+                    //         file_name : item.file_name
+                    //     }
+                    // }
+                    return {
+                        file_id : item.prc_file_id,
+                        file_path : item.file_path,
+                        file_name : item.file_name
                     }
                 });
                 prcInfoList.file = modifiedPaths
@@ -111,18 +118,24 @@ router.get('/prcInfo', verifyToken,
 
                 // 특정 문자열
                 const modifiedPaths = prcCommentFileList.map(item => {
-                    if(db.host == process.env.DEV_DB_HOST || db.host == process.env.PROD_DB_HOST) {
-                        // '/file' 이전의 부분을 제거
-                        const newPath = item.file_path.split('/develop')[1];
-                        // 특정 문자열과 합치기
-                        return { comm_file_id : item.comm_file_id, comm_id : item.comm_id, file_path: specificString + newPath, file_name : item.file_name };
-                    } else {
-                        return {
-                            comm_file_id : item.comm_file_id,
-                            comm_id : item.comm_id,
-                            file_path : item.file_path,
-                            file_name : item.file_name
-                        }
+                    // if(db.host == process.env.DEV_DB_HOST || db.host == process.env.PROD_DB_HOST) {
+                    //     // '/file' 이전의 부분을 제거
+                    //     const newPath = item.file_path.split('/develop')[1];
+                    //     // 특정 문자열과 합치기
+                    //     return { comm_file_id : item.comm_file_id, comm_id : item.comm_id, file_path: specificString + newPath, file_name : item.file_name };
+                    // } else {
+                    //     return {
+                    //         comm_file_id : item.comm_file_id,
+                    //         comm_id : item.comm_id,
+                    //         file_path : item.file_path,
+                    //         file_name : item.file_name
+                    //     }
+                    // }
+                    return {
+                        comm_file_id : item.comm_file_id,
+                        comm_id : item.comm_id,
+                        file_path : item.file_path,
+                        file_name : item.file_name
                     }
                 });
                 const combined = commentList.map(comment => {
@@ -254,7 +267,7 @@ router.post('/addCmt', verifyToken, upload.array('files'),
                 const data = {
                     comm_file_id : comm_file_id,
                     comm_id : param.comm_id,
-                    file_path : param.file[i].path,
+                    file_path : specificString + param.file[i].path.split('/develop')[1],
                     file_name : param.file[i].originalname
                 };
 
@@ -342,7 +355,7 @@ router.put('/updtCmt', verifyToken, upload.array('files'),
                     const data = {
                         comm_file_id : comm_file_id,
                         comm_id : param.comm_id,
-                        file_path : param.file[i].path,
+                        file_path : specificString + param.file[i].path.split('/develop')[1],
                         file_name : param.file[i].originalname
                     };
                     // console.log(data);
@@ -394,6 +407,8 @@ router.delete('/delCmt', verifyToken,
                 return res.json(await calc.resJson(400, '코멘트가 존재하지 않습니다 코멘트 번호를 다시 입력해 주세요', null, null))
             }
 
+            // const commentFileList = await mysql.query('prc', 'selectPrcCommentFile', param, con)
+
             await mysql.proc('prc', 'deletePrcComment', param, con)
             await mysql.proc('prc', 'deletePrcCommentFile', param, con)
             
@@ -417,15 +432,9 @@ router.post('/lstnRgst', verifyToken, upload.array('files'),
         body('prj_id').notEmpty().withMessage('Project Id is required.').isNumeric().withMessage('Project Id must be a number.'),
         body('version_number').notEmpty().withMessage('Version Number is required.').isString().withMessage('Version Number must be a string.'),
         body('step_number').notEmpty().withMessage('Step Number is required.').isNumeric().withMessage('Step Number must be a number.'),
-        body('step_lnk').notEmpty().withMessage('Step link is required').isURL().withMessage('Step link is must be a URL'),
-        body('step_description').notEmpty().withMessage('Step Description is required.').isString().withMessage('Step Description must be a string.'),
-        body('rgst_user_id').notEmpty().withMessage('Regist User ID is required.').isNumeric().withMessage('Regist User ID must be a number.'),
-        body('files').custom((value, { req }) => {
-            if (req.files.length < 1) {
-                throw new Error('File is required.');
-            }
-            return true; // 유효성 검사 통과
-        })
+        body('step_lnk').optional(),
+        body('step_description').optional().isString().withMessage('Step Description must be a string.'),
+        body('rgst_user_id').notEmpty().withMessage('Regist User ID is required.').isNumeric().withMessage('Regist User ID must be a number.')
     ],
     async(req,res) => {
 
@@ -438,8 +447,8 @@ router.post('/lstnRgst', verifyToken, upload.array('files'),
             prj_id : req.body.prj_id,
             version_number : req.body.version_number,
             step_number : req.body.step_number,
-            step_lnk : req.body.step_lnk,
-            step_description : req.body.step_description,
+            step_lnk : req.body.step_lnk == '' ? null : req.body.step_lnk, 
+            step_description : req.body.step_description == '' ? null : req.body.step_description,
             rgst_user_id : req.body.rgst_user_id,
             file : typeof req.files == "undefined" ? null : req.files
         }
@@ -453,24 +462,49 @@ router.post('/lstnRgst', verifyToken, upload.array('files'),
 
             await calc.logInfo('Interface', `${specificString}/das/prc/lstnRgst`);
 
-            const prcStepList = await mysql.query('prc', 'selectPrcStepInfo', param, con);
-
             const prjlist = await mysql.query('prj', 'selectPrjVersion', param, con);
 
             if (prjlist.length < 1) {
                 return res.json(await calc.resJson(400, '프로젝트 또는 프로젝트 버전이 존재하지 않습니다', null, null))
             }
 
+            const prcStepList = await mysql.query('prc', 'selectPrcStepInfo', param, con);
+
             if (prcStepList.length < 1) {
                 param.prc_id = await mysql.value('prc', 'nextvalId', {id : 'prc_id'}, con);
                 await mysql.proc('prc', 'insertPrcStepInfo', param, con);
+            } else {
+                await mysql.proc('prc', 'updatePrcStepInfo', param, con);
             }
 
-            param.prc_id = await mysql.value('prc', 'nextvalId', {id : 'prc_id'}, con);
-            await mysql.proc('prc', 'updatePrcStepInfo', param, con);
+            if (param.file.length == 0 || param.file.length > 0) {
+
+                const deleteFileList = await mysql.query('prc', 'selectPrcStepInfoFile', param, con);
+                for (const i in deleteFileList) {
+                    try {
+                        const str = deleteFileList[i].file_path.split('/default/')[1];
+                        // await calc.removeFile(str)
+                        const deletePath = path.join(__dirname, '../', '../', 'file', 'default', str)
+                        fs.unlink(deletePath, function(err) {
+                            if(err) {
+                                console.log(err);
+                            }
+                        });
+                    } catch(error) {
+                        console.log(error)
+                        return res.json({
+                            resultCode : 500,
+                            resultMsg : 'SERVER ERROR'
+                        }) 
+                    }
+                }
+
+                await mysql.proc('prc', 'deletePrcStepInfoFile', param, con);
+                
+            }
 
             if(param.file.length > 0) {
-                await mysql.proc('prc', 'deletePrcStepInfoFile', param, con);
+
                 for (const i in param.file) {
                     const prc_file_id = await mysql.value('prc', 'nextvalId', {id : 'prc_file_id'}, con);
                     const data = {
@@ -478,13 +512,16 @@ router.post('/lstnRgst', verifyToken, upload.array('files'),
                         prj_id : param.prj_id,
                         version_number : param.version_number,
                         step_number : param.step_number,
-                        file_path : param.file[i].path,
+                        file_path : specificString + param.file[i].path.split('/develop')[1],
                         file_name : param.file[i].originalname
                     };
         
                     await mysql.proc('prj', 'insertPrcStepInfoFile', data, con);
                 }
+
             }
+
+            
 
             const prjSecUserList = await mysql.query('prc', 'selectPrjSecManageList', param, con);
             const prjDevUserList = await mysql.query('prc', 'selectPrjDecManageList', param, con);
@@ -505,7 +542,7 @@ router.post('/lstnRgst', verifyToken, upload.array('files'),
 
             param.email_to_array = to_email_id;
             const userEmail = await mysql.query('prc', 'selectUserEmail', param, con);
-            const mailOption = '[' + prjlist[0].prj_name + ']' + ' ' + '[' +prjlist[0].version_number + ']' + '의 최종정보 항목이 등록 되었습니다.';
+            const mailOption = '[' + prjlist[0].prj_name + ']' + ' ' + '[' + prjlist[0].version_number + ']' + '의 최종정보 항목이 등록 되었습니다.';
             /* 이메일 전송  */
             await calc.toEmail(userEmail, 'D', mailOption)
             await con.commit();

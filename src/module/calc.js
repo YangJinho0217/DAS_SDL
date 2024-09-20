@@ -2,6 +2,8 @@ const nodemailer                    = require('nodemailer');
 const db                            = require('../config/db');
 const logger                        = require('../config/logger');
 const cryptojs                      = require('crypto');
+const fs                            = require('fs');
+const path                          = require('path');
 
 require('dotenv').config();
 
@@ -217,4 +219,13 @@ exports.resJson = async function(resultCode, resultMsg, data, token) {
     await this.logInfo('Data', result)
 
     return result
+}
+
+exports.removeFile = async function(path) {
+    const deletePath = path.join(__dirname, '../', '../', 'file', 'default', path)
+    fs.unlink(deletePath, function(err) {
+        if(err) {
+            console.log(err)
+        }
+    })
 }

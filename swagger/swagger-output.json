@@ -1850,16 +1850,14 @@
             "in": "formData",
             "type": "string",
             "example": "https://naver.com",
-            "description" : "등록하려는 링크",
-            "required" : true
+            "description" : "등록하려는 링크"
           },
           {
             "name": "step_description",
             "in": "formData",
             "type": "string",
             "example": "어쩌구저쩌구 왈왈",
-            "description" : "등록하려는 내용",
-            "required" : true
+            "description" : "등록하려는 내용"
           },
           {
             "name": "rgst_user_id",
@@ -1876,8 +1874,7 @@
             "items" : {
               "type" : "file"
             },
-            "description" : "등록하려는 파일 (다중)",
-            "required" : true
+            "description" : "등록하려는 파일 (다중)"
           }
         ],
         "responses": {

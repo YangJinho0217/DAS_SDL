@@ -8,6 +8,8 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerFile = require('./swagger/swagger-output.json')
 const app = express();
 const helmet = require('helmet');
+const db = require('./src/config/db');
+require('dotenv').config();
 
 app.use(cors({
   origin: 'localhost:3000',
